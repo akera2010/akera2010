@@ -1,0 +1,16 @@
+{
+  "accentColor": "",
+  "theme": "obsidian",
+  "cssTheme": "",
+  "baseFontSize": 16,
+  "enabledCssSnippets": [],
+  "spellcheckDictionary": [],
+  "spellcheck": false,
+  "strictLineBreaks": false,
+  "showLineNumber": true,
+  "showIndentGuide": true,
+  "showFrontmatter": false,
+  "readableLineLength": true,
+  "defaultViewMode": "source",
+  "livePreview": true
+}

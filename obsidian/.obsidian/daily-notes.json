@@ -1,0 +1,6 @@
+{
+  "folder": "01-Diario",
+  "template": "Templates/📅 Nota Diaria",
+  "format": "YYYY-MM-DD",
+  "autorun": false
+}

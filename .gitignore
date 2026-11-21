@@ -1,0 +1,22 @@
+# Claude Code internos (no sincronizar)
+projects/
+todos/
+*.log
+
+# Obsidian internos
+obsidian/.obsidian/workspace.json
+obsidian/.obsidian/workspace-mobile.json
+obsidian/.obsidian/cache
+obsidian/.trash/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Secretos
+.env
+*.key
+*.pem
+credentials.json
