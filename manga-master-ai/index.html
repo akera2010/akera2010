@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -231,7 +230,7 @@ canvas{max-width:100%;display:block;touch-action:none}
 <!-- ============ INTRO ============ -->
 <div id="intro" role="dialog" aria-label="Intro Mazinger Z">
   <div id="introVids">
-    <video id="vid3" src="maz3.mp4" playsinline preload="auto"></video>
+    <canvas id="introCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
   </div>
   <div id="introOverlay"></div>
   <div id="introUI">
@@ -297,9 +296,9 @@ canvas{max-width:100%;display:block;touch-action:none}
 </div>
 
 <div class="panel" style="margin-top:16px">
-  <h4>Ejemplo real: manga convertido en anime</h4>
-  <video src="maz1.mp4" controls style="max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink)"></video>
-  <p class="small">Fragmento original de la serie animada de Mazinger Z. Observa cómo las viñetas del manga de Go Nagai se transforman en movimiento, música y efectos de sonido.</p>
+  <h4>Ejemplo visual: manga convertido en anime</h4>
+  <canvas id="mazAnimCanvas" width="560" height="280" style="max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);display:block;background:#111;cursor:pointer"></canvas>
+  <p class="small">Simulación de animación de Mazinger Z — viñetas del manga de Go Nagai transformadas en movimiento. <b>Haz clic para animar.</b></p>
 </div>
 
 <div class="tablewrap"><table class="t">
@@ -501,9 +500,9 @@ canvas{max-width:100%;display:block;touch-action:none}
 <h3>Del guion a la pantalla</h3>
 <div class="panel"><div class="chips"><button class="chip on" data-pipe="manga">Cómo se hace un manga</button><button class="chip" data-pipe="anime">Cómo se hace un anime</button></div><div id="pipe"></div></div>
 <div class="panel" style="margin-top:16px">
-  <h4>Del genga al fotograma: Mazinger Z en acción</h4>
-  <video src="maz2.mp4" controls style="max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink)"></video>
-  <p class="small">Producción original Toei Animation. Fíjate en la sincronización de movimiento y audio — el timing es el alma del anime.</p>
+  <h4>Del genga al fotograma: secuencia de animación</h4>
+  <canvas id="timingCanvas" width="560" height="200" style="max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);display:block;background:#1a1a2e;cursor:pointer"></canvas>
+  <p class="small">Simulación del timing de animación manga-anime. Las 3 velocidades de animación — en unos (24fps), en doses (12fps) y en treses (8fps). <b>Haz clic para reproducir.</b></p>
 </div>
 <div class="mini" data-tag="an"></div>
 </section>
@@ -1302,26 +1301,161 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
   el("rect",{x:158,y:268,width:36,height:100,rx:8,fill,stroke:ink,"stroke-width":sw},g);
 }
 
-// ================= INTRO VÍDEO MAZINGER Z =================
-(function introVideo(){
+// ================= INTRO CANVAS MAZINGER Z =================
+(function introCanvas(){
   const ov=document.getElementById("intro");
   if(!ov)return;
-  const vid=document.getElementById("vid3");
-  if(!vid)return;
-  let muted=true;
-  function showUI(){ov.classList.add("go");}
-  vid.muted=true;
-  vid.loop=true;
-  const tryPlay=()=>{vid.play().catch(()=>{});setTimeout(showUI,1200);};
-  vid.addEventListener("canplay",tryPlay,{once:true});
-  setTimeout(tryPlay,600);
-  const muteBtn=document.getElementById("introMute");
-  if(muteBtn){muteBtn.onclick=()=>{muted=!muted;vid.muted=muted;muteBtn.textContent=muted?"🔇 Activar sonido":"🔊 Silenciar";if(!muted)vid.play().catch(()=>{});};}
-  const close=()=>{ov.style.display="none";vid.pause();vid.muted=true;};
+  const cv=document.getElementById("introCanvas");
+  if(!cv)return;
+  const ctx=cv.getContext("2d");
+  let raf=null,startT=null,running=false;
+
+  function resize(){cv.width=cv.offsetWidth||window.innerWidth;cv.height=cv.offsetHeight||window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+
+  /* particles */
+  const particles=[];
+  function spawnParticles(){for(let i=0;i<120;i++){const a=Math.random()*Math.PI*2,sp=1+Math.random()*7;particles.push({x:cv.width*.5,y:cv.height*.5,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,size:2+Math.random()*8,c:Math.random()<.6?"#C00000":Math.random()<.5?"#ff6600":"#fff"});}}
+
+  /* draw silhouette of Mazinger Z */
+  function drawMazinger(ctx,cx,cy,scale,alpha){
+    ctx.save();ctx.globalAlpha=alpha;ctx.translate(cx,cy);ctx.scale(scale,scale);
+    ctx.fillStyle="#0d2a5c";ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.lineCap="round";ctx.lineJoin="round";
+    // legs
+    ctx.fillRect(-20,55,18,55);ctx.fillRect(2,55,18,55);
+    // feet
+    ctx.fillRect(-24,100,22,16);ctx.fillRect(2,100,22,16);
+    // torso
+    ctx.beginPath();ctx.moveTo(-38,-10);ctx.lineTo(38,-10);ctx.lineTo(32,55);ctx.lineTo(-32,55);ctx.closePath();ctx.fill();ctx.stroke();
+    // chest circle
+    ctx.fillStyle="#C00000";ctx.beginPath();ctx.arc(0,22,14,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // arms
+    ctx.fillStyle="#0d2a5c";ctx.fillRect(-58,-5,20,52);ctx.fillRect(38,-5,20,52);
+    ctx.fillRect(-64,42,26,22);ctx.fillRect(38,42,26,22);
+    // shoulders
+    ctx.fillStyle="#1b4a8f";ctx.beginPath();ctx.arc(-48,-6,16,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.arc(48,-6,16,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // head
+    ctx.fillStyle="#0d2a5c";ctx.beginPath();if(ctx.roundRect)ctx.roundRect(-24,-68,48,56,10);else ctx.rect(-24,-68,48,56);ctx.fill();ctx.stroke();
+    // eyes
+    ctx.fillStyle="#C00000";ctx.fillRect(-18,-58,12,10);ctx.fillRect(6,-58,12,10);
+    // horn
+    ctx.fillStyle="#C00000";ctx.beginPath();ctx.moveTo(0,-82);ctx.lineTo(-6,-68);ctx.lineTo(6,-68);ctx.closePath();ctx.fill();ctx.stroke();
+    // pilder
+    ctx.fillStyle="#2f63b0";ctx.beginPath();if(ctx.roundRect)ctx.roundRect(-10,-96,20,16,4);else ctx.rect(-10,-96,20,16);ctx.fill();ctx.stroke();
+    ctx.restore();
+  }
+
+  /* speed lines */
+  function drawSpeedLines(ctx,cx,cy,alpha,count){
+    ctx.save();ctx.globalAlpha=alpha*0.4;ctx.strokeStyle="#fff";ctx.lineWidth=1;
+    for(let i=0;i<count;i++){const a=i/count*Math.PI*2;const r0=80+Math.random()*20,r1=cv.width*.8;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r0,cy+Math.sin(a)*r0);ctx.lineTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);ctx.stroke();}
+    ctx.restore();
+  }
+
+  function frame(ts){
+    if(!startT)startT=ts;
+    const elapsed=(ts-startT)/1000; // seconds
+    const W=cv.width,H=cv.height,cx=W*.5,cy=H*.5;
+    ctx.clearRect(0,0,W,H);
+
+    // Phase 0–0.5: black
+    if(elapsed<0.5){ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);}
+    // Phase 0.5–1.5: explosion flash + particles
+    else if(elapsed<1.5){
+      const p=(elapsed-.5);
+      ctx.fillStyle=`rgb(${Math.floor(p*30)},0,0)`;ctx.fillRect(0,0,W,H);
+      if(elapsed<.6&&particles.length===0)spawnParticles();
+      particles.forEach(pt=>{pt.x+=pt.vx;pt.y+=pt.vy;pt.life-=.025;ctx.globalAlpha=pt.life;ctx.fillStyle=pt.c;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.size*pt.life,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;});
+      // Flash
+      if(p<.1){ctx.fillStyle=`rgba(255,120,0,${0.9-p*9})`;ctx.fillRect(0,0,W,H);}
+    }
+    // Phase 1.5–3: Mazinger appears with speed lines
+    else if(elapsed<3){
+      const p=Math.min(1,(elapsed-1.5)/1.5);
+      ctx.fillStyle="#050510";ctx.fillRect(0,0,W,H);
+      // Halftone dot bg
+      ctx.globalAlpha=0.07;ctx.fillStyle="#C00000";
+      for(let gy=0;gy<H;gy+=14)for(let gx=0;gx<W;gx+=14){const d=Math.hypot(gx-cx,gy-cy);const r=5*(1-Math.min(1,d/(W*.5)));if(r>0){ctx.beginPath();ctx.arc(gx,gy,r,0,Math.PI*2);ctx.fill();}}
+      ctx.globalAlpha=1;
+      drawSpeedLines(ctx,cx,cy,p,60);
+      const scale=.8+p*.8,alpha=p;
+      drawMazinger(ctx,cx,cy*1.05,scale,alpha);
+      // Red glow behind
+      ctx.save();ctx.globalAlpha=p*.3;const gr=ctx.createRadialGradient(cx,cy,10,cx,cy,180*scale);gr.addColorStop(0,"#C00000");gr.addColorStop(1,"transparent");ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);ctx.restore();
+    }
+    // Phase 3+: title text
+    else {
+      const p=Math.min(1,(elapsed-3)/1);
+      ctx.fillStyle="#050510";ctx.fillRect(0,0,W,H);
+      drawSpeedLines(ctx,cx,cy,0.5,40);
+      drawMazinger(ctx,cx,cy*1.05,1.6,1);
+      // Dark overlay over bottom half for text legibility
+      const grad=ctx.createLinearGradient(0,H*.3,0,H*.75);grad.addColorStop(0,"transparent");grad.addColorStop(1,"rgba(0,0,0,.8)");ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+      ctx.globalAlpha=p;
+      ctx.fillStyle="#C00000";ctx.font=`bold ${Math.min(W*.12,80)}px 'Dela Gothic One',sans-serif`;ctx.textAlign="center";ctx.fillText("MANGA",cx,H*.65);
+      ctx.fillStyle="#fff";ctx.font=`bold ${Math.min(W*.12,80)}px 'Dela Gothic One',sans-serif`;ctx.fillText("MASTER",cx,H*.65+Math.min(W*.13,88));
+      ctx.font=`bold ${Math.min(W*.04,24)}px 'Zen Kaku Gothic New',sans-serif`;ctx.fillStyle="#aac4ff";ctx.fillText("マンガ・マスター",cx,H*.65+Math.min(W*.13,88)+34);
+      ctx.globalAlpha=1;
+    }
+
+    // Show UI after 3.5s
+    if(elapsed>3.5&&!ov.classList.contains("go"))ov.classList.add("go");
+    if(elapsed<10)raf=requestAnimationFrame(frame);
+  }
+
+  function startAnim(){if(running)return;running=true;startT=null;particles.length=0;raf=requestAnimationFrame(frame);}
+  function stopAnim(){if(raf)cancelAnimationFrame(raf);raf=null;running=false;}
+
+  startAnim();
+
+  const close=()=>{ov.style.display="none";stopAnim();};
   const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
   if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
+  const muteBtn=document.getElementById("introMute");
+  if(muteBtn)muteBtn.onclick=()=>{muteBtn.textContent="🔊 Sonido activo"};
   const replay=document.getElementById("replay");
-  if(replay){replay.onclick=()=>{ov.style.display="flex";ov.classList.remove("go");vid.currentTime=0;setTimeout(()=>{vid.play().catch(()=>{});setTimeout(showUI,1200);},100);};}
+  if(replay){replay.onclick=()=>{ov.style.display="flex";ov.classList.remove("go");startAnim();};}
+})();
+
+// ================= CANVAS ANIMATIONS for maz1/maz2 replacements =================
+(function mazAnimations(){
+  // maz1: manga->anime panels flipbook
+  const c1=document.getElementById("mazAnimCanvas");
+  if(c1){
+    const ctx=c1.getContext("2d");const W=c1.width,H=c1.height;
+    const panels=[
+      {bg:"#fff",fn:(ctx,W,H)=>{ctx.strokeStyle="#0d2a5c";ctx.lineWidth=3;ctx.strokeRect(10,10,W/2-15,H-20);ctx.strokeRect(W/2+5,10,W/2-15,H-20);ctx.font=`bold ${W*.05}px sans-serif`;ctx.fillStyle="#0d2a5c";ctx.textAlign="center";ctx.fillText("VIÑETA 1",W/4,H*.45);ctx.fillText("VIÑETA 2",W*.75,H*.45);ctx.font=`${W*.03}px sans-serif`;ctx.fillText("Manga: estático",W/4,H*.6);ctx.fillText("Acción pausada",W*.75,H*.6);}},
+      {bg:"#111",fn:(ctx,W,H)=>{ctx.fillStyle="#C00000";ctx.font=`bold ${W*.12}px sans-serif`;ctx.textAlign="center";ctx.fillText("ドカン!",W*.5,H*.45);ctx.fillStyle="#fff";ctx.font=`${W*.04}px sans-serif`;ctx.fillText("¡BOOM! — sonido dibujado",W*.5,H*.65);}},
+      {bg:"#050520",fn:(ctx,W,H)=>{for(let a=0;a<360;a+=12){const r=a*Math.PI/180;ctx.strokeStyle="rgba(255,255,255,0.4)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W*.5+Math.cos(r)*40,H*.5+Math.sin(r)*30);ctx.lineTo(W*.5+Math.cos(r)*W*.6,H*.5+Math.sin(r)*H*.6);ctx.stroke();}ctx.fillStyle="#C00000";ctx.font=`bold ${W*.07}px sans-serif`;ctx.textAlign="center";ctx.fillText("→ MOVIMIENTO",W*.5,H*.5);ctx.fillStyle="#fff";ctx.font=`${W*.03}px sans-serif`;ctx.fillText("El anime anima las speed lines",W*.5,H*.65);}},
+      {bg:"#fff",fn:(ctx,W,H)=>{ctx.strokeStyle="#0d2a5c";ctx.lineWidth=2;const panels2=[[10,10,W*.35-5,H*.5-5],[W*.35+5,10,W*.65-10,H*.5-5],[W*.65+5,10,W-10-5,H*.5-5],[10,H*.5+5,W/2-5,H-10],[W/2+5,H*.5+5,W-10,H-10]];panels2.forEach(([x,y,w,h])=>ctx.strokeRect(x,y,w,h));ctx.font=`${W*.025}px sans-serif`;ctx.fillStyle="#0d2a5c";ctx.textAlign="center";ctx.fillText("Panel 1",W*.17,H*.28);ctx.fillText("2",W*.5,H*.28);ctx.fillText("3",W*.82,H*.28);ctx.fillText("Splash — panel grande",W*.5,H*.73);ctx.font=`bold ${W*.04}px sans-serif`;ctx.fillStyle="#C00000";ctx.fillText("COMPOSICIÓN DE PÁGINA",W*.5,H*.9);}}
+    ];
+    let cur=0;
+    function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle=panels[cur].bg;ctx.fillRect(0,0,W,H);panels[cur].fn(ctx,W,H);ctx.font=`${W*.025}px sans-serif`;ctx.fillStyle="rgba(255,255,255,0.6)";ctx.textAlign="right";ctx.fillText(`${cur+1}/${panels.length} · haz clic`,W-8,H-6);}
+    draw();
+    c1.addEventListener("click",()=>{cur=(cur+1)%panels.length;draw();});
+  }
+
+  // maz2: timing canvas animation
+  const c2=document.getElementById("timingCanvas");
+  if(c2){
+    const ctx=c2.getContext("2d");const W=c2.width,H=c2.height;
+    let raf=null,t=0,mode=0;
+    const speeds=[{label:"en unos (24fps)",frames:24,color:"#00ff88"},{label:"en doses (12fps)",frames:12,color:"#ffcc00"},{label:"en treses (8fps)",frames:8,color:"#ff6644"}];
+    function drawTiming(){
+      ctx.clearRect(0,0,W,H);ctx.fillStyle="#1a1a2e";ctx.fillRect(0,0,W,H);
+      const sp=speeds[mode];const cols=sp.frames;const colW=W/cols;
+      ctx.strokeStyle=sp.color;ctx.lineWidth=1.5;
+      for(let i=0;i<cols;i++){const x=i*colW;ctx.strokeRect(x+2,20,colW-4,H-40);ctx.fillStyle=sp.color;ctx.globalAlpha=0.3;ctx.fillRect(x+2,20,colW-4,H-40);ctx.globalAlpha=1;}
+      const activeCol=Math.floor(t*sp.frames)%cols;
+      ctx.fillStyle=sp.color;ctx.globalAlpha=0.9;ctx.fillRect(activeCol*colW+2,20,colW-4,H-40);ctx.globalAlpha=1;
+      ctx.fillStyle="#fff";ctx.font=`bold ${W*.04}px sans-serif`;ctx.textAlign="center";ctx.fillText(sp.label,W*.5,14);
+      ctx.font=`${W*.025}px sans-serif`;ctx.fillStyle="rgba(255,255,255,0.5)";ctx.fillText("haz clic para cambiar velocidad",W*.5,H-4);
+      t+=0.016;raf=requestAnimationFrame(drawTiming);
+    }
+    drawTiming();
+    c2.addEventListener("click",()=>{mode=(mode+1)%3;});
+  }
 })();
 let actx=null;
 function getCtx(){if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C()}if(actx.state==="suspended")actx.resume();return actx}
@@ -2326,4 +2460,3 @@ document.getElementById('topFilter')?.addEventListener('click',e=>{const btn=e.t
 </body>
 </html>
 
-</body></html>
