@@ -8,15 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
-  --bg:#3a5572;--s1:#435c78;--s2:#4e6885;--s3:#587492;
-  --acc:#60a5fa;--acc2:#818cf8;--green:#34d399;--yellow:#fbbf24;
-  --orange:#fb923c;--red:#f87171;--text:#e8f0ff;--muted:#a8c4de;
-  --border:#587492;--card:#4a6880;--radius:12px;
-  --shadow:0 4px 20px rgba(0,0,0,.28);
+  --bg:#f4f7fb;--s1:#edf2f8;--s2:#e2eaf4;--s3:#cdd8e8;
+  --acc:#1d4ed8;--acc2:#5b21b6;--green:#15803d;--yellow:#a16207;
+  --orange:#c2410c;--red:#b91c1c;--text:#0f172a;--muted:#475569;
+  --border:#94a3b8;--card:#ffffff;--radius:12px;
+  --shadow:0 2px 14px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 @keyframes metalShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-body{background:linear-gradient(-45deg,#3a5572,#4a6485,#527293,#405e76);background-size:400% 400%;animation:metalShimmer 15s ease infinite;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+body{background:#f4f7fb;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
 #app{max-width:1200px;margin:0 auto;padding:16px}
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:10px}
@@ -24,7 +24,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text)}
 .logo-text span{font-size:.75rem;color:var(--muted)}
 .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-#dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--s2);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+#dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--acc);padding:6px 12px;border-radius:8px;border:1px solid var(--acc)}
 #refreshBtn,#pdfBtn{background:var(--acc);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
 #pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b)}
 #refreshBtn:hover,#pdfBtn:hover{opacity:.85}
@@ -83,7 +83,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .ppg{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.7rem;font-weight:700}
 .ppg-g{background:#15803d;color:#fff}.ppg-y{background:#ca8a04;color:#fff}
 .ppg-o{background:#ea580c;color:#fff}.ppg-r{background:#dc2626;color:#fff}
-#loadingOverlay{position:fixed;inset:0;background:rgba(26,42,72,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
+#loadingOverlay{position:fixed;inset:0;background:rgba(244,247,251,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
 #loadingOverlay .spin{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loadingOverlay p{color:var(--muted);font-size:.9rem;text-align:center;max-width:300px}
