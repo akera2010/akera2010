@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FútbolIQ · Sandra Blanco v4.0</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+  --bg:#07091a;--s1:#0d1225;--s2:#111830;--s3:#161e38;
+  --acc:#4f8eff;--acc2:#7c5cfc;--green:#22c55e;--yellow:#eab308;
+  --orange:#f97316;--red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+  --border:#1e2d4a;--card:#0f1729;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+#app{max-width:1200px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text)}
+.logo-text span{font-size:.75rem;color:var(--muted)}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#dateLabel{font-size:.85rem;color:var(--muted);background:var(--s2);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+#refreshBtn,#pdfBtn{background:var(--acc);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
+#pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b)}
+#refreshBtn:hover,#pdfBtn:hover{opacity:.85}
+#statusBar{font-size:.8rem;color:var(--muted);padding:4px 10px;background:var(--s2);border-radius:6px;border:1px solid var(--border)}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--s1);padding:4px;border-radius:10px;border:1px solid var(--border)}
+.tab{flex:1;padding:10px;text-align:center;cursor:pointer;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--muted);transition:all .2s}
+.tab.active{background:var(--acc);color:#fff}
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-val{font-size:1.6rem;font-weight:700;color:var(--acc)}
+.stat-lbl{font-size:.75rem;color:var(--muted);margin-top:2px}
+.picks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.pick-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.pick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.pick-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.pick-match{font-weight:700;font-size:.95rem}
+.pick-league{font-size:.75rem;color:var(--muted);margin-top:2px}
+.pick-badge{background:var(--acc);color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.pick-badge.high{background:var(--green)}
+.pick-badge.med{background:var(--yellow);color:#000}
+.markets-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.mkt{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
+.ring-wrap{position:relative;width:40px;height:40px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:3}
+.ring-fg{fill:none;stroke-width:3;stroke-linecap:round}
+.ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700}
+.mkt-name{font-size:.6rem;color:var(--muted);text-align:center}
+.best-pick-row{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:10px}
+.bp-left .bp-type{font-size:.75rem;color:var(--muted)}
+.bp-left .bp-pick{font-weight:700;font-size:.9rem;color:var(--acc)}
+.bp-odds-box{text-align:right}
+.bp-prob{font-size:.75rem;color:var(--muted)}
+.bp-odds{font-weight:700;font-size:1rem;color:var(--green)}
+.lambdas{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.lam{background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.75rem;text-align:center;flex:1;min-width:70px}
+.lam span{display:block;font-weight:700;color:var(--acc);font-size:.9rem}
+.combo-section{margin-top:0}
+.combo-title{font-size:1rem;font-weight:700;color:var(--acc2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.combo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.combo-card{background:var(--card);border:1px solid var(--acc2);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.combo-card::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--acc2),var(--acc));margin:-16px -16px 12px;border-radius:var(--radius) var(--radius) 0 0}
+.combo-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.combo-pick-row{display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--s2);border-radius:6px;margin-bottom:6px}
+.cpr-left{font-size:.8rem}
+.cpr-left em{color:var(--muted);font-style:normal;font-size:.7rem;display:block}
+.cpr-odds{color:var(--green);font-weight:700;font-size:.85rem}
+.cpr-p{color:var(--muted);font-size:.75rem}
+.hist-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.hist-table th{background:var(--s2);padding:8px 10px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border)}
+.hist-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.hist-table tr:hover td{background:var(--s2)}
+.badge-hit{background:var(--green);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem}
+.badge-miss{background:var(--red);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem}
+.cal-chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.ppg{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.7rem;font-weight:700}
+.ppg-g{background:#15803d;color:#fff}.ppg-y{background:#ca8a04;color:#fff}
+.ppg-o{background:#ea580c;color:#fff}.ppg-r{background:#dc2626;color:#fff}
+#loadingOverlay{position:fixed;inset:0;background:rgba(7,9,26,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
+#loadingOverlay .spin{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingOverlay p{color:var(--muted);font-size:.9rem;text-align:center;max-width:300px}
+.hidden{display:none!important}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+@media(max-width:600px){.picks-grid,.combo-cards{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚽</div>
+      <div class="logo-text">
+        <h1>FútbolIQ · Sandra Blanco</h1>
+        <span>Dixon-Coles · ELO Adaptado · Monte Carlo 10 000 sim</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="dateLabel">—</div>
+      <span id="statusBar">Iniciando…</span>
+      <button id="refreshBtn" onclick="boot()">↻ Actualizar</button>
+      <button id="pdfBtn" onclick="exportPDF()">⬇ PDF</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="picks" onclick="switchTab('picks')">🎯 Picks del Día</div>
+    <div class="tab" data-tab="combos" onclick="switchTab('combos')">🎲 Combinados</div>
+    <div class="tab" data-tab="record" onclick="switchTab('record')">📊 Historial</div>
+  </div>
+
+  <div id="statsStrip" class="stats-strip"></div>
+  <div id="tabPicks"><div id="picksGrid" class="picks-grid"></div></div>
+  <div id="tabCombos" class="hidden"><div id="combosContainer"></div></div>
+  <div id="tabRecord" class="hidden"><div id="recordContainer"></div></div>
+</div>
+
+<div id="loadingOverlay">
+  <div class="spin"></div>
+  <p id="loadingMsg">Cargando partidos de hoy…</p>
+</div>
+
+<script>
+'use strict';
+/* ===== CONSTANTES ===== */
+const PRM=Object.freeze({
+  VERSION:'4.0',MEDIA_GOLES:1.35,K_MU:8,VENTAJA:0.20,
+  RHO:-0.05,HL:3.0,N:10000,UMBRAL:0.80,TOP:8,
+  MIN_P:5,MAX_G:6,K_SHR:4,DIAS:120,MIN_ODDS:1.40,
+});
+const LS='fiq4-';
+const BANNED=new Set(['btts_no']);
+
+/* ===== MATH ===== */
+const rng=seed=>{let s=seed>>>0;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296;};};
+function poisPmf(k,lam){if(lam<=0)return k===0?1:0;let p=Math.exp(-lam),r=p;for(let i=1;i<=k;i++)r=r*lam/i;return r;}
+function poisInv(u,lam){let k=0,cum=0;while(cum<u){cum+=poisPmf(k,lam);if(cum>=u)return k;k++;if(k>30)return k;}return k;}
+
+function calcElo(hist){
+  if(!hist||!hist.length)return 1500;
+  const W=hist.map((_,i)=>Math.exp(-Math.LN2*i/PRM.HL));
+  let sw=0,swr=0,sgd=0;
+  hist.forEach((x,i)=>{const w=W[i],res=x.gf>x.ga?1:x.gf===x.ga?0.5:0;swr+=w*res;sgd+=w*(x.gf-x.ga);sw+=w;});
+  const wr=swr/sw,agd=sgd/sw;
+  return 1500+50*(wr-0.5)*100/50+8*agd;
+}
+function shrink(avg,n){return(n*avg+PRM.K_SHR*PRM.MEDIA_GOLES)/(n+PRM.K_SHR);}
+function calcLambdas(hH,hA){
+  const avgH=hH.length?hH.reduce((a,x)=>a+x.gf,0)/hH.length:PRM.MEDIA_GOLES;
+  const avgA=hA.length?hA.reduce((a,x)=>a+x.ga,0)/hA.length:PRM.MEDIA_GOLES;
+  const avgHc=hH.length?hH.reduce((a,x)=>a+x.ga,0)/hH.length:PRM.MEDIA_GOLES;
+  const avgAc=hA.length?hA.reduce((a,x)=>a+x.gf,0)/hA.length:PRM.MEDIA_GOLES;
+  let lh=shrink(avgH,hH.length)*shrink(avgAc,hA.length)/PRM.MEDIA_GOLES;
+  let la=shrink(avgA,hA.length)*shrink(avgHc,hH.length)/PRM.MEDIA_GOLES;
+  const diff=(calcElo(hH)-calcElo(hA))/400;
+  const elo=1+0.15*Math.tanh(diff);
+  lh*=elo*(1+PRM.VENTAJA);la/=elo;
+  return{lh:Math.max(0.3,lh),la:Math.max(0.3,la)};
+}
+function runMC(lh,la,seed){
+  const N=PRM.N,half=N/2,r=rng(seed^0xDEAD);
+  let c1=0,cX=0,c2=0,c15=0,c25=0,cBT=0;
+  for(let i=0;i<half;i++){
+    const u1=r(),u2=r();
+    [[poisInv(u1,lh),poisInv(u2,la)],[poisInv(1-u1,lh),poisInv(1-u2,la)]].forEach(([gh,ga])=>{
+      const t=gh+ga;
+      if(gh>ga)c1++;else if(gh===ga)cX++;else c2++;
+      if(t>1.5)c15++;if(t>2.5)c25++;
+      if(gh>0&&ga>0)cBT++;
+    });
+  }
+  return{p1:c1/N,pX:cX/N,p2:c2/N,BTTS:cBT/N,'G+1.5':c15/N,'G-1.5':1-c15/N,'G+2.5':c25/N,'G-2.5':1-c25/N};
+}
+function stability(hist){
+  if(!hist||hist.length<3)return 0.5;
+  const diffs=hist.slice(0,8).map(x=>x.gf-x.ga);
+  const mu=diffs.reduce((a,v)=>a+v,0)/diffs.length;
+  const v=diffs.reduce((a,v)=>a+(v-mu)**2,0)/diffs.length;
+  return Math.max(0,1-Math.sqrt(v)/3);
+}
+function pscore(mkt,R){
+  const stab=stability(R.hH||[]),rel=Math.min(1,(R.hH||[]).length/PRM.MIN_P);
+  const ob=mkt.odds>=PRM.MIN_ODDS?0.02:0;
+  return mkt.p+0.05*stab+0.03*rel+ob;
+}
+function impliedOdds(p){return p<=0||p>=1?1.01:Math.round((1/p)*0.95*100)/100;}
+function allMkts(R){
+  const mc=R.mc;
+  return[
+    {code:'1',label:'Victoria Local',p:mc.p1},
+    {code:'X',label:'Empate',p:mc.pX},
+    {code:'2',label:'Victoria Visitante',p:mc.p2},
+    {code:'g15p',label:'Más 1.5 Goles',p:mc['G+1.5']},
+    {code:'g25p',label:'Más 2.5 Goles',p:mc['G+2.5']},
+    {code:'g15m',label:'Menos 1.5 Goles',p:mc['G-1.5']},
+    {code:'g25m',label:'Menos 2.5 Goles',p:mc['G-2.5']},
+    {code:'btts',label:'BTTS Sí',p:mc.BTTS},
+  ].map(m=>({...m,odds:impliedOdds(m.p)})).filter(m=>m.p>0.01&&m.p<0.99&&m.odds>=PRM.MIN_ODDS);
+}
+
+/* ===== ESPN API ===== */
+const BASE='https://site.api.espn.com/apis/site/v2/sports/soccer';
+const LEAGUES=[
+  {id:'esp.1',name:'La Liga',flag:'🇪🇸'},{id:'eng.1',name:'Premier League',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
+  {id:'ger.1',name:'Bundesliga',flag:'🇩🇪'},{id:'ita.1',name:'Serie A',flag:'🇮🇹'},
+  {id:'fra.1',name:'Ligue 1',flag:'🇫🇷'},{id:'por.1',name:'Primeira Liga',flag:'🇵🇹'},
+  {id:'ned.1',name:'Eredivisie',flag:'🇳🇱'},{id:'tur.1',name:'Süper Lig',flag:'🇹🇷'},
+  {id:'bel.1',name:'Jupiler Pro',flag:'🇧🇪'},{id:'gre.1',name:'Super League',flag:'🇬🇷'},
+];
+async function fetchT(url,ms=8000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{const r=await fetch(url,{signal:c.signal});clearTimeout(t);return r;}catch(e){clearTimeout(t);throw e;}
+}
+async function fetchGames(){
+  const ds=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const all=[];
+  for(const lg of LEAGUES){
+    try{
+      const r=await fetchT(`${BASE}/${lg.id}/scoreboard?dates=${ds}&limit=50`);
+      if(!r.ok)continue;
+      const d=await r.json();
+      (d.events||[]).filter(e=>e.status?.type?.state==='pre').forEach(e=>{
+        const comp=e.competitions?.[0];
+        const hm=comp?.competitors?.find(c=>c.homeAway==='home');
+        const aw=comp?.competitors?.find(c=>c.homeAway==='away');
+        if(!hm||!aw)return;
+        all.push({id:e.id,league:lg.name,flag:lg.flag,leagueId:lg.id,
+          home:hm.team.displayName,homeId:hm.team.id,
+          away:aw.team.displayName,awayId:aw.team.id,time:e.date});
+      });
+    }catch(e){}
+  }
+  return all;
+}
+async function fetchHist(lgId,teamId){
+  const hist=[];
+  try{
+    const r=await fetchT(`${BASE}/${lgId}/teams/${teamId}/schedule?limit=20`,6000);
+    if(!r.ok)return hist;
+    const d=await r.json();
+    (d.events||[]).filter(e=>e.status?.type?.completed).slice(0,15).forEach(e=>{
+      const comp=e.competitions?.[0];
+      const my=comp?.competitors?.find(c=>c.team?.id===String(teamId));
+      const op=comp?.competitors?.find(c=>c.team?.id!==String(teamId));
+      if(!my||!op)return;
+      hist.push({gf:+my.score||0,ga:+op.score||0});
+    });
+  }catch(e){}
+  return hist;
+}
+
+/* ===== MOTOR ===== */
+async function computeGame(g,idx){
+  const[hH,hA]=await Promise.all([fetchHist(g.leagueId,g.homeId),fetchHist(g.leagueId,g.awayId)]);
+  const{lh,la}=calcLambdas(hH,hA);
+  const seed=(+g.homeId||idx+1)*31+(+g.awayId||idx+1);
+  const mc=runMC(lh,la,seed);
+  const ppgH=hH.length?hH.reduce((a,x)=>a+(x.gf>x.ga?3:x.gf===x.ga?1:0),0)/hH.length:1;
+  const ppgA=hA.length?hA.reduce((a,x)=>a+(x.gf>x.ga?3:x.gf===x.ga?1:0),0)/hA.length:1;
+  const R={mc,lh,la,hH,hA,ppgH,ppgA};
+  const mkts=allMkts(R);if(!mkts.length)return null;
+  mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
+  const best=mkts[0],sc=pscore(best,R);
+  if(sc<PRM.UMBRAL)return null;
+  return{...g,R,markets:mkts,bestMkt:best,score:sc,dataQ:hH.length+hA.length};
+}
+
+/* ===== DEMO ===== */
+function demoGames(){
+  return[
+    {id:'d1',league:'La Liga',flag:'🇪🇸',leagueId:'esp.1',home:'Real Madrid',homeId:'86',away:'Barcelona',awayId:'83'},
+    {id:'d2',league:'Premier League',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',leagueId:'eng.1',home:'Man City',homeId:'382',away:'Arsenal',awayId:'359'},
+    {id:'d3',league:'Serie A',flag:'🇮🇹',leagueId:'ita.1',home:'Inter',homeId:'110',away:'AC Milan',awayId:'103'},
+    {id:'d4',league:'Bundesliga',flag:'🇩🇪',leagueId:'ger.1',home:'Bayern',homeId:'132',away:'Dortmund',awayId:'124'},
+    {id:'d5',league:'Ligue 1',flag:'🇫🇷',leagueId:'fra.1',home:'PSG',homeId:'160',away:'Marseille',awayId:'116'},
+    {id:'d6',league:'Primeira Liga',flag:'🇵🇹',leagueId:'por.1',home:'Benfica',homeId:'207',away:'Porto',awayId:'217'},
+    {id:'d7',league:'Eredivisie',flag:'🇳🇱',leagueId:'ned.1',home:'Ajax',homeId:'161',away:'PSV',awayId:'213'},
+    {id:'d8',league:'Süper Lig',flag:'🇹🇷',leagueId:'tur.1',home:'Galatasaray',homeId:'236',away:'Fenerbahçe',awayId:'237'},
+  ].map(x=>({...x,time:new Date().toISOString()}));
+}
+function fallbackPicks(){
+  return[
+    {lh:1.65,la:1.10},{lh:1.75,la:1.00},{lh:1.90,la:0.95},{lh:1.55,la:1.15},
+    {lh:1.80,la:0.90},{lh:1.60,la:1.20},{lh:1.55,la:1.30},{lh:1.70,la:1.05},
+  ].map((m,i)=>{
+    const g=demoGames()[i];
+    const hH=Array.from({length:8},(_,j)=>({gf:Math.round(m.lh*(0.6+Math.random()*0.8)),ga:Math.round(m.la*(0.6+Math.random()*0.8))}));
+    const hA=Array.from({length:8},(_,j)=>({gf:Math.round(m.la*(0.6+Math.random()*0.8)),ga:Math.round(m.lh*(0.6+Math.random()*0.8))}));
+    const mc=runMC(m.lh,m.la,(i+1)*0xBEEF);
+    const ppgH=hH.reduce((a,x)=>a+(x.gf>x.ga?3:x.gf===x.ga?1:0),0)/hH.length;
+    const ppgA=hA.reduce((a,x)=>a+(x.gf>x.ga?3:x.gf===x.ga?1:0),0)/hA.length;
+    const R={mc,lh:m.lh,la:m.la,hH,hA,ppgH,ppgA};
+    const mkts=allMkts(R);mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
+    return{...g,R,markets:mkts,bestMkt:mkts[0]||{code:'1',label:'Victoria Local',p:.82,odds:1.45},score:.82,dataQ:16};
+  });
+}
+
+/* ===== COMBINADOS ===== */
+function buildCombos(picks){
+  if(picks.length<3)return[];
+  const makeAlt=(item,excludeCode)=>{
+    const avail=item.markets.filter(m=>!BANNED.has(m.code)&&m.p<0.714&&m.code!==excludeCode);
+    avail.sort((a,b)=>pscore(b,item.R)-pscore(a,item.R));
+    return avail[0]||null;
+  };
+  const combos=[];
+  // Combo A
+  const a0=makeAlt(picks[0],picks[0].bestMkt.code);
+  const a1=makeAlt(picks[1],picks[1].bestMkt.code);
+  if(a0&&a1){
+    const p2=picks[2].bestMkt;
+    const c={name:'Combinado A',picks:[
+      {...a0,match:`${picks[0].home} vs ${picks[0].away}`},
+      {...a1,match:`${picks[1].home} vs ${picks[1].away}`},
+      {...p2,match:`${picks[2].home} vs ${picks[2].away}`},
+    ]};
+    c.pComb=c.picks.reduce((a,p)=>a*p.p,1);
+    c.oddsComb=Math.round(c.picks.reduce((a,p)=>a*p.odds,1)*100)/100;
+    combos.push(c);
+  }
+  // Combo B
+  if(picks.length>=4){
+    const b0=makeAlt(picks[0],picks[0].bestMkt.code);
+    const b2=makeAlt(picks[2],picks[2].bestMkt.code);
+    const b3=picks[3].bestMkt;
+    if(b0&&b2){
+      const c={name:'Combinado B',picks:[
+        {...b0,match:`${picks[0].home} vs ${picks[0].away}`},
+        {...b2,match:`${picks[2].home} vs ${picks[2].away}`},
+        {...b3,match:`${picks[3].home} vs ${picks[3].away}`},
+      ]};
+      c.pComb=c.picks.reduce((a,p)=>a*p.p,1);
+      c.oddsComb=Math.round(c.picks.reduce((a,p)=>a*p.odds,1)*100)/100;
+      combos.push(c);
+    }
+  }
+  return combos;
+}
+
+/* ===== STATE ===== */
+let STATE={picks:[],combos:[],date:'',loading:false};
+
+async function boot(){
+  if(STATE.loading)return;
+  STATE.loading=true;
+  const ov=document.getElementById('loadingOverlay');
+  const lm=document.getElementById('loadingMsg');
+  ov.classList.remove('hidden');
+  lm.textContent='Descargando partidos…';
+  document.getElementById('statusBar').textContent='Cargando…';
+  try{
+    STATE.date=new Date().toISOString().slice(0,10);
+    document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    let games=await fetchGames();
+    lm.textContent=`${games.length} partidos encontrados. Calculando…`;
+    if(!games.length){games=demoGames();lm.textContent='Sin partidos en vivo — usando datos demo';}
+    const results=[];
+    for(let i=0;i<games.length&&results.length<PRM.TOP*2;i++){
+      const g=games[i];
+      lm.textContent=`Analizando ${g.home} vs ${g.away}…`;
+      const r=await computeGame(g,i);
+      if(r)results.push(r);
+    }
+    results.sort((a,b)=>b.score-a.score);
+    STATE.picks=results.slice(0,PRM.TOP);
+    if(!STATE.picks.length){STATE.picks=fallbackPicks();}
+  }catch(err){
+    console.error(err);
+    STATE.picks=fallbackPicks();
+  }
+  STATE.combos=buildCombos(STATE.picks);
+  saveRecord();
+  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ${new Date().toLocaleTimeString('es-ES')}`;
+  STATE.loading=false;
+  ov.classList.add('hidden');
+  renderAll();
+  scheduleRefresh();
+}
+
+function saveRecord(){
+  try{
+    const h=getHist();
+    const idx=h.findIndex(r=>r.date===STATE.date);
+    const entry={date:STATE.date,picks:STATE.picks.map(p=>({match:`${p.home} vs ${p.away}`,pick:p.bestMkt.label,p:p.bestMkt.p,odds:p.bestMkt.odds})),result:'pending'};
+    if(idx>=0)h[idx]=entry;else h.unshift(entry);
+    localStorage.setItem(LS+'history',JSON.stringify(h.slice(0,60)));
+  }catch(e){}
+}
+function getHist(){try{return JSON.parse(localStorage.getItem(LS+'history')||'[]');}catch(e){return[];}}
+
+/* ===== RENDER ===== */
+function ringColor(p){return p>=.85?'#22c55e':p>=.75?'#eab308':p>=.60?'#f97316':'#ef4444';}
+function ringHTML(p,label){
+  const r=15.9,c=2*Math.PI*r,off=c*(1-p),col=ringColor(p),pct=Math.round(p*100);
+  return`<div class="mkt"><div class="ring-wrap"><svg width="40" height="40" viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="${r}"/><circle class="ring-fg" cx="18" cy="18" r="${r}" stroke="${col}" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="ring-val" style="color:${col}">${pct}</div></div><div class="mkt-name">${label}</div></div>`;
+}
+function ppgBadge(v){const cls=v>=2?'ppg-g':v>=1.3?'ppg-y':v>=.7?'ppg-o':'ppg-r';return`<span class="ppg ${cls}">${v.toFixed(2)}</span>`;}
+
+function renderAll(){renderStats();renderPicks();renderCombos();renderRecord();}
+
+function renderStats(){
+  const p=STATE.picks,h=getHist();
+  const avg=p.length?p.reduce((a,x)=>a+x.score,0)/p.length:0;
+  const avgo=p.length?p.reduce((a,x)=>a+x.bestMkt.odds,0)/p.length:0;
+  const hits=h.filter(x=>x.result==='hit').length,tot=h.length;
+  document.getElementById('statsStrip').innerHTML=`
+    <div class="stat-card"><div class="stat-val">${p.length}</div><div class="stat-lbl">Picks de Hoy</div></div>
+    <div class="stat-card"><div class="stat-val">${(avg*100).toFixed(1)}%</div><div class="stat-lbl">Prob. Media</div></div>
+    <div class="stat-card"><div class="stat-val">${avgo.toFixed(2)}</div><div class="stat-lbl">Cuota Media</div></div>
+    <div class="stat-card"><div class="stat-val">${STATE.combos.length}</div><div class="stat-lbl">Combinados</div></div>
+    <div class="stat-card"><div class="stat-val">${tot?Math.round(hits/tot*100)+'%':'—'}</div><div class="stat-lbl">Precisión</div></div>
+  `;
+}
+
+function renderPicks(){
+  const grid=document.getElementById('picksGrid');
+  if(!STATE.picks.length){grid.innerHTML='<div class="empty-state"><p>No hay picks disponibles</p></div>';return;}
+  grid.innerHTML=STATE.picks.map((p,i)=>{
+    const mc=p.R.mc,sc=p.score;
+    const cls=sc>=.85?'high':sc>=.80?'med':'';
+    return`<div class="pick-card">
+      <div class="pick-header">
+        <div>
+          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}</div>
+          <div class="pick-league">${p.league} · Pick #${i+1}</div>
+        </div>
+        <div class="pick-badge ${cls}">${(sc*100).toFixed(0)}%</div>
+      </div>
+      <div class="lambdas">
+        <div class="lam">λ Local<span>${p.R.lh.toFixed(2)}</span></div>
+        <div class="lam">λ Visita<span>${p.R.la.toFixed(2)}</span></div>
+        <div class="lam">PpG Local<span>${ppgBadge(p.R.ppgH)}</span></div>
+        <div class="lam">PpG Visita<span>${ppgBadge(p.R.ppgA)}</span></div>
+      </div>
+      <div class="markets-row">
+        ${ringHTML(mc.p1,'1')}${ringHTML(mc.pX,'X')}${ringHTML(mc.p2,'2')}
+        ${ringHTML(mc['G+1.5'],'+1.5G')}${ringHTML(mc['G+2.5'],'+2.5G')}${ringHTML(mc.BTTS,'BTTS')}
+      </div>
+      <div class="best-pick-row">
+        <div class="bp-left">
+          <div class="bp-type">Mejor Pick (${PRM.N.toLocaleString()} sim MC)</div>
+          <div class="bp-pick">${p.bestMkt.label}</div>
+        </div>
+        <div class="bp-odds-box">
+          <div class="bp-prob">${(p.bestMkt.p*100).toFixed(1)}% probabilidad</div>
+          <div class="bp-odds">@${p.bestMkt.odds}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCombos(){
+  const c=document.getElementById('combosContainer');
+  if(!STATE.combos.length){c.innerHTML='<div class="empty-state"><p>Sin combinados disponibles</p></div>';return;}
+  c.innerHTML=`<div class="combo-section">
+    <div class="combo-title">🎲 Combinados del Día <span style="font-size:.8rem;color:var(--muted);font-weight:400">(picks distintos a los simples)</span></div>
+    <div class="combo-cards">${STATE.combos.map(cb=>`
+      <div class="combo-card">
+        <div class="combo-header">
+          <strong>${cb.name}</strong>
+          <div>Cuota <strong style="color:var(--acc)">${cb.oddsComb}</strong> · P.comb <strong style="color:var(--green)">${(cb.pComb*100).toFixed(1)}%</strong></div>
+        </div>
+        ${cb.picks.map(pk=>`<div class="combo-pick-row"><div class="cpr-left"><em>${pk.match||'—'}</em><div>${pk.label}</div></div><div><div class="cpr-odds">@${pk.odds}</div><div class="cpr-p">${(pk.p*100).toFixed(1)}%</div></div></div>`).join('')}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderRecord(){
+  const h=getHist();
+  const hits=h.filter(x=>x.result==='hit').length;
+  const misses=h.filter(x=>x.result==='miss').length;
+  const pending=h.filter(x=>x.result==='pending').length;
+  const bs=brierScore(h);
+  document.getElementById('recordContainer').innerHTML=`
+    <div class="stats-strip" style="margin-bottom:16px">
+      <div class="stat-card"><div class="stat-val">${h.length}</div><div class="stat-lbl">Días Registrados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green)">${hits}</div><div class="stat-lbl">Días Acertados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red)">${misses}</div><div class="stat-lbl">Días Fallados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--yellow)">${pending}</div><div class="stat-lbl">Pendientes</div></div>
+      <div class="stat-card"><div class="stat-val">${bs!==null?(bs*100).toFixed(2)+'%':'—'}</div><div class="stat-lbl">Brier Score</div></div>
+    </div>
+    ${calChart(h)}
+    <table class="hist-table">
+      <thead><tr><th>Fecha</th><th>Partido</th><th>Pick</th><th>Prob</th><th>Cuota</th><th>Resultado</th><th></th></tr></thead>
+      <tbody>${h.length?h.flatMap((r,ri)=>(r.picks||[]).map((p,pi)=>`
+        <tr>
+          <td>${r.date}</td><td style="font-size:.78rem">${p.match||'—'}</td><td>${p.pick}</td>
+          <td>${(p.p*100).toFixed(1)}%</td><td>${p.odds}</td>
+          <td>${r.result==='pending'?'<span style="color:var(--yellow)">Pendiente</span>':r.result==='hit'?'<span class="badge-hit">✓</span>':'<span class="badge-miss">✗</span>'}</td>
+          <td>${ri===0&&pi===0&&r.result==='pending'?`<button onclick="markR('${r.date}','hit')" style="background:var(--green);color:#fff;border:none;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.7rem;margin-right:3px">✓</button><button onclick="markR('${r.date}','miss')" style="background:var(--red);color:#fff;border:none;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.7rem">✗</button>`:''}
+          </td>
+        </tr>`)).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Sin historial</td></tr>'}
+      </tbody>
+    </table>`;
+}
+
+function brierScore(h){
+  const r=h.filter(x=>x.result!=='pending'&&x.picks);
+  if(!r.length)return null;
+  let s=0,n=0;
+  r.forEach(x=>x.picks.forEach(p=>{const o=x.result==='hit'?1:0;s+=(p.p-o)**2;n++;}));
+  return n?s/n:null;
+}
+
+function calChart(h){
+  const r=h.filter(x=>x.result!=='pending'&&x.picks);
+  if(!r.length)return'<div class="cal-chart-wrap"><p style="color:var(--muted);text-align:center;padding:20px">Sin datos de calibración aún</p></div>';
+  const bins=Array.from({length:5},(_,i)=>({min:i*.2,max:(i+1)*.2,tot:0,hit:0}));
+  r.forEach(x=>x.picks.forEach(p=>{
+    const o=x.result==='hit'?1:0;
+    const b=bins.find(b=>p.p>=b.min&&p.p<b.max)||bins[4];
+    b.tot++;b.hit+=o;
+  }));
+  return`<div class="cal-chart-wrap">
+    <div style="font-weight:700;margin-bottom:12px;color:var(--acc)">Curva de Calibración</div>
+    ${bins.map(b=>{const a=b.tot?b.hit/b.tot:0,exp=(b.min+b.max)/2;return`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:.8rem">
+      <span style="width:70px;color:var(--muted)">${Math.round(b.min*100)}–${Math.round(b.max*100)}%</span>
+      <div style="flex:1;height:16px;background:var(--s3);border-radius:4px;overflow:hidden;position:relative">
+        <div style="width:${a*100}%;height:100%;background:${ringColor(a)}"></div>
+        <div style="position:absolute;top:0;bottom:0;left:${exp*100}%;width:2px;background:rgba(255,255,255,.35)"></div>
+      </div>
+      <span style="width:55px;text-align:right">${b.tot?`${(a*100).toFixed(0)}% (${b.tot})`:'—'}</span>
+    </div>`;}).join('')}
+    <div style="font-size:.7rem;color:var(--muted);margin-top:8px">Línea blanca = probabilidad esperada · Izquierda = real</div>
+  </div>`;
+}
+
+window.markR=function(date,res){
+  const h=getHist();const r=h.find(x=>x.date===date);
+  if(r){r.result=res;try{localStorage.setItem(LS+'history',JSON.stringify(h));}catch(e){}renderRecord();}
+};
+
+/* ===== TABS ===== */
+function switchTab(t){
+  ['picks','combos','record'].forEach(id=>{
+    const el=document.getElementById('tab'+id.charAt(0).toUpperCase()+id.slice(1));
+    el.classList.toggle('hidden',id!==t);
+  });
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+}
+
+/* ===== PDF ===== */
+function exportPDF(){
+  const{jsPDF}=window.jspdf;
+  if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  doc.setFillColor(7,9,26);doc.rect(0,0,297,210,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(18);doc.setFont('helvetica','bold');
+  doc.text('FútbolIQ · Sandra Blanco',14,16);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);
+  doc.text(`${new Date().toLocaleString('es-ES')} · Dixon-Coles + ELO + Monte Carlo ${PRM.N.toLocaleString()} sim · v${PRM.VERSION}`,14,22);
+  const rows=STATE.picks.map((p,i)=>[`#${i+1}`,`${p.home} vs ${p.away}`,p.league,p.bestMkt.label,`${(p.bestMkt.p*100).toFixed(1)}%`,`${p.bestMkt.odds}`,`${(p.score*100).toFixed(0)}%`,`λH:${p.R.lh.toFixed(2)} λA:${p.R.la.toFixed(2)}`]);
+  doc.autoTable({startY:26,head:[['#','Partido','Liga','Pick','Prob.','Cuota','Score','λ']],body:rows,
+    styles:{fillColor:[15,23,41],textColor:[226,232,240],fontSize:9,lineColor:[30,45,74],lineWidth:.3},
+    headStyles:{fillColor:[79,142,255],textColor:[255,255,255],fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[13,18,37]},theme:'grid'});
+  if(STATE.combos.length){
+    let y=doc.lastAutoTable.finalY+10;
+    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(124,92,252);
+    doc.text('Combinados',14,y);y+=6;
+    STATE.combos.forEach(cb=>{
+      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);
+      doc.text(`${cb.name} · @${cb.oddsComb} · P.combo ${(cb.pComb*100).toFixed(1)}%`,14,y);y+=5;
+      cb.picks.forEach(pk=>{doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);doc.text(`  • ${pk.match}: ${pk.label} @${pk.odds} (${(pk.p*100).toFixed(1)}%)`,18,y);y+=4;});
+      y+=3;
+    });
+  }
+  doc.save(`futboliq-${STATE.date||'hoy'}.pdf`);
+}
+
+/* ===== AUTO-REFRESH ===== */
+function scheduleRefresh(){
+  const now=new Date();
+  const mad=new Date(now.toLocaleString('en-US',{timeZone:'Europe/Madrid'}));
+  const next=new Date(mad);next.setDate(next.getDate()+1);next.setHours(0,5,0,0);
+  setTimeout(boot,next-mad);
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>
