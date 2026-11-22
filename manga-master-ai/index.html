@@ -248,6 +248,23 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 #xpbar i{transition:width .5s cubic-bezier(.2,1.4,.4,1)!important}
 #mazMusicBtn.playing{background:var(--red)!important;color:#fff!important;animation:mazPulse .9s ease-in-out infinite alternate}
 @keyframes mazPulse{from{box-shadow:3px 3px 0 var(--ink)}to{box-shadow:3px 3px 0 var(--red),0 0 16px rgba(192,0,0,.55)}}
+/* ===== LÍNEA DE TIEMPO AMPLIADA ===== */
+.tl-entry{border:2px solid var(--line);border-left:4px solid var(--dec,var(--blue));border-radius:4px;overflow:hidden;margin-bottom:4px}
+.tl-entry>summary{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;background:var(--paper);flex-wrap:wrap;list-style:none;user-select:none}
+.tl-entry>summary::-webkit-details-marker{display:none}
+.tl-entry>summary::before{content:'▶';color:var(--dec,var(--blue));font-size:9px;flex-shrink:0;transition:transform .2s}
+.tl-entry[open]>summary::before{transform:rotate(90deg)}
+.tl-entry>summary:hover{background:var(--tone)}
+.tl-entry[open]>summary{background:var(--tone)}
+.tl-yr{font-family:var(--disp);font-size:13px;color:var(--dec,var(--blue));min-width:40px;flex-shrink:0}
+.tl-nm{font-weight:700;flex:1;font-size:14px;min-width:0}
+.tl-au{font-size:12px;color:var(--muted);flex-shrink:0}
+.tl-body{padding:12px 14px;border-top:1px solid var(--line)}
+.tl-pub{font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:6px}
+.tl-tec{background:var(--tone);border-left:3px solid var(--dec,var(--blue));padding:8px 10px;margin:8px 0;border-radius:0 4px 4px 0;font-size:13px}
+.tl-tec b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--dec,var(--blue));margin-bottom:4px}
+.tl-leg{font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.tl-leg b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -402,6 +419,170 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 <h3>Laboratorio: ¿qué pasó antes?</h3>
 <div class="panel tone" id="beforeGame"></div>
 <div class="box"><b class="t">A la manera de Tezuka</b>Tezuka trataba la página como si fuese una cámara de cine: planos generales para situar, primeros planos para emocionar y viñetas encadenadas para el movimiento. Prueba a contar una escena tuya con esos tres planos.</div>
+
+<div class="panel" style="margin-top:16px">
+  <h3 style="margin-top:0;font-family:var(--disp);font-size:clamp(18px,4vw,26px)">Línea de Tiempo Ampliada: Técnica y Legado</h3>
+  <p class="small" style="color:var(--muted);margin-top:4px">16 obras que transformaron el manga y el anime · 1952–1997 · Pulsa cada obra para expandir</p>
+  <div style="margin-top:12px">
+
+    <!-- 1950s — púrpura -->
+    <details class="tl-entry" style="--dec:#5a2d82">
+      <summary><span class="tl-yr">1952</span><span class="tl-nm">Astro Boy <i>(Tetsuwan Atom)</i></span><span class="tl-au">Osamu Tezuka</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Kobunsha → Kodansha · Weekly Shōnen · Manga shōnen</div>
+        <p style="font-size:13px;margin:0 0 8px">El primer robot con emociones humanas. Atom, un androide creado a imagen del hijo muerto de un científico, lucha por los derechos de los robots en un Japón futurista. Fundó el lenguaje visual del manga moderno.</p>
+        <div class="tl-tec"><b>Técnica</b>Lenguaje cinematográfico aplicado a la viñeta: planos generales → primeros planos → detalle, siguiendo los principios del montaje soviético. Creó el "estrella system" de personajes reciclados entre obras. Primer uso masivo de la viñeta asimétrica para transmitir dinamismo en acción.</div>
+        <div class="tl-leg"><b>Legado:</b> Fundó el manga moderno. El anime de 1963 estableció el modelo industrial de producción japonesa. Los robots Honda ASIMO rinden homenaje a su nombre. Inspiró a generaciones de mangakas incluyendo al propio Go Nagai.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#5a2d82">
+      <summary><span class="tl-yr">1953</span><span class="tl-nm">Princesa Caballero <i>(Ribon no Kishi)</i></span><span class="tl-au">Osamu Tezuka</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Nakayoshi · Kodansha · Manga shōjo pionero</div>
+        <p style="font-size:13px;margin:0 0 8px">Princess Sapphire nació con dos almas: la de un niño y la de una niña. Criada como príncipe para gobernar un reino que no acepta reinas, lucha enmascarada contra la injusticia en una Francia fantástica.</p>
+        <div class="tl-tec"><b>Técnica</b>Influencia directa de los dibujos animados Disney y la estética de la ópera de Takarazuka (teatro musical japonés de figuras andróginas). Creó el arquetipo visual del personaje androgino o <i>bishōnen</i> que dominaría el shōjo. Uso pionero del vestido como metáfora de identidad.</div>
+        <div class="tl-leg"><b>Legado:</b> Inventó el shōjo manga moderno. Sin Princesa Caballero no existirían La Rosa de Versalles, Sailor Moon ni prácticamente ninguna protagonista femenina del manga actual. Fue el primer manga que cruzó las fronteras de género shōnen/shōjo intencionadamente.</div>
+      </div>
+    </details>
+
+    <!-- 1960s — azul marino -->
+    <details class="tl-entry" style="--dec:#1b4a8f">
+      <summary><span class="tl-yr">1964</span><span class="tl-nm">Cyborg 009</span><span class="tl-au">Shotaro Ishinomori</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen King · Akita Shoten · Manga shōnen de acción</div>
+        <p style="font-size:13px;margin:0 0 8px">Nueve personas de distintas naciones son capturadas y convertidas en cyborgs por la organización terrorista Black Ghost. Juntos se rebelan y luchan por la paz de la humanidad que les robó la humanidad.</p>
+        <div class="tl-tec"><b>Técnica</b>Composición cinematográfica de acción con influencia del cómic americano. Uso pionero de páginas dobles de impacto máximo para los momentos de combate. Integración orgánica de las onomatopeyas como elemento visual, no solo textual. Fundó la narrativa de "equipo diverso".</div>
+        <div class="tl-leg"><b>Legado:</b> Creó el concepto del equipo de superhéroes multinacional en Japón, antes que Marvel desarrollara los X-Men multiétnicos. Influyó directamente en Saint Seiya y en el género sentai (Power Rangers). Chris Claremont admitió conocer la obra.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#1b4a8f">
+      <summary><span class="tl-yr">1969</span><span class="tl-nm">Doraemon</span><span class="tl-au">Fujiko F. Fujio</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Shogakukan · CoroCoro Comic (1977→) · Manga kodomo</div>
+        <p style="font-size:13px;margin:0 0 8px">Doraemon, un gato-robot del futuro enviado por el descendiente de Nobita, ayuda a un niño torpe y soñador con artilugios fantásticos extraídos de su bolsillo mágico cuatridimensional.</p>
+        <div class="tl-tec"><b>Técnica</b>Ritmo ultracompacto: historia completa en 10–12 páginas con arco narrativo completo (planteamiento, nudo, desenlace cómico). El "objeto cotidiano mágico" como dispositivo narrativo universal. Economía de líneas al máximo — expresividad con mínimos trazos.</div>
+        <div class="tl-leg"><b>Legado:</b> Obra más vendida en Japón (~100 millones de tomos). Embajador cultural oficial del Gobierno japonés. Referente de la infancia en toda Asia. Sus historias cortas influyeron en el formato <i>yonkoma</i> y en toda la narrativa episódica japonesa posterior.</div>
+      </div>
+    </details>
+
+    <!-- 1970s — rojo -->
+    <details class="tl-entry" style="--dec:#C00000">
+      <summary><span class="tl-yr">1972</span><span class="tl-nm">Mazinger Z</span><span class="tl-au">Go Nagai</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen Jump + Shōnen Magazine · Shueisha/Kodansha · Manga mecha</div>
+        <p style="font-size:13px;margin:0 0 8px">Koji Kabuto hereda de su abuelo el Mazinger Z — el primero en la historia en ser pilotado desde su interior — y lo usa para combatir al Dr. Hell y sus bestias mecánicas que amenazan al mundo.</p>
+        <div class="tl-tec"><b>Técnica</b>Splash pages de impacto total para los ataques especiales (Rayos Láser, Rocket Punch). Uso pionero y sistemático de las <i>speed lines</i> en mecha. Perspectivas picado/contrapicado extremas para enfatizar la diferencia de escala entre robot y humano.</div>
+        <div class="tl-leg"><b>Legado:</b> Inventó el género mecha. Generó el modelo global de merchandising de robots que transformó la industria del juguete. Fundó el universo de Super Robot Wars. Base genealógica de todo el anime mecha posterior incluyendo Gundam y Evangelion.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#C00000">
+      <summary><span class="tl-yr">1972</span><span class="tl-nm">La Rosa de Versalles <i>(Versailles no Bara)</i></span><span class="tl-au">Riyoko Ikeda</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Margaret · Shueisha · Manga shōjo histórico</div>
+        <p style="font-size:13px;margin:0 0 8px">Oscar François de Jarjayes, una mujer criada como hombre para ser comandante de la Guardia Real, sirve a María Antonieta en la corte de Versalles mientras la Revolución Francesa se avecina.</p>
+        <div class="tl-tec"><b>Técnica</b>Creó el lenguaje visual del shōjo moderno: fondos florales como expresión emocional en lugar de fondos arquitectónicos. Líneas fluidas de influencia Art Nouveau. Fundó el estándar <i>bishōnen</i> en shōjo — personajes andróginos de belleza extrema que encarnan ambigüedad de género.</div>
+        <div class="tl-leg"><b>Legado:</b> Adaptación teatral de Takarazuka desde 1974, superando los 10 millones de espectadores. Considerada la obra más influyente del manga shōjo de todos los tiempos. Base directa de Sailor Moon, Card Captor Sakura y prácticamente todo el shōjo de los 90s.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#C00000">
+      <summary><span class="tl-yr">1977</span><span class="tl-nm">Galaxy Express 999 <i>(Ginga Tetsudō Surī-Nain)</i></span><span class="tl-au">Leiji Matsumoto</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen King · Akita Shoten · Manga shōnen / space opera</div>
+        <p style="font-size:13px;margin:0 0 8px">Tetsuro Hoshino viaja en el tren espacial 999 junto a la misteriosa Maetel hacia el fin del universo para obtener un cuerpo mecánico inmortal, aprendiendo en cada planeta una lección sobre la vida.</p>
+        <div class="tl-tec"><b>Técnica</b>"Poesía espacial": silencios y páginas casi vacías para transmitir la vastedad del cosmos. Influencia del expresionismo alemán en los fondos de locomotoras y estaciones. Narración episódica filosófica — cada planeta es una metáfora existencial autónoma.</div>
+        <div class="tl-leg"><b>Legado:</b> Influyó profundamente en Hayao Miyazaki (El viaje de Chihiro tiene estructura de viaje iniciático similar). Fundó el sub-género <i>space opera melancólico</i> japonés. Hizo de la melancolía del viaje un estilo propio que resuena en obras como Vinland Saga.</div>
+      </div>
+    </details>
+
+    <!-- 1980s — verde -->
+    <details class="tl-entry" style="--dec:#1a6632">
+      <summary><span class="tl-yr">1979</span><span class="tl-nm">Mobile Suit Gundam <i>(Kidō Senshi Gandamu)</i></span><span class="tl-au">Yoshiyuki Tomino</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Monthly Gundam Ace · Kadokawa · Manga mecha / drama bélico</div>
+        <p style="font-size:13px;margin:0 0 8px">En el año Universal Century 0079, la Federación Terrestre combate a Zeon en una guerra espacial. Amuro Ray, un adolescente común, se convierte en piloto del prototipo Gundam casi por accidente.</p>
+        <div class="tl-tec"><b>Técnica</b>Vistas técnicas y militares de los mechas (perspectiva de ingeniería, no de épica heroica). Paleta desaturada y realista vs el colorido saturado de Mazinger. Narrativa coral multiperspectiva: antagonistas con motivaciones comprensibles, no simples villanos.</div>
+        <div class="tl-leg"><b>Legado:</b> Fundó el sub-género <i>Real Robot</i>. Las maquetas Gunpla son la mayor industria de modelos del mundo (~950 mil millones de yenes anuales). Influyó en todo el anime posterior y en la forma en que Occidente percibe la ciencia ficción japonesa.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#1a6632">
+      <summary><span class="tl-yr">1982</span><span class="tl-nm">Akira</span><span class="tl-au">Katsuhiro Otomo</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Young Magazine · Kodansha · Manga seinen / cyberpunk</div>
+        <p style="font-size:13px;margin:0 0 8px">Neo-Tokyo 2019, reconstruida sobre las ruinas de la explosión que provocó la Tercera Guerra Mundial. Tetsuo, miembro de una banda de motoristas, desarrolla poderes psíquicos incontrolables tras un accidente con una criatura de apariencia de anciano.</p>
+        <div class="tl-tec"><b>Técnica</b>Hasta 70 tonos de grises por página — la producción más cara del manga hasta entonces. Storyboard cinematográfico puro: cada viñeta diseñada como fotograma de película de autor. Efectos de movimiento de velocidad y distorsión que crearon un estándar visual para el cyberpunk.</div>
+        <div class="tl-leg"><b>Legado:</b> La película de 1988 rompió todos los moldes del anime para adultos. Influyó directamente en The Matrix (Wachowski), Darren Aronofsky, Christopher Nolan y prácticamente toda la ciencia ficción cyberpunk occidental posterior. Redefinió las posibilidades del manga como arte.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#1a6632">
+      <summary><span class="tl-yr">1984</span><span class="tl-nm">Dragon Ball</span><span class="tl-au">Akira Toriyama</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen Jump · Shueisha · Manga shōnen de acción</div>
+        <p style="font-size:13px;margin:0 0 8px">Son Goku, un niño de fuerza extraordinaria, busca las siete bolas del dragón que conceden cualquier deseo. Su aventura lo llevará a convertirse en el guerrero más poderoso del universo a través de décadas de batallas.</p>
+        <div class="tl-tec"><b>Técnica</b>Escalada gradual y sistemática del poder como motor narrativo (el <i>power creep</i> elevado a arte). Efectos de impacto radiales y explosivos de enorme claridad visual. Economía extrema de fondos para maximizar la velocidad de lectura en las secuencias de acción.</div>
+        <div class="tl-leg"><b>Legado:</b> La obra shōnen de mayor influencia global. Creó la plantilla del torneo de batalla como eje narrativo que domina el género: Naruto, Bleach, My Hero Academia, Demon Slayer. Vendió más de 300 millones de tomos. Referente cultural universal.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#1a6632">
+      <summary><span class="tl-yr">1986</span><span class="tl-nm">Saint Seiya <i>(Caballeros del Zodiaco)</i></span><span class="tl-au">Masami Kurumada</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen Jump · Shueisha · Manga shōnen / mitología</div>
+        <p style="font-size:13px;margin:0 0 8px">Los Santos de Atenea, guerreros jóvenes con armaduras de constelaciones, protegen a la diosa encarnada de los dioses que quieren exterminar a la humanidad en épicas batallas donde el límite es el Cosmos interior.</p>
+        <div class="tl-tec"><b>Técnica</b>Diseño de armaduras como joyas cinéticas en continua transformación. Primera visualización sistemática del poder interior como aura luminosa (<i>cosmos</i>) en el shōnen — antecedente directo del chakra de Naruto y del ki de Dragon Ball Z. Composición teatral de las batallas.</div>
+        <div class="tl-leg"><b>Legado:</b> Fenómeno masivo en España y Latinoamérica (TV desde 1988). Creó la fórmula "armadura + poder espiritual" que dominaría el shōnen de los 90s. Precursor directo de Naruto y Bleach en términos de poderes visualizados. Referente cultural de toda una generación española.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#1a6632">
+      <summary><span class="tl-yr">1989</span><span class="tl-nm">Ghost in the Shell <i>(Kōkaku Kidōtai)</i></span><span class="tl-au">Masamune Shirow</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Young Magazine · Kodansha · Manga seinen / cyberpunk filosófico</div>
+        <p style="font-size:13px;margin:0 0 8px">La Mayor Motoko Kusanagi, cyborg comandante de la Sección 9 de operaciones especiales, investiga el espionaje corporativo y los crímenes de hackers en el Japón cyberpunk del año 2029, cuestionando su propia humanidad.</p>
+        <div class="tl-tec"><b>Técnica</b>Notas al pie filosóficas densas que comentan la acción desde fuera del relato — narrador técnico-ensayístico. Diseño hiperrealista de cyborgs con detalle de ingeniería. Splash pages de altísima complejidad visual que requieren relectura para descifrar su información.</div>
+        <div class="tl-leg"><b>Legado:</b> La película de Mamoru Oshii (1995) influyó directamente en The Matrix — confirmado por las Wachowski. Redefinió la ciencia ficción japonesa y global. Referente filosófico fundamental sobre identidad, conciencia y humanidad en la era digital. Generó el concepto de <i>cyborg body politics</i>.</div>
+      </div>
+    </details>
+
+    <!-- 1990s — naranja -->
+    <details class="tl-entry" style="--dec:#b85c00">
+      <summary><span class="tl-yr">1991</span><span class="tl-nm">Sailor Moon <i>(Bishōjo Senshi Sērā Mūn)</i></span><span class="tl-au">Naoko Takeuchi</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Nakayoshi · Kodansha · Manga shōjo / magical girl</div>
+        <p style="font-size:13px;margin:0 0 8px">Usagi Tsukino, una adolescente torpe y romántica, descubre ser la reencarnación de la princesa lunar Serenity y la líder de las Sailor Senshi, guerreras planetarias que protegen la Tierra del mal.</p>
+        <div class="tl-tec"><b>Técnica</b>Diseño de personajes con estética <i>magical girl</i> llevada al extremo de la sofisticación. Fundó la fórmula de las transformaciones secuenciadas como ritual visual autónomo (escena de transformación = pausa dramática en sí misma). Uso del blanco puro como lenguaje emocional de pureza y sacrificio.</div>
+        <div class="tl-leg"><b>Legado:</b> Hizo global el género magical girl. Referente cultural LGBTQ+ pionero (Sailors Urano/Neptuno, 1994). Primera heroína shōjo que alcanzó la misma popularidad que los héroes shōnen masculinos. Inspiró Precure, Steven Universe, She-Ra y decenas de series occidentales.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#b85c00">
+      <summary><span class="tl-yr">1995</span><span class="tl-nm">Neon Genesis Evangelion <i>(Shin Seiki Evangerion)</i></span><span class="tl-au">Yoshiyuki Sadamoto</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Monthly Shōnen Ace · Kadokawa · Manga mecha / psicológico</div>
+        <p style="font-size:13px;margin:0 0 8px">Shinji Ikari, un adolescente atormentado por el abandono paterno, es forzado a pilotar el EVA-01 — un cyborg orgánico de proporciones descomunales — para combatir a los Ángeles y sus propios demonios internos.</p>
+        <div class="tl-tec"><b>Técnica</b>Fusión radical del lenguaje mecha con el monólogo interior psicoanalítico. Simbolismo judeo-cristiano como capa semiótica visual (Cruz de luz, Lanza de Longinos, Árbol de la Vida). Silencios de páginas en blanco y cambios abruptos de ritmo narrativo como herramienta expresiva.</div>
+        <div class="tl-leg"><b>Legado:</b> Deconstruyó el género mecha y lo reconstruyó desde la psicología freudiana-jungiana. Referente cultural global en filosofía, religión y psicoanálisis pop. La franquicia más rentable del anime (~150 mil millones de yenes). Inauguró el anime "postmoderno" que cuestiona sus propios tropos.</div>
+      </div>
+    </details>
+
+    <details class="tl-entry" style="--dec:#b85c00">
+      <summary><span class="tl-yr">1997</span><span class="tl-nm">One Piece</span><span class="tl-au">Eiichiro Oda</span></summary>
+      <div class="tl-body">
+        <div class="tl-pub">Weekly Shōnen Jump · Shueisha · Manga shōnen de aventuras</div>
+        <p style="font-size:13px;margin:0 0 8px">Monkey D. Luffy y su tripulación, los Piratas de Sombrero de Paja, navegan los Siete Mares buscando el One Piece —el mayor tesoro de la historia— para que Luffy se convierta en el Rey de los Piratas.</p>
+        <div class="tl-tec"><b>Técnica</b>Character design único e inconfundible (cuerpos elásticos, diseños grotescos pero memorables). Narrativa de "recompensa diferida": las revelaciones emocionales se espacian cuidadosamente durante años de publicación. Construcción de un <i>lore</i> enciclopédico con coherencia interna absolutamente rigurosa.</div>
+        <div class="tl-leg"><b>Legado:</b> La obra más vendida de la historia del manga (~516 millones de tomos en 2023). Convirtió el shōnen en un fenómeno literario de largo aliento medible en décadas. Establece el récord de mayor tirada de manga semanal. Demuestra que la constancia narrativa puede superar a la innovación técnica.</div>
+      </div>
+    </details>
+
+  </div>
+</div>
+
 <div class="mini" data-tag="hi"></div>
 </section>
 
@@ -1711,13 +1892,21 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
 
   startAnim();
 
-  const close=()=>{ov.style.display="none";stopAnim();};
+  const close=()=>{
+    ov.style.display="none";stopAnim();
+    // Detener música sintetizada al entrar a la página
+    if(typeof _mazPlay!=='undefined'&&_mazPlay&&typeof toggleMazMusicAll==='function'){toggleMazMusicAll();}
+  };
   const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
   if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
-  // Desmutar en el primer toque — sin botón de mute
+  // Desmutar + iniciar música sintetizada en el primer toque
   const unmute=()=>{
     const v=document.getElementById('vid3');
     if(v){v.muted=false;v.play().catch(()=>{});}
+    // Arrancar música sintetizada con el primer toque
+    if(typeof _mazPlay!=='undefined'&&!_mazPlay&&typeof _mazSeq==='function'){
+      _mazPlay=true;_mazSeq();if(typeof _mazUpdateBtns==='function')_mazUpdateBtns(true);
+    }
     const note=document.getElementById('introNote');
     if(note)note.textContent='♪ Mazinger Z — Go Nagai (1972)';
     ov.removeEventListener('click',unmute);
