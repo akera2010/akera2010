@@ -265,11 +265,10 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <div id="introSub">de Sarah Hernández · マンガ・マスター</div>
     <div id="introBtns">
       <button class="btn red" id="introEnter">Entrar al dojo →</button>
-      <button class="btn sm" id="introMute">🔇 Activar sonido</button>
     </div>
   </div>
   <button class="btn sm" id="introSkip" style="position:absolute;top:14px;right:14px;z-index:10">Saltar intro ×</button>
-  <div id="introNote">Homenaje a Mazinger Z de Go Nagai (1972). Animación interactiva — sin descargas externas.</div>
+  <div id="introNote">👆 Toca la pantalla para escuchar · Homenaje a Mazinger Z de Go Nagai (1972)</div>
 </div>
 
 <!-- ============ TOP BAR ============ -->
@@ -1715,8 +1714,17 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
   const close=()=>{ov.style.display="none";stopAnim();};
   const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
   if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
-  const muteBtn=document.getElementById("introMute");
-  if(muteBtn)muteBtn.onclick=()=>{const v=document.getElementById('vid3');if(v){v.muted=false;v.play().catch(()=>{})}muteBtn.textContent='🔊 Sonido activo';muteBtn.classList.add('on');};
+  // Desmutar en el primer toque — sin botón de mute
+  const unmute=()=>{
+    const v=document.getElementById('vid3');
+    if(v){v.muted=false;v.play().catch(()=>{});}
+    const note=document.getElementById('introNote');
+    if(note)note.textContent='♪ Mazinger Z — Go Nagai (1972)';
+    ov.removeEventListener('click',unmute);
+    ov.removeEventListener('touchstart',unmute);
+  };
+  ov.addEventListener('click',unmute,{once:true});
+  ov.addEventListener('touchstart',unmute,{once:true,passive:true});
   const replay=document.getElementById("replay");
   if(replay){replay.onclick=()=>{ov.style.display="flex";ov.classList.remove("go");startAnim();};}
 })();
