@@ -4,7 +4,7 @@
 const fs = require('fs');
 
 const PRM = {
-  VERSION: '5.0', N: 100000, UMBRAL: 0.80, TOP: 8,
+  VERSION: '5.0', N: 100000, UMBRAL: 0.60, TOP: 8,
   MIN_P: 5, MIN_ODDS: 1.10,
 };
 
