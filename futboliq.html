@@ -707,9 +707,8 @@ function renderRecord(){
     </div>
     ${calChart(h)}
     <div style="display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap;align-items:center">
-      <span style="font-size:.78rem;color:var(--muted);flex:1">El historial se guarda en este dispositivo. Exporta el JSON y luego impórtalo en otros terminales para consolidar.</span>
-      <button onclick="exportHist()" style="background:var(--s2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:7px;cursor:pointer;font-size:.78rem">⬇ Exportar JSON</button>
-      <label style="background:var(--s2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:7px;cursor:pointer;font-size:.78rem">⬆ Importar JSON<input type="file" accept=".json" style="display:none" onchange="importHist(event)"></label>
+      <span style="font-size:.78rem;color:var(--muted);flex:1">Historial de precisión guardado en este dispositivo.</span>
+      <button onclick="exportHistPDF()" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600">⬇ PDF Historial</button>
     </div>
     <table class="hist-table">
       <thead><tr><th>Fecha</th><th>Partido</th><th>Pick</th><th>Prob</th><th>Cuota</th><th>Resultado</th><th></th></tr></thead>
@@ -761,27 +760,52 @@ window.markR=function(date,res){
   const h=getHist();const r=h.find(x=>x.date===date);
   if(r){r.result=res;try{localStorage.setItem(LS+'history',JSON.stringify(h));}catch(e){}renderRecord();}
 };
-window.exportHist=function(){
-  const blob=new Blob([JSON.stringify(getHist(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`futboliq-historial-${new Date().toISOString().slice(0,10)}.json`;a.click();
-};
-window.importHist=function(e){
-  const file=e.target.files[0];if(!file)return;
-  const rdr=new FileReader();
-  rdr.onload=ev=>{
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!Array.isArray(data))throw new Error('formato inválido');
-      const existing=getHist();
-      const merged=[...data];
-      existing.forEach(r=>{if(!merged.find(m=>m.date===r.date))merged.push(r);});
-      merged.sort((a,b)=>b.date.localeCompare(a.date));
-      localStorage.setItem(LS+'history',JSON.stringify(merged.slice(0,60)));
-      renderRecord();alert(`Historial importado: ${merged.length} entradas`);
-    }catch(err){alert('Error al importar: '+err.message);}
-  };
-  rdr.readAsText(file);
+window.exportHistPDF=function(){
+  const{jsPDF}=window.jspdf;if(!jsPDF)return;
+  const h=getHist();if(!h.length){alert('Sin historial todavía');return;}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297,H=210,ML=14,MR=14;
+  doc.setFillColor(237,242,248);doc.rect(0,0,W,32,'F');
+  doc.setFillColor(192,0,0);doc.rect(0,32,W,1.2,'F');
+  doc.setFontSize(20);doc.setFont('helvetica','bold');
+  doc.setTextColor(15,23,42);doc.text('Futbol',ML,16);
+  const wF=doc.getTextWidth('Futbol');
+  doc.setTextColor(192,0,0);doc.text('IQ',ML+wF,16);
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Historial de Precisión · Por Data Science Sandra Blanco',ML,23);
+  const hits=h.filter(x=>x.result==='hit').length;
+  const misses=h.filter(x=>x.result==='miss').length;
+  const pending=h.filter(x=>x.result==='pending').length;
+  const acc=hits+misses?Math.round(hits/(hits+misses)*100)+'%':'—';
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(192,0,0);
+  doc.text(`${h.length} días · ✓ ${hits} · ✗ ${misses} · ⏳ ${pending} · Precisión ${acc}`,W-MR,16,{align:'right'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text(new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),W-MR,23,{align:'right'});
+  const rows=h.flatMap(r=>(r.picks||[]).map(p=>[r.date,p.match||'—',p.pick,`${(p.p*100).toFixed(1)}%`,`${p.odds}`,r.result==='hit'?'✓ Acierto':r.result==='miss'?'✗ Fallo':'Pendiente']));
+  doc.autoTable({
+    startY:36,
+    head:[['Fecha','Partido','Pick','Prob','Cuota','Resultado']],
+    body:rows,
+    styles:{fillColor:[255,255,255],textColor:[15,23,42],fontSize:8,lineColor:[148,163,184],lineWidth:.25,cellPadding:2.5},
+    headStyles:{fillColor:[29,78,216],textColor:[255,255,255],fontStyle:'bold',fontSize:7.5,halign:'center'},
+    alternateRowStyles:{fillColor:[237,242,248]},
+    columnStyles:{0:{cellWidth:22,halign:'center'},1:{cellWidth:70},2:{cellWidth:40},3:{cellWidth:16,halign:'center'},4:{cellWidth:16,halign:'center'},5:{cellWidth:24,halign:'center'}},
+    theme:'grid',margin:{left:ML,right:MR},
+    didDrawCell:d=>{
+      if(d.column.index===5&&d.section==='body'){
+        const v=d.cell.raw;
+        if(v.startsWith('✓'))d.doc.setTextColor(21,128,61);
+        else if(v.startsWith('✗'))d.doc.setTextColor(185,28,28);
+        else d.doc.setTextColor(161,98,7);
+      }
+    },
+  });
+  doc.setDrawColor(148,163,184);doc.setLineWidth(.4);doc.line(ML,H-10,W-MR,H-10);
+  doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco  |  akera2011@protonmail.com',ML,H-5);
+  doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Análisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100.000 sim',W-MR,H-5,{align:'right'});
+  doc.save(`futboliq-historial-${new Date().toISOString().slice(0,10)}.pdf`);
 };
 
 /* ===== TABS ===== */
