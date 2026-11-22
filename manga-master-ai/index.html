@@ -322,6 +322,124 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 .tl-tec b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--dec,var(--blue));margin-bottom:4px}
 .tl-leg{font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
 .tl-leg b{color:var(--ink)}
+
+/* ===== MANGA INTERACTIVA HOME ===== */
+#mangaHome{background:var(--paper)}
+.mh-banner{background:#0d2a5c;padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:4px solid #C00000}
+.mh-maz-svg{width:60px;height:88px;flex-shrink:0}
+.mh-titles{flex:1}
+.mh-t1{font-family:var(--disp);font-size:34px;color:#fff;line-height:.9;text-shadow:4px 4px 0 #C00000}
+.mh-t2{font-family:var(--disp);font-size:11px;color:#cfe0ff;letter-spacing:.12em;margin-top:5px}
+.mh-xp{background:var(--tone);border-top:3px solid var(--ink);padding:12px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.manga-panels{display:grid;grid-template-columns:repeat(3,1fr);border-left:4px solid var(--ink);border-top:4px solid var(--ink)}
+@media(max-width:620px){.manga-panels{grid-template-columns:1fr 1fr}}
+.mp{border-right:4px solid var(--ink);border-bottom:4px solid var(--ink);padding:14px 12px;cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:110px;background:var(--paper);transition:background .13s,transform .1s}
+.mp:hover{background:var(--tone);z-index:1;transform:scale(1.02)}
+.mp:active{transform:scale(.97)}
+.mp-span2{grid-column:span 2}
+@media(max-width:620px){.mp-span2{grid-column:span 1}}
+.mp-kj{font-family:var(--disp);font-size:52px;color:rgba(13,42,92,.07);position:absolute;right:6px;bottom:-4px;line-height:1;pointer-events:none}
+.mp-tag{font-family:var(--disp);font-size:10px;letter-spacing:.07em;color:var(--muted);border:1px solid var(--line);padding:2px 6px;align-self:flex-start;margin-bottom:6px}
+.mp-ck{font-family:var(--disp);font-size:40px;color:var(--ink);line-height:1;margin-bottom:3px}
+.mp-ct{font-family:var(--disp);font-size:15px;color:var(--ink);line-height:1.2;margin-bottom:3px}
+.mp-cd{font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+.mp.red{background:#fff0f0}.mp.red:hover{background:#ffe4e4}
+.mp.red .mp-ck{color:#C00000}.mp.red .mp-tag{color:#C00000;border-color:#C00000}
+.mp.blue .mp-ck{color:var(--blue)}.mp.blue .mp-tag{color:var(--blue);border-color:var(--blue)}
+.mp.gold .mp-ck{color:#8a6200}.mp.gold .mp-tag{color:#8a6200;border-color:#8a6200}
+.mp.purple .mp-ck{color:#5a2d82}.mp.purple .mp-tag{color:#5a2d82;border-color:#5a2d82}
+.mp.green .mp-ck{color:#1a6632}.mp.green .mp-tag{color:#1a6632;border-color:#1a6632}
+.mp.dark{background:#0d2a5c}.mp.dark:hover{background:#1b4a8f}
+.mp.dark .mp-ck{color:#C00000}.mp.dark .mp-tag{color:#cfe0ff;border-color:#2f63b0}.mp.dark .mp-ct{color:#fff}.mp.dark .mp-cd{color:#8899bb}.mp.dark .mp-kj{color:rgba(255,255,255,.05)}
+
+/* ===== BACK TO HOME NAV ===== */
+.st-back{padding:8px 16px;background:var(--ink);display:flex;align-items:center;gap:8px;border-bottom:3px solid var(--red);position:sticky;top:0;z-index:10}
+.st-back button{background:none;border:none;color:#cfe0ff;font-family:var(--disp);font-size:12px;cursor:pointer;letter-spacing:.08em;padding:4px 10px;border:1px solid #2f63b0;border-radius:2px}
+.st-back button:hover{background:#C00000;border-color:#C00000;color:#fff}
+.st-back .st-back-title{font-family:var(--disp);font-size:12px;color:#8899bb;letter-spacing:.06em}
+
+/* ===== BATALLA MAZINGER ===== */
+#mazBattle{background:#050a1a;border:3px solid #C00000;box-shadow:5px 5px 0 #C00000}
+.maz-field{display:flex;justify-content:space-around;align-items:flex-end;padding:16px 8px;min-height:170px;background:radial-gradient(ellipse at 50% 100%,rgba(192,0,0,.12) 0%,transparent 70%);position:relative}
+.maz-unit{text-align:center;min-width:100px}
+.maz-unit svg{width:70px;height:105px;display:block;margin:0 auto 6px;filter:drop-shadow(0 0 4px currentColor)}
+.maz-name{font-family:var(--disp);font-size:10px;color:#cfe0ff;letter-spacing:.08em;margin-bottom:4px}
+.maz-hp-wrap{background:#1a2340;border:1px solid #2a3a60;border-radius:2px;width:90px;height:10px;overflow:hidden;margin:0 auto}
+.maz-hp-bar{height:100%;background:linear-gradient(90deg,#C00000,#ff6644);transition:width .4s;border-radius:2px}
+.maz-hp-bar.low{background:#8a0000}
+.maz-hp-bar.enemy{background:linear-gradient(90deg,#1b4a8f,#4a90d9)}
+.maz-hp-num{font-family:var(--disp);font-size:9px;color:#cfe0ff;text-align:center;margin-top:2px}
+.maz-atks{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;background:#0a1428}
+.atk-btn{background:#0d2a5c;color:#cfe0ff;border:1px solid #2f63b0;padding:9px 8px;cursor:pointer;font-family:var(--disp);font-size:11px;text-align:left;border-radius:2px;transition:background .12s,border-color .12s;line-height:1.4}
+.atk-btn:hover:not(:disabled){background:#1b4a8f;border-color:#C00000;color:#fff}
+.atk-btn:disabled{opacity:.35;cursor:not-allowed}
+.atk-dmg{display:block;font-size:9px;color:#8899bb;font-family:var(--body);margin-top:1px}
+.maz-log{background:#020810;border-top:1px solid #1a2a4a;padding:8px 10px;min-height:56px;font-size:11.5px;font-family:var(--body);color:#8ca8d0;line-height:1.6;max-height:90px;overflow-y:auto}
+.maz-log .lhit{color:#ff7755;font-weight:700}
+.maz-log .lenemy{color:#4a90d9}
+.maz-log .lwin{color:#ffd700;font-family:var(--disp)}
+.maz-log .lloose{color:#C00000;font-family:var(--disp)}
+.battle-result{padding:16px;text-align:center;display:none;background:#0d2a5c;border-top:2px solid #C00000}
+.battle-result.show{display:block}
+.battle-result h3{font-family:var(--disp);font-size:26px;margin:0 0 8px}
+.battle-result.victory h3{color:#ffd700;text-shadow:0 0 16px #ffd700}
+.battle-result.defeat h3{color:#C00000}
+.battle-stage{background:#0d1f3a;border:1px solid #2f63b0;padding:8px 12px;font-family:var(--disp);font-size:11px;color:#cfe0ff;text-align:center;letter-spacing:.08em}
+@keyframes mazshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.shake{animation:mazshake .28s}
+
+/* ===== FLASHCARDS SRS ===== */
+#fcWrap{perspective:900px;min-height:200px;display:flex;align-items:center;justify-content:center}
+.fc-card{width:100%;max-width:480px;height:195px;cursor:pointer;user-select:none;position:relative}
+.fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:16px;text-align:center}
+.fc-back{transform:rotateY(180deg);background:var(--tone)}
+.fc-front{background:var(--paper)}
+.fc-jp{font-family:var(--disp);font-size:48px;color:var(--red);line-height:1;margin-bottom:6px}
+.fc-romaji{font-size:13px;color:var(--muted);font-style:italic}
+.fc-es{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.fc-desc{font-size:12px;color:var(--muted);line-height:1.5;max-width:380px}
+.fc-hint{font-size:10px;color:var(--muted);margin-top:6px;font-style:italic}
+.srs-row{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.srs-btn{padding:9px 18px;border:2px solid;font-family:var(--disp);font-size:12px;cursor:pointer;border-radius:2px;transition:background .12s;background:transparent}
+.srs-btn.easy{border-color:#1a6632;color:#1a6632}.srs-btn.easy:hover{background:#1a6632;color:#fff}
+.srs-btn.ok{border-color:var(--blue);color:var(--blue)}.srs-btn.ok:hover{background:var(--blue);color:#fff}
+.srs-btn.hard{border-color:var(--red);color:var(--red)}.srs-btn.hard:hover{background:var(--red);color:#fff}
+.fc-stats{display:flex;gap:8px;padding:8px 0;font-size:12px;font-family:var(--disp);flex-wrap:wrap}
+.fc-stat{padding:4px 10px;border:1px solid var(--line);border-radius:2px;text-align:center;min-width:70px}
+.fc-stat b{display:block;font-size:20px;color:var(--red)}
+.fc-stat span{color:var(--muted);font-size:10px}
+.fc-ctr{font-family:var(--disp);font-size:12px;color:var(--muted);text-align:center;margin:4px 0}
+
+/* ===== RACHAS Y SELLOS ===== */
+.streak-card{background:linear-gradient(135deg,#0d2a5c,#1b4a8f);border:3px solid #C00000;box-shadow:5px 5px 0 #C00000;padding:18px;text-align:center;margin-bottom:14px}
+.streak-num{font-family:var(--disp);font-size:64px;color:#ffd700;line-height:1;text-shadow:0 0 20px #ffd70080}
+.streak-label{font-family:var(--disp);font-size:12px;color:#cfe0ff;margin-top:4px;letter-spacing:.1em}
+.sellos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.sello{border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:10px 8px;text-align:center;background:var(--paper);transition:transform .13s;cursor:default;position:relative}
+.sello:hover{transform:scale(1.04)}
+.sello.locked{opacity:.28;filter:grayscale(1)}
+.sello .s-emo{font-size:28px;line-height:1;margin-bottom:4px;display:block}
+.sello .s-kj{font-family:var(--disp);font-size:20px;color:var(--red);line-height:1;margin-bottom:3px}
+.sello .s-name{font-family:var(--disp);font-size:10px;color:var(--ink);line-height:1.3}
+.sello .s-desc{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.4}
+.sello.unlocked{background:linear-gradient(135deg,var(--paper),var(--tone));border-color:var(--red)}
+.sello.unlocked .s-name{color:var(--red)}
+.sello .s-new{position:absolute;top:-4px;right:-4px;background:#C00000;color:#fff;font-family:var(--disp);font-size:9px;padding:1px 5px;letter-spacing:.06em}
+
+/* ===== KISHŌTENKETSU LAB ===== */
+.kst-wrap{display:grid;grid-template-columns:repeat(4,1fr);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);overflow:hidden}
+@media(max-width:580px){.kst-wrap{grid-template-columns:1fr 1fr}}
+.kst-p{border-right:2px solid var(--ink);padding:12px 10px;min-height:150px;display:flex;flex-direction:column;background:var(--paper)}
+.kst-p:last-child{border-right:none}
+@media(max-width:580px){.kst-p:nth-child(2n){border-right:none}.kst-p:nth-child(1),.kst-p:nth-child(2){border-bottom:2px solid var(--ink)}}
+.kst-hdr{font-family:var(--disp);font-size:24px;color:var(--red);line-height:1;margin-bottom:1px}
+.kst-sub{font-family:var(--disp);font-size:9px;color:var(--muted);margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
+.kst-ta{flex:1;width:100%;border:1px solid var(--line);padding:7px;font-family:var(--body);font-size:12px;resize:vertical;background:var(--tone);color:var(--ink);min-height:70px}
+.kst-hint{font-size:10px;color:var(--muted);margin-top:5px;font-style:italic;line-height:1.4}
+.kst-ex{background:var(--tone);border-left:4px solid var(--red);padding:8px 10px;margin-bottom:14px;font-size:12.5px}
+.kst-ex b{display:block;font-size:9px;color:var(--red);font-family:var(--disp);letter-spacing:.08em;margin-bottom:3px}
 </style>
 </head>
 <body>
@@ -385,53 +503,165 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 
 <!-- 0 — INICIO HUB -->
 <section class="st" data-id="0" data-t="Inicio" data-k="門">
-<div id="homeHub">
-  <div class="hub-hero">
-    <div class="hub-title">MANGA<br>MASTER</div>
-    <div class="hub-sub">para Noa Bello · de Sarah Hernández · マンガ・マスター</div>
+<div id="mangaHome">
+
+  <!-- PORTADA MANGA MAZINGER Z — panel grande con speedlines -->
+  <div style="position:relative;overflow:hidden;border-bottom:5px solid #C00000;background:repeating-conic-gradient(from 0deg at 38% 60%,transparent 0deg,transparent 2.5deg,rgba(255,255,255,.07) 2.5deg,rgba(255,255,255,.07) 3.2deg) #040e24;min-height:260px;display:flex;align-items:stretch">
+    <!-- Faja roja derecha (manga color page accent) -->
+    <div style="position:absolute;top:0;right:0;width:5px;height:100%;background:#C00000"></div>
+    <!-- Mazinger Z silhouette grande -->
+    <svg style="width:160px;height:230px;flex-shrink:0;align-self:flex-end;padding:0 0 0 12px;filter:drop-shadow(0 0 12px rgba(192,0,0,.7))" viewBox="-80 -115 160 225">
+      <!-- Body glow aura -->
+      <ellipse cx="0" cy="20" rx="50" ry="80" fill="rgba(27,74,143,.25)"/>
+      <!-- Legs -->
+      <rect x="-20" y="55" width="18" height="55" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <rect x="2" y="55" width="18" height="55" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <!-- Feet -->
+      <rect x="-24" y="100" width="22" height="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <rect x="2" y="100" width="22" height="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <!-- Torso -->
+      <polygon points="-38,-10 38,-10 32,55 -32,55" fill="#0d2a5c" stroke="#fff" stroke-width="1.5"/>
+      <!-- Chest orb -->
+      <circle cx="0" cy="22" r="15" fill="#C00000" stroke="#fff" stroke-width="2"/>
+      <circle cx="0" cy="22" r="8" fill="rgba(255,100,80,.8)"/>
+      <!-- Arms -->
+      <rect x="-58" y="-5" width="20" height="52" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <rect x="38" y="-5" width="20" height="52" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
+      <!-- Fists — Rocket Punch pose (right arm slightly extended) -->
+      <rect x="-64" y="42" width="26" height="22" fill="#0d2a5c" stroke="#fff" stroke-width="1.2"/>
+      <rect x="40" y="38" width="28" height="24" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
+      <!-- Shoulders -->
+      <circle cx="-48" cy="-6" r="17" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="48" cy="-6" r="17" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
+      <!-- Head -->
+      <rect x="-24" y="-68" width="48" height="56" rx="8" fill="#0d2a5c" stroke="#fff" stroke-width="1.5"/>
+      <!-- Eyes -->
+      <rect x="-18" y="-58" width="13" height="11" fill="#C00000"/>
+      <rect x="5" y="-58" width="13" height="11" fill="#C00000"/>
+      <!-- Eye glow -->
+      <rect x="-16" y="-56" width="9" height="7" fill="rgba(255,180,160,.8)"/>
+      <rect x="7" y="-56" width="9" height="7" fill="rgba(255,180,160,.8)"/>
+      <!-- Horn -->
+      <polygon points="0,-84 -7,-68 7,-68" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
+      <!-- Pilder dome -->
+      <ellipse cx="0" cy="-92" rx="12" ry="8" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
+      <!-- Action lines from fist -->
+      <line x1="70" y1="45" x2="90" y2="38" stroke="#C00000" stroke-width="2.5"/>
+      <line x1="72" y1="52" x2="95" y2="52" stroke="#C00000" stroke-width="1.8"/>
+      <line x1="70" y1="59" x2="90" y2="66" stroke="#C00000" stroke-width="1.5"/>
+    </svg>
+    <!-- Texto de portada -->
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 20px 16px 12px">
+      <div style="font-family:var(--disp);font-size:13px;color:#C00000;letter-spacing:.15em;margin-bottom:4px;text-transform:uppercase">Go Nagai · 1972</div>
+      <div style="font-family:var(--disp);font-size:40px;color:#fff;line-height:.85;text-shadow:4px 4px 0 #C00000,8px 8px 0 rgba(192,0,0,.3);margin-bottom:8px">マジンガーZ</div>
+      <div style="font-family:var(--disp);font-size:22px;color:#cfe0ff;line-height:1;text-shadow:2px 2px 0 rgba(0,0,0,.8);margin-bottom:10px">MANGA<br>MASTER</div>
+      <div style="font-family:var(--disp);font-size:9px;color:#8899bb;letter-spacing:.12em;line-height:1.6">para Noa Bello<br>de Sarah Hernández</div>
+      <div style="margin-top:12px;font-family:var(--disp);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.1em;animation:pulse 2s infinite">↓ PULSA UN PANEL ↓</div>
+    </div>
+    <!-- Número de volumen manga-style -->
+    <div style="position:absolute;top:0;left:0;background:#C00000;padding:4px 10px;font-family:var(--disp);font-size:10px;color:#fff;letter-spacing:.12em">VOL.1 · 30 ESTACIONES</div>
   </div>
-  <div class="hub-grid">
-    <div class="hub-card" onclick="location.hash='#s1'">
-      <span class="hub-tag">Est. 1–5</span>
-      <span class="hub-ck">初</span>
-      <span class="hub-ct">Nivel Aprendiz</span>
-      <span class="hub-cd">¿Manga o anime? Historia, públicos, géneros y herramientas. Empieza aquí.</span>
+
+  <!-- MANGA PANELS (12 estaciones navegables) -->
+  <div class="manga-panels">
+    <!-- Fila 1 -->
+    <div class="mp mp-span2" onclick="location.hash='#s1'" title="Nivel Aprendiz">
+      <span class="mp-tag">Est. 1–5</span>
+      <span class="mp-ck">初</span>
+      <span class="mp-ct">Nivel Aprendiz</span>
+      <span class="mp-cd">¿Manga o anime? Historia, públicos, géneros y herramientas básicas de dibujo.</span>
+      <span class="mp-kj">初</span>
     </div>
-    <div class="hub-card purple" onclick="location.hash='#s6'">
-      <span class="hub-tag">Est. 6–12</span>
-      <span class="hub-ck">中</span>
-      <span class="hub-ct">Nivel Medio</span>
-      <span class="hub-cd">Técnicas de dibujo, hiperrealismo, rostro, viñetas, animación y maestros.</span>
+    <div class="mp purple" onclick="location.hash='#s11'" title="Mesa de Dibujo">
+      <span class="mp-tag">Est. 11</span>
+      <span class="mp-ck">描</span>
+      <span class="mp-ct">Mesa de Dibujo</span>
+      <span class="mp-cd">Canvas de dibujo con herramientas y guías de perspectiva.</span>
+      <span class="mp-kj">描</span>
     </div>
-    <div class="hub-card red" onclick="location.hash='#s16'">
-      <span class="hub-tag">Est. 16–20</span>
-      <span class="hub-ck">上</span>
-      <span class="hub-ct">Nivel Avanzado</span>
-      <span class="hub-cd">Entrenador SRS, examen final, dojo hiperrealista y competencias semanales.</span>
+    <!-- Fila 2 -->
+    <div class="mp blue" onclick="location.hash='#s6'" title="Nivel Medio">
+      <span class="mp-tag">Est. 6–12</span>
+      <span class="mp-ck">中</span>
+      <span class="mp-ct">Nivel Medio</span>
+      <span class="mp-cd">Técnicas, hiperrealismo, rostros, viñetas, animación y grandes maestros.</span>
+      <span class="mp-kj">中</span>
     </div>
-    <div class="hub-card dark" onclick="location.hash='#s25'">
-      <span class="hub-tag">Est. 25</span>
-      <span class="hub-ck">Z</span>
-      <span class="hub-ct">Mazinger Z</span>
-      <span class="hub-cd">La estación sagrada. Vídeos, música, legado y la revolución mecha de Go Nagai.</span>
+    <div class="mp red" onclick="location.hash='#s16'" title="Nivel Avanzado">
+      <span class="mp-tag">Est. 16–20</span>
+      <span class="mp-ck">上</span>
+      <span class="mp-ct">Nivel Avanzado</span>
+      <span class="mp-cd">Entrenador SRS, examen final, dojo y competencias semanales.</span>
+      <span class="mp-kj">上</span>
     </div>
-    <div class="hub-card green" onclick="location.hash='#s15'">
-      <span class="hub-tag">Est. 15</span>
-      <span class="hub-ck">館</span>
-      <span class="hub-ct">Museos y Festivales</span>
-      <span class="hub-cd">Visitas virtuales gratuitas, museos de Doraemon, Ghibli y grandes salones.</span>
+    <div class="mp dark" onclick="location.hash='#s25'" title="Mazinger Z">
+      <span class="mp-tag">Est. 25</span>
+      <span class="mp-ck">Z</span>
+      <span class="mp-ct">Mazinger Z</span>
+      <span class="mp-cd">La estación sagrada. Vídeos, música y legado del mecha.</span>
+      <span class="mp-kj">Z</span>
     </div>
-    <div class="hub-card gold" onclick="location.hash='#s26'">
-      <span class="hub-tag">Est. 26</span>
-      <span class="hub-ck">賞</span>
-      <span class="hub-ct">Concursos</span>
-      <span class="hub-cd">8 concursos con proyección profesional: Norma, Manga Barcelona, Japón y más.</span>
+    <!-- Fila 3 -->
+    <div class="mp" onclick="location.hash='#s27'" title="Batalla Mazinger">
+      <span class="mp-tag" style="color:#C00000;border-color:#C00000">Est. 27 · NUEVO</span>
+      <span class="mp-ck" style="color:#C00000">⚔</span>
+      <span class="mp-ct">Batalla Mazinger</span>
+      <span class="mp-cd">Minijuego: pilota Mazinger Z contra los mechas del Doctor Infierno.</span>
+      <span class="mp-kj">戦</span>
+    </div>
+    <div class="mp" onclick="location.hash='#s28'" title="Flashcards SRS">
+      <span class="mp-tag" style="color:#1a6632;border-color:#1a6632">Est. 28 · NUEVO</span>
+      <span class="mp-ck" style="color:#1a6632">単</span>
+      <span class="mp-ct">Flashcards SRS</span>
+      <span class="mp-cd">40 tarjetas de vocabulario manga con repetición espaciada inteligente.</span>
+      <span class="mp-kj">語</span>
+    </div>
+    <div class="mp" onclick="location.hash='#s29'" title="Rachas y Sellos">
+      <span class="mp-tag" style="color:#8a6200;border-color:#8a6200">Est. 29 · NUEVO</span>
+      <span class="mp-ck" style="color:#8a6200">🔥</span>
+      <span class="mp-ct">Rachas y Sellos</span>
+      <span class="mp-cd">Seguimiento de tu racha diaria y colección de logros desbloqueables.</span>
+      <span class="mp-kj">連</span>
+    </div>
+    <!-- Fila 4 -->
+    <div class="mp" onclick="location.hash='#s30'" title="Kishōtenketsu">
+      <span class="mp-tag" style="color:#5a2d82;border-color:#5a2d82">Est. 30 · NUEVO</span>
+      <span class="mp-ck" style="color:#5a2d82">起</span>
+      <span class="mp-ct">Kishōtenketsu Lab</span>
+      <span class="mp-cd">La estructura narrativa de 4 actos del manga clásico japonés. Crea tu historia.</span>
+      <span class="mp-kj">承</span>
+    </div>
+    <div class="mp green" onclick="location.hash='#s15'" title="Museos y Festivales">
+      <span class="mp-tag">Est. 15</span>
+      <span class="mp-ck">館</span>
+      <span class="mp-ct">Museos y Festivales</span>
+      <span class="mp-cd">Visitas digitales gratuitas a los grandes museos del manga.</span>
+      <span class="mp-kj">館</span>
+    </div>
+    <div class="mp gold" onclick="location.hash='#s26'" title="Concursos">
+      <span class="mp-tag">Est. 26</span>
+      <span class="mp-ck">賞</span>
+      <span class="mp-ct">Concursos</span>
+      <span class="mp-cd">8 concursos con proyección profesional: Norma, Manga Barcelona y Japón.</span>
+      <span class="mp-kj">賞</span>
+    </div>
+    <div class="mp" onclick="location.hash='#s18'" title="Dojo">
+      <span class="mp-tag">Est. 18</span>
+      <span class="mp-ck">道</span>
+      <span class="mp-ct">Dojo</span>
+      <span class="mp-cd">5 ejercicios hiperrealistas con evaluación automática y puntuación.</span>
+      <span class="mp-kj">道</span>
     </div>
   </div>
-  <div style="padding:16px 20px;background:var(--tone);border-top:3px solid var(--ink);display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+
+  <!-- Barra de progreso global -->
+  <div class="mh-xp">
     <span style="font-size:13px;color:var(--muted)">Progreso global:</span>
     <div id="homeXpBar" style="flex:1;min-width:120px;height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div id="homeXpFill" style="height:100%;background:var(--red);width:0;transition:width .5s"></div></div>
     <span id="homeXpLabel" style="font-family:var(--disp);font-size:13px;color:var(--ink)">0 XP · 見習い</span>
+  </div>
+  <div style="padding:10px 18px;background:var(--ink);text-align:center">
+    <span style="font-family:var(--disp);font-size:10px;color:#8899bb;letter-spacing:.1em">Sarah Hernández · +34641216429 · akera7827@gmail.com</span>
   </div>
 </div>
 </section>
@@ -1550,6 +1780,212 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 <div class="mini" data-tag="cc"></div>
 </section>
 
+<!-- 27 — BATALLA MAZINGER Z -->
+<section class="st" data-id="27" data-t="Batalla Mazinger" data-k="戦">
+<div class="sthead" style="border-color:#C00000;box-shadow:9px 9px 0 #C00000">
+  <div class="num" style="background:#C00000">27</div>
+  <div class="tt" style="background:linear-gradient(90deg,#0d2a5c,#1b4a8f)">
+    <h2 style="color:#fff">Batalla Mazinger Z</h2>
+    <div class="jp" style="color:#cfe0ff">戦闘 sentō · Pilota el mecha más poderoso del universo</div>
+  </div>
+  <div class="kj" style="color:rgba(192,0,0,.4);-webkit-text-stroke:2px #C00000;background:#0d2a5c">戦</div>
+</div>
+
+<div class="box ojo"><b class="t">¿Cómo jugar?</b>Selecciona un ataque cada turno. Los ataques de Mazinger Z tienen distintos rangos de daño y efectos especiales. Derrota a los 3 enemigos del Doctor Infierno. Cada victoria otorga XP.</div>
+
+<div id="mazBattle">
+  <div class="battle-stage" id="battleStage">— Pulsa "INICIAR BATALLA" para empezar —</div>
+  <div class="maz-field" id="mazField">
+    <!-- Mazinger Z -->
+    <div class="maz-unit" id="mazUnit">
+      <svg viewBox="-80 -110 160 220" style="color:#0d2a5c">
+        <rect x="-20" y="55" width="18" height="55" fill="#0d2a5c"/>
+        <rect x="2" y="55" width="18" height="55" fill="#0d2a5c"/>
+        <rect x="-24" y="100" width="22" height="16" fill="#0d2a5c"/>
+        <rect x="2" y="100" width="22" height="16" fill="#0d2a5c"/>
+        <polygon points="-38,-10 38,-10 32,55 -32,55" fill="#1b4a8f" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="0" cy="22" r="14" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
+        <rect x="-58" y="-5" width="20" height="52" fill="#0d2a5c"/>
+        <rect x="38" y="-5" width="20" height="52" fill="#0d2a5c"/>
+        <rect x="-64" y="42" width="26" height="22" fill="#0d2a5c"/>
+        <rect x="38" y="42" width="26" height="22" fill="#0d2a5c"/>
+        <circle cx="-48" cy="-6" r="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="48" cy="-6" r="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.5"/>
+        <rect x="-24" y="-68" width="48" height="56" rx="8" fill="#0d2a5c" stroke="#fff" stroke-width="1.5"/>
+        <rect x="-18" y="-58" width="12" height="10" fill="#C00000"/>
+        <rect x="6" y="-58" width="12" height="10" fill="#C00000"/>
+        <polygon points="0,-82 -6,-68 6,-68" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
+        <rect x="-10" y="-96" width="20" height="16" rx="4" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
+      </svg>
+      <div class="maz-name">MAZINGER Z</div>
+      <div class="maz-hp-wrap"><div class="maz-hp-bar" id="mazHpBar" style="width:100%"></div></div>
+      <div class="maz-hp-num" id="mazHpNum">HP: 100/100</div>
+    </div>
+    <div style="font-family:var(--disp);font-size:32px;color:#C00000;text-shadow:0 0 10px #C00000;align-self:center">VS</div>
+    <!-- Enemigo -->
+    <div class="maz-unit" id="enemyUnit">
+      <div id="enemySvg" style="font-size:64px;line-height:1;margin-bottom:6px;text-align:center">🤖</div>
+      <div class="maz-name" id="enemyName">—</div>
+      <div class="maz-hp-wrap"><div class="maz-hp-bar enemy" id="enemyHpBar" style="width:0%"></div></div>
+      <div class="maz-hp-num" id="enemyHpNum">HP: —</div>
+    </div>
+  </div>
+
+  <!-- Ataques -->
+  <div class="maz-atks" id="mazAtks">
+    <button class="atk-btn" data-atk="0" disabled>⚡ Rocket Punch<span class="atk-dmg">Daño: 25–38 · El puño volador clásico</span></button>
+    <button class="atk-btn" data--atk="1" disabled>🔥 Breast Fire<span class="atk-dmg">Daño: 32–48 · Rayos atómicos del pecho</span></button>
+    <button class="atk-btn" data-atk="2" disabled>⚔ Iron Cutter<span class="atk-dmg">Daño: 20–34 · Cuchillas de Super Alloy Z</span></button>
+    <button class="atk-btn" data-atk="3" disabled>🌪 Rust Hurricane<span class="atk-dmg">Daño: 15–28 · Tornillo de acero 300 km/h</span></button>
+  </div>
+
+  <!-- Log de batalla -->
+  <div class="maz-log" id="mazLog"></div>
+
+  <!-- Resultado -->
+  <div class="battle-result" id="battleResult">
+    <h3 id="battleResultTitle">—</h3>
+    <p id="battleResultMsg" style="color:#cfe0ff;font-family:var(--disp);font-size:13px"></p>
+    <button class="btn red" id="battleRestartBtn" style="margin-top:10px" onclick="battleInit()">⚔ Nueva batalla</button>
+  </div>
+</div>
+
+<div class="chips" style="margin-top:12px">
+  <button class="btn red" id="battleStartBtn" onclick="battleInit()">⚔ INICIAR BATALLA</button>
+  <button class="btn sm" onclick="toggleMazMusicAll()">🎵 Tema Mazinger Z</button>
+</div>
+<div class="firma"><span><b>Sarah Hernández | +34641216429 | akera7827@gmail.com</b></span></div>
+</section>
+
+<!-- 28 — FLASHCARDS SRS -->
+<section class="st" data-id="28" data-t="Flashcards SRS" data-k="語">
+<div class="sthead">
+  <div class="num">28</div>
+  <div class="tt"><h2>Flashcards — Vocabulario Manga</h2><div class="jp">単語カード · Repetición Espaciada Inteligente</div></div>
+  <div class="kj">語</div>
+</div>
+
+<p>Pulsa la tarjeta para girarla y ver la respuesta. Luego indica qué tal lo has recordado. El sistema prioriza las cartas más difíciles para ti. ¡+2 XP por cada sesión completada!</p>
+
+<div class="fc-stats" id="fcStats">
+  <div class="fc-stat"><b id="fcTotal">0</b><span>Total</span></div>
+  <div class="fc-stat"><b id="fcLearning">0</b><span>Aprendiendo</span></div>
+  <div class="fc-stat"><b id="fcMastered">0</b><span>Dominadas</span></div>
+</div>
+
+<div id="fcWrap">
+  <div class="fc-card" id="fcCard" onclick="fcFlip()">
+    <div class="fc-inner">
+      <div class="fc-front">
+        <div class="fc-jp" id="fcFrontJp">漫画</div>
+        <div class="fc-romaji" id="fcFrontRomaji">manga</div>
+        <div class="fc-hint">← Pulsa para girar →</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-es" id="fcBackEs">Cómic japonés</div>
+        <div class="fc-desc" id="fcBackDesc">Narración gráfica en blanco y negro, leída de derecha a izquierda, publicada en tomos o revistas semanales (shōnen, shōjo, seinen...).</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="fc-ctr" id="fcCtr">Tarjeta 1 / 40</div>
+
+<div class="srs-row" id="srsRow" style="display:none">
+  <button class="srs-btn hard" onclick="fcRate('hard')">😰 Difícil</button>
+  <button class="srs-btn ok" onclick="fcRate('ok')">🙂 Bien</button>
+  <button class="srs-btn easy" onclick="fcRate('easy')">😄 Fácil</button>
+</div>
+<div class="chips" style="margin-top:8px">
+  <button class="btn sm" id="fcRevealBtn" onclick="fcFlip()">👁 Ver respuesta</button>
+  <button class="btn sm" onclick="fcShuffle()">🔀 Mezclar mazo</button>
+  <button class="btn sm" onclick="fcRestart()">↺ Reiniciar</button>
+</div>
+<div class="firma"><span><b>Sarah Hernández | +34641216429 | akera7827@gmail.com</b></span></div>
+</section>
+
+<!-- 29 — RACHAS Y SELLOS -->
+<section class="st" data-id="29" data-t="Rachas y Sellos" data-k="連">
+<div class="sthead">
+  <div class="num">29</div>
+  <div class="tt"><h2>Rachas y Sellos — Tus logros</h2><div class="jp">連続 renzoku · Racha diaria · 印章 inshō</div></div>
+  <div class="kj">連</div>
+</div>
+
+<p>Cada día que abres la app y completas al menos una actividad, tu racha aumenta. Los sellos (logros) se desbloquean automáticamente al cumplir condiciones. ¡Colecciónalos todos!</p>
+
+<!-- Racha -->
+<div class="streak-card" id="streakCard">
+  <div style="font-size:40px;line-height:1;margin-bottom:6px">🔥</div>
+  <div class="streak-num" id="streakNum">0</div>
+  <div class="streak-label">DÍAS DE RACHA</div>
+  <div style="font-family:var(--disp);font-size:11px;color:#8899bb;margin-top:8px" id="streakMsg">Comienza tu racha hoy haciendo cualquier actividad.</div>
+</div>
+
+<div class="chips" style="margin-bottom:14px">
+  <button class="btn sm" onclick="streakCheck()">✓ Marcar actividad de hoy</button>
+  <button class="btn sm" onclick="streakReset()">↺ Reiniciar racha</button>
+</div>
+
+<!-- Sellos -->
+<h3 style="margin:0 0 10px">Colección de Sellos</h3>
+<div class="sellos-grid" id="sellosGrid"></div>
+<div class="firma" style="margin-top:16px"><span><b>Sarah Hernández | +34641216429 | akera7827@gmail.com</b></span></div>
+</section>
+
+<!-- 30 — KISHŌTENKETSU LAB -->
+<section class="st" data-id="30" data-t="Kishōtenketsu" data-k="転">
+<div class="sthead">
+  <div class="num">30</div>
+  <div class="tt"><h2>Kishōtenketsu Lab</h2><div class="jp">起承転結 kisōtenketsu · Narrativa clásica japonesa en 4 actos</div></div>
+  <div class="kj">転</div>
+</div>
+
+<p>El <b>kishōtenketsu</b> es la estructura narrativa de 4 actos usada en el manga clásico japonés (y en muchos juegos de Nintendo). No hay conflicto explícito — el giro del tercer acto crea la tensión. Escribe tu historia siguiendo esta estructura y gana XP.</p>
+
+<div class="kst-ex">
+  <b>EJEMPLO — Dragon Ball, primer arco (Toriyama, 1984)</b>
+  <b style="color:var(--blue);font-size:11px">起 KI · Introducción:</b> Un niño con rabo de mono vive solo en el bosque. Encuentra a una chica que busca esferas mágicas.<br>
+  <b style="color:var(--blue);font-size:11px">承 SHŌ · Desarrollo:</b> Juntos buscan las 7 Dragon Balls. Aprenden la historia de las esferas y los peligros del camino.<br>
+  <b style="color:var(--blue);font-size:11px">転 TEN · Giro (el momento inesperado):</b> El villano Pilaf consigue todas las esferas y pide el dominio del mundo — pero Oolong pide los calzoncillos de una chica.<br>
+  <b style="color:var(--blue);font-size:11px">結 KETSU · Resolución:</b> El deseo ridículo de Oolong frustra el plan del villano. Goku y Bulma se separan, pero la aventura apenas empieza.
+</div>
+
+<div class="kst-wrap" id="kstWrap">
+  <div class="kst-p">
+    <div class="kst-hdr">起</div>
+    <div class="kst-sub">KI · Introducción</div>
+    <textarea class="kst-ta" id="kstKi" placeholder="Presenta a tu personaje y el mundo..."></textarea>
+    <div class="kst-hint">¿Quién es? ¿Dónde está? ¿Qué quiere?</div>
+  </div>
+  <div class="kst-p">
+    <div class="kst-hdr">承</div>
+    <div class="kst-sub">SHŌ · Desarrollo</div>
+    <textarea class="kst-ta" id="kstSho" placeholder="La situación se desarrolla sin conflicto directo..."></textarea>
+    <div class="kst-hint">¿Qué encuentra? ¿Qué aprende? ¿Cómo avanza?</div>
+  </div>
+  <div class="kst-p">
+    <div class="kst-hdr">転</div>
+    <div class="kst-sub">TEN · Giro</div>
+    <textarea class="kst-ta" id="kstTen" placeholder="Algo inesperado cambia todo..." style="border-color:#C00000"></textarea>
+    <div class="kst-hint">El elemento sorpresa. No tiene que ser violento — puede ser absurdo, emotivo o misterioso.</div>
+  </div>
+  <div class="kst-p">
+    <div class="kst-hdr">結</div>
+    <div class="kst-sub">KETSU · Resolución</div>
+    <textarea class="kst-ta" id="kstKetsu" placeholder="El giro recontextualiza todo lo anterior..."></textarea>
+    <div class="kst-hint">¿Cómo cambia la perspectiva? ¿Qué queda sin resolver?</div>
+  </div>
+</div>
+
+<div class="chips" style="margin-top:12px">
+  <button class="btn red" onclick="kstEval()">✓ Evaluar mi historia (+30 XP)</button>
+  <button class="btn sm" onclick="kstClear()">↺ Limpiar</button>
+  <button class="btn sm" onclick="kstExample()">💡 Cargar ejemplo</button>
+</div>
+<div id="kstResult" class="box" style="display:none;margin-top:12px"></div>
+<div class="firma" style="margin-top:14px"><span><b>Sarah Hernández | +34641216429 | akera7827@gmail.com</b></span></div>
+</section>
+
 </template>
 <script>
 // ================= DATA =================
@@ -1949,6 +2385,17 @@ function show(id){
   S.visited[id]=1;save();renderProgress();
   if(INIT[id]&&!INIT[id].done){INIT[id].done=1;INIT[id]();}
   const cur=$(`#nav a[data-id="${id}"]`); if(cur&&window.innerWidth<860) cur.scrollIntoView({inline:"center",block:"nearest"});
+  // Inyectar botón ← Inicio en estaciones que no son la 0
+  const st=STS.find(s=>s.dataset.id===id);
+  if(st&&id!=="0"){
+    if(!st.querySelector('.st-back')){
+      const bk=document.createElement('div');bk.className='st-back';
+      bk.innerHTML=`<button onclick="location.hash='#s0'">← Inicio</button><span class="st-back-title">マンガ・マスター · Est. ${id} · ${st.dataset.t||''}</span>`;
+      st.insertBefore(bk,st.firstChild);
+    }
+  }
+  // Check streak
+  streakDailyCheck();
   window.scrollTo({top:0});
 }
 function route(){const m=location.hash.match(/^#s(\d+)$/);show(m?m[1]:"0")}
@@ -3094,6 +3541,291 @@ document.getElementById('topFilter')?.addEventListener('click',e=>{const btn=e.t
   document.getElementById('labClear')?.addEventListener('click',()=>{annotations=[];drawBg();const r=document.getElementById('labResult');if(r)r.hidden=true;});
   document.getElementById('labEval')?.addEventListener('click',()=>{const result=document.getElementById('labResult');if(!result)return;const found=new Set(annotations.map(a=>a.tag));const xp=found.size*25;result.hidden=false;result.innerHTML=`<div class="panel" style="margin-top:10px;background:${found.size>=3?'#eaffea':'#fff9e6'}"><b>Análisis: ${found.size}/4 tipos identificados</b> (+${xp} XP)<br>${['Body','Face','Frame','Text'].map(t=>`${found.has(t)?'✅':'❌'} ${t}`).join(' · ')}<br><small>Basado en la metodología Manga109. ${found.size>=3?'¡Excelente análisis!':'Intenta marcar más elementos.'}</small></div>`;if(xp>0)addXP(xp);});
 })();
+
+// ================= BATALLA MAZINGER Z =================
+const ENEMIES=[
+  {name:"BARON ASHURA",icon:"👺",hp:80,atks:["Ataque Mazinga","Bloque metálico","Rayo de energía"],dmg:[10,8,14],xp:30},
+  {name:"CONDE BLOCKEN",icon:"💀",hp:95,atks:["Gas venenoso","Ataque aéreo","Cabeza voladora"],dmg:[12,10,18],xp:50},
+  {name:"DOCTOR INFIERNO",icon:"🦾",hp:120,atks:["DESTROY BEAM","Iron Cross","Emisión iónica"],dmg:[18,14,22],xp:80}
+];
+const ATKS=[
+  {name:"Rocket Punch",icon:"⚡",min:25,max:38,desc:"¡Los puños de Mazinger Z vuelan como misiles!"},
+  {name:"Breast Fire",icon:"🔥",min:32,max:48,desc:"¡Rayos atómicos del pecho! Calor incandescente."},
+  {name:"Iron Cutter",icon:"⚔",min:20,max:34,desc:"¡Cuchillas de Super Alloy Z!"},
+  {name:"Rust Hurricane",icon:"🌪",min:15,max:28,desc:"Tornillo de acero a 300 km/h."}
+];
+let bState={active:false,mazHp:100,mazMaxHp:100,eneHp:0,eneMaxHp:0,stage:0,busy:false};
+function battleInit(){
+  bState={active:true,mazHp:100,mazMaxHp:100,eneHp:ENEMIES[0].hp,eneMaxHp:ENEMIES[0].hp,stage:0,busy:false};
+  const r=document.getElementById('battleResult');if(r){r.className='battle-result';r.style.display='none';}
+  bRender();bLog('<span class="lwin">¡COMIENZA LA BATALLA! — Escoge tu ataque.</span>',true);
+  const startBtn=document.getElementById('battleStartBtn');if(startBtn)startBtn.style.display='none';
+}
+function bRender(){
+  const e=ENEMIES[bState.stage];
+  document.getElementById('battleStage').textContent=`BATALLA ${bState.stage+1}/3 — ${e.name}`;
+  document.getElementById('mazHpBar').style.width=(bState.mazHp/bState.mazMaxHp*100)+'%';
+  document.getElementById('mazHpBar').className='maz-hp-bar'+(bState.mazHp<bState.mazMaxHp*.3?' low':'');
+  document.getElementById('mazHpNum').textContent=`HP: ${bState.mazHp}/${bState.mazMaxHp}`;
+  document.getElementById('enemyName').textContent=e.name;
+  document.getElementById('enemySvg').textContent=e.icon;
+  document.getElementById('enemyHpBar').style.width=(bState.eneHp/bState.eneMaxHp*100)+'%';
+  document.getElementById('enemyHpNum').textContent=`HP: ${bState.eneHp}/${bState.eneMaxHp}`;
+  document.querySelectorAll('.atk-btn').forEach((b,i)=>{
+    b.disabled=bState.busy||!bState.active;
+    b.innerHTML=`${ATKS[i].icon} ${ATKS[i].name}<span class="atk-dmg">Daño: ${ATKS[i].min}–${ATKS[i].max} · ${ATKS[i].desc}</span>`;
+    b.onclick=()=>bAttack(i);
+  });
+}
+function bLog(msg,clear){
+  const log=document.getElementById('mazLog');if(!log)return;
+  if(clear)log.innerHTML='';
+  log.innerHTML+=`<div>${msg}</div>`;log.scrollTop=log.scrollHeight;
+}
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function bAttack(atkIdx){
+  if(bState.busy||!bState.active)return;
+  bState.busy=true;
+  document.querySelectorAll('.atk-btn').forEach(b=>b.disabled=true);
+  const atk=ATKS[atkIdx];
+  const dmg=rnd(atk.min,atk.max);
+  bState.eneHp=Math.max(0,bState.eneHp-dmg);
+  bLog(`<span class="lhit">Mazinger Z → ${atk.icon} ${atk.name} → ${dmg} de daño!</span>`);
+  // Shake enemy
+  const eu=document.getElementById('enemyUnit');if(eu){eu.classList.add('shake');setTimeout(()=>eu.classList.remove('shake'),350);}
+  bRender();
+  if(bState.eneHp<=0){
+    setTimeout(()=>bEnemyDown(),400);return;
+  }
+  // Enemy attacks
+  setTimeout(()=>{
+    if(!bState.active)return;
+    const e=ENEMIES[bState.stage];
+    const ei=Math.floor(Math.random()*e.atks.length);
+    const edmg=rnd(e.dmg[ei]-2,e.dmg[ei]+2);
+    bState.mazHp=Math.max(0,bState.mazHp-edmg);
+    bLog(`<span class="lenemy">${e.icon} ${e.name} usa ${e.atks[ei]} → ${edmg} de daño a Mazinger Z</span>`);
+    const mu=document.getElementById('mazUnit');if(mu){mu.classList.add('shake');setTimeout(()=>mu.classList.remove('shake'),350);}
+    bRender();
+    if(bState.mazHp<=0){bDefeat();return;}
+    bState.busy=false;
+    document.querySelectorAll('.atk-btn').forEach(b=>b.disabled=false);
+  },800);
+}
+function bEnemyDown(){
+  const e=ENEMIES[bState.stage];
+  bLog(`<span class="lwin">★ ¡${e.name} derrotado!</span>`);
+  if(bState.stage<ENEMIES.length-1){
+    bState.stage++;
+    bState.eneHp=ENEMIES[bState.stage].hp;bState.eneMaxHp=ENEMIES[bState.stage].hp;
+    bLog(`<span class="lwin">¡Nuevo enemigo! → ${ENEMIES[bState.stage].icon} ${ENEMIES[bState.stage].name}</span>`);
+    bRender();bState.busy=false;
+    document.querySelectorAll('.atk-btn').forEach(b=>b.disabled=false);
+  } else {
+    bVictory();
+  }
+}
+function bVictory(){
+  bState.active=false;bState.busy=true;
+  const totalXp=ENEMIES.reduce((s,e)=>s+e.xp,0);
+  addXP(totalXp);
+  const r=document.getElementById('battleResult');
+  if(r){r.className='battle-result victory show';r.innerHTML=`<h3>⚡ ¡VICTORIA TOTAL!</h3><p style="color:#ffd700;font-family:var(--disp);font-size:13px">¡Mazinger Z ha derrotado al ejército del Doctor Infierno!<br>+${totalXp} XP · ¡Go! Mazinger Z!</p><button class="btn red" onclick="battleInit()" style="margin-top:10px">⚔ Nueva batalla</button>`;}
+  bLog('<span class="lwin">★★★ ¡MAZINGER Z TRIUNFA! ¡GO! ★★★</span>');
+  unlockSello('battle');
+}
+function bDefeat(){
+  bState.active=false;bState.busy=true;
+  const r=document.getElementById('battleResult');
+  if(r){r.className='battle-result defeat show';r.innerHTML=`<h3>💥 MAZINGER Z CAÍDO</h3><p style="color:#cfe0ff;font-family:var(--disp);font-size:13px">El Doctor Infierno ha ganado esta batalla...<br>Pero ¡Koji Kabuto nunca se rinde!</p><button class="btn red" onclick="battleInit()" style="margin-top:10px">⚔ Reintentar</button>`;}
+  bLog('<span class="lloose">✖ Mazinger Z ha caído... Por ahora.</span>');
+}
+
+// ================= FLASHCARDS SRS =================
+const FC_DATA=[
+  {jp:"漫画",ro:"manga",es:"Cómic japonés",desc:"Narración gráfica BN leída de dcha. a izq., publicada en tomos o revistas semanales."},
+  {jp:"マンガ家",ro:"mangaka",es:"Autor/a de manga",desc:"Dibujante y guionista de manga. Frecuentemente trabaja con asistentes (asistento)."},
+  {jp:"アシスタント",ro:"asistento",es:"Asistente del mangaka",desc:"Ayuda con tramas (screentone), fondos y entintado bajo la supervisión del mangaka."},
+  {jp:"週刊誌",ro:"shūkanshi",es:"Revista semanal",desc:"Publicación de capítulos nuevos cada semana. Shōnen Jump es la más famosa del mundo."},
+  {jp:"コマ",ro:"koma",es:"Viñeta",desc:"Cada cuadro individual de un manga. Su tamaño y forma comunican ritmo y emoción."},
+  {jp:"フキダシ",ro:"fukidashi",es:"Globo de diálogo",desc:"Elemento que contiene el texto hablado o pensado por los personajes."},
+  {jp:"擬音語",ro:"giongo",es:"Onomatopeya sonora",desc:"Palabras que imitan sonidos reales: ドン (don) para golpes, ズドン (zudon) para explosiones."},
+  {jp:"擬態語",ro:"gitaigo",es:"Onomatopeya de estado",desc:"Palabras que describen sensaciones o estados: キラキラ (kirakira) = brillante."},
+  {jp:"スクリーントーン",ro:"sukurīn tōn",es:"Trama / screentone",desc:"Láminas adhesivas con patrones de puntos usadas para crear grises y texturas en BN."},
+  {jp:"ト書き",ro:"togaki",es:"Narración textual",desc:"Texto narrativo fuera de los globos, generalmente en cajas rectangulares."},
+  {jp:"少年",ro:"shōnen",es:"Manga para chicos",desc:"Dirigido a chicos jóvenes. Temas: amistad, superación, aventura. Ej: Dragon Ball, Naruto."},
+  {jp:"少女",ro:"shōjo",es:"Manga para chicas",desc:"Dirigido a chicas jóvenes. Énfasis en emociones y relaciones. Ej: Sailor Moon, Card Captor."},
+  {jp:"青年",ro:"seinen",es:"Manga para adultos",desc:"Dirigido a hombres adultos. Más complejo y maduro. Ej: Berserk, Vagabond."},
+  {jp:"女性",ro:"josei",es:"Manga para mujeres adultas",desc:"Dirigido a mujeres adultas. Romance y drama realista. Ej: Nana, Chihayafuru."},
+  {jp:"同人誌",ro:"dōjinshi",es:"Fanzine manga",desc:"Publicaciones independientes, muchas veces fanfic de obras existentes."},
+  {jp:"Gペン",ro:"jī pen",es:"Plumilla G",desc:"La plumilla más usada en manga. Permite trazar líneas con variación de grosor según presión."},
+  {jp:"丸ペン",ro:"maru pen",es:"Plumilla maru",desc:"Plumilla de punta fina para detalles y líneas delgadas uniformes."},
+  {jp:"インク",ro:"inku",es:"Tinta",desc:"Generalmente tinta negra brillante (sumi) a base de agua para dibujar manga."},
+  {jp:"ホワイト",ro:"howaito",es:"Blanco corrector",desc:"Tinta blanca opaca para corregir errores o añadir brillos. Elemento esencial del mangaka."},
+  {jp:"ベタ",ro:"beta",es:"Relleno negro sólido",desc:"Áreas completamente negras que dan contraste dramático. Fundamental en el estilo manga."},
+  {jp:"クロスハッチング",ro:"kurosu hatchingu",es:"Sombreado cruzado",desc:"Técnica de sombreado con líneas que se cruzan para crear texturas y degradados."},
+  {jp:"パース",ro:"pāsu",es:"Perspectiva",desc:"Sistema de representación del espacio en tres dimensiones sobre papel bidimensional."},
+  {jp:"消失点",ro:"shōshitsu-ten",es:"Punto de fuga",desc:"Punto donde las líneas paralelas convergen en la perspectiva. Puede haber 1, 2 o 3."},
+  {jp:"キャラデザ",ro:"kyara deza",es:"Diseño de personaje",desc:"El proceso de crear la apariencia visual de un personaje: proporciones, rasgos, vestuario."},
+  {jp:"頭身",ro:"tōshin",es:"Proporción corporal",desc:"Número de cabezas que cabe el cuerpo. Manga usa 6-7, super-deformed usa 2-3."},
+  {jp:"丸目",ro:"marume",es:"Ojos redondos",desc:"El estilo de ojos grandes característico del manga shōnen y shōjo, heredado de Tezuka."},
+  {jp:"手塚治虫",ro:"Tezuka Osamu",es:"Padre del manga moderno",desc:"Autor de Astro Boy y Kimba (1952-1989). Creó el vocabulario visual del manga moderno."},
+  {jp:"マジンガーZ",ro:"Majingā Zetto",es:"Mazinger Z",desc:"1972, Go Nagai. El primer mecha pilotado desde dentro. Originó el género Super Robot."},
+  {jp:"ゴ・ナガイ",ro:"Gō Nagai",es:"Go Nagai",desc:"Mangaka nacido en 1945. Creador de Mazinger Z, Devilman y Cutie Honey. Visionario del manga mecha."},
+  {jp:"超合金",ro:"chougokin",es:"Super Alloy Z",desc:"Material ficticio de Mazinger Z, resistente a cualquier ataque. También es una línea de juguetes."},
+  {jp:"ロケットパンチ",ro:"roketto panchi",es:"Rocket Punch",desc:"El ataque más famoso de Mazinger Z: el puño disparado como misil. Icono del manga mecha."},
+  {jp:"Nスクリーン",ro:"N sukurīn",es:"Pantalla N (trama de puntos)",desc:"La trama más usada en manga. Distintos números indican densidad de puntos."},
+  {jp:"集中線",ro:"shūchūsen",es:"Líneas de concentración",desc:"Líneas que convergen en un punto para indicar foco, impacto o velocidad."},
+  {jp:"流線",ro:"ryūsen",es:"Speed lines",desc:"Líneas horizontales paralelas que indican movimiento rápido del cuerpo o la cámara."},
+  {jp:"大ゴマ",ro:"ōgoma",es:"Viñeta grande",desc:"Una viñeta que ocupa media página o más. Usada para momentos climáticos."},
+  {jp:"見開き",ro:"miひらki",es:"Página doble",desc:"Dos páginas tratadas como una sola imagen. Máximo impacto visual en el manga."},
+  {jp:"ネーム",ro:"nēmu",es:"Boceto de páginas",desc:"El storyboard rough del mangaka. Distribución de viñetas, diálogos y composición."},
+  {jp:"原稿",ro:"genkō",es:"Manuscrito original",desc:"Las páginas originales dibujadas a mano por el mangaka, generalmente en papel B4."},
+  {jp:"担当編集",ro:"tantō henshū",es:"Editor de manga",desc:"El editor asignado al mangaka. Revisa el nēmu, da feedback y es el primer lector."},
+  {jp:"打ち合わせ",ro:"uchiawase",es:"Reunión de trabajo",desc:"La reunión semanal entre mangaka y editor para revisar el nēmu. Crucial en el proceso."}
+];
+let fcDeck=[],fcIdx=0,fcFlipped=false,fcMastered=new Set(),fcLearning=new Set();
+function fcInit(){
+  try{const st=JSON.parse(localStorage.getItem('fc_st')||'{}');fcMastered=new Set(st.m||[]);fcLearning=new Set(st.l||[]);}catch(e){}
+  fcDeck=[...FC_DATA.keys()].sort(()=>Math.random()-.5);
+  fcIdx=0;fcFlipped=false;fcUpdateStats();fcRender();
+}
+function fcRender(){
+  if(fcIdx>=fcDeck.length){fcComplete();return;}
+  const c=FC_DATA[fcDeck[fcIdx]];
+  document.getElementById('fcFrontJp').textContent=c.jp;
+  document.getElementById('fcFrontRomaji').textContent=c.ro;
+  document.getElementById('fcBackEs').textContent=c.es;
+  document.getElementById('fcBackDesc').textContent=c.desc;
+  document.getElementById('fcCard').classList.remove('flipped');
+  fcFlipped=false;
+  const sr=document.getElementById('srsRow');if(sr)sr.style.display='none';
+  const rb=document.getElementById('fcRevealBtn');if(rb)rb.style.display='';
+  document.getElementById('fcCtr').textContent=`Tarjeta ${fcIdx+1} / ${fcDeck.length}`;
+  fcUpdateStats();
+}
+function fcFlip(){
+  if(fcIdx>=fcDeck.length)return;
+  document.getElementById('fcCard').classList.toggle('flipped');
+  fcFlipped=!fcFlipped;
+  const sr=document.getElementById('srsRow');if(sr)sr.style.display=fcFlipped?'flex':'none';
+  const rb=document.getElementById('fcRevealBtn');if(rb)rb.style.display=fcFlipped?'none':'';
+}
+function fcRate(rate){
+  const idx=fcDeck[fcIdx];
+  if(rate==='easy'){fcMastered.add(idx);fcLearning.delete(idx);}
+  else if(rate==='hard'){fcLearning.add(idx);fcMastered.delete(idx);}
+  else{if(!fcMastered.has(idx))fcLearning.add(idx);}
+  fcSave();fcIdx++;fcRender();
+  if(fcIdx===Math.floor(fcDeck.length/2))addXP(5);
+}
+function fcComplete(){
+  document.getElementById('fcWrap').innerHTML=`<div style="text-align:center;padding:20px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);width:100%;max-width:480px"><div style="font-family:var(--disp);font-size:32px;color:var(--red);margin-bottom:8px">完了!</div><div style="font-family:var(--disp);font-size:14px;color:var(--ink)">¡Mazo completado! +10 XP<br>Dominadas: ${fcMastered.size} / ${FC_DATA.length}</div><button class="btn red" style="margin-top:14px" onclick="fcRestart()">↺ Repetir mazo</button></div>`;
+  addXP(10);unlockSello('flashcards');
+}
+function fcSave(){try{localStorage.setItem('fc_st',JSON.stringify({m:[...fcMastered],l:[...fcLearning]}));}catch(e){}}
+function fcUpdateStats(){
+  document.getElementById('fcTotal').textContent=FC_DATA.length;
+  document.getElementById('fcLearning').textContent=fcLearning.size;
+  document.getElementById('fcMastered').textContent=fcMastered.size;
+}
+function fcShuffle(){fcDeck.sort(()=>Math.random()-.5);fcIdx=0;fcRender();}
+function fcRestart(){
+  fcDeck=[...FC_DATA.keys()].sort(()=>Math.random()-.5);fcIdx=0;
+  document.getElementById('fcWrap').innerHTML=`<div class="fc-card" id="fcCard" onclick="fcFlip()"><div class="fc-inner"><div class="fc-front"><div class="fc-jp" id="fcFrontJp"></div><div class="fc-romaji" id="fcFrontRomaji"></div><div class="fc-hint">← Pulsa para girar →</div></div><div class="fc-back"><div class="fc-es" id="fcBackEs"></div><div class="fc-desc" id="fcBackDesc"></div></div></div></div>`;
+  fcRender();
+}
+INIT['28']=()=>{fcInit();};
+
+// ================= RACHAS Y SELLOS =================
+const SELLOS=[
+  {id:'aprendiz',icon:'📖',kj:'初',name:'Primer Paso',desc:'Visita la Est. 1',cond:()=>S.visited&&S.visited['1']},
+  {id:'mangaka',icon:'✏️',kj:'描',name:'Dibujante',desc:'Usa la Mesa de Dibujo',cond:()=>S.visited&&S.visited['11']},
+  {id:'maz',icon:'⚡',kj:'Z',name:'Piloto Mazinger',desc:'Est. 25 visitada',cond:()=>S.visited&&S.visited['25']},
+  {id:'battle',icon:'⚔️',kj:'戦',name:'Guerrero Mecha',desc:'Vence en Batalla',cond:()=>{try{return JSON.parse(localStorage.getItem('sello_battle')||'false');}catch(e){return false;}}},
+  {id:'flashcards',icon:'🃏',kj:'語',name:'Vocabulista',desc:'Completa el mazo',cond:()=>{try{return JSON.parse(localStorage.getItem('sello_fc')||'false');}catch(e){return false;}}},
+  {id:'explorer',icon:'🔍',kj:'探',name:'Explorador',desc:'Visita 5 estaciones',cond:()=>Object.keys(S.visited||{}).length>=5},
+  {id:'marathon',icon:'🏃',kj:'走',name:'Maratón',desc:'Visita 15 estaciones',cond:()=>Object.keys(S.visited||{}).length>=15},
+  {id:'master',icon:'🏆',kj:'巨',name:'Maestro Manga',desc:'Llega a nivel Sensei',cond:()=>S.xp>=800},
+  {id:'streak3',icon:'🔥',kj:'連',name:'3 días seguidos',desc:'Racha de 3 días',cond:()=>{try{return (JSON.parse(localStorage.getItem('streak')||'0'))>=3;}catch(e){return false;}}},
+  {id:'streak7',icon:'🌟',kj:'週',name:'Una semana',desc:'Racha de 7 días',cond:()=>{try{return (JSON.parse(localStorage.getItem('streak')||'0'))>=7;}catch(e){return false;}}},
+  {id:'kishoten',icon:'📜',kj:'転',name:'Narrador',desc:'Completa Kishōtenketsu',cond:()=>{try{return JSON.parse(localStorage.getItem('sello_kst')||'false');}catch(e){return false;}}},
+  {id:'concert',icon:'🥇',kj:'賞',name:'Concursante',desc:'Visita Est. 26',cond:()=>S.visited&&S.visited['26']},
+];
+function unlockSello(id){try{localStorage.setItem('sello_'+id,'true');}catch(e){}renderSellos();}
+function renderSellos(){
+  const grid=document.getElementById('sellosGrid');if(!grid)return;
+  grid.innerHTML=SELLOS.map(s=>{
+    const unlocked=s.cond();
+    return `<div class="sello${unlocked?' unlocked':' locked'}" title="${s.desc}">
+      <span class="s-emo">${s.icon}</span>
+      <div class="s-kj">${s.kj}</div>
+      <div class="s-name">${s.name}</div>
+      <div class="s-desc">${s.desc}</div>
+    </div>`;
+  }).join('');
+}
+function streakDailyCheck(){
+  try{
+    const today=new Date().toDateString();
+    const last=localStorage.getItem('streak_date');
+    let cur=parseInt(localStorage.getItem('streak')||'0');
+    if(last===today){/* same day */}
+    else if(last===new Date(Date.now()-86400000).toDateString()){cur++;localStorage.setItem('streak',cur);localStorage.setItem('streak_date',today);}
+    else{cur=1;localStorage.setItem('streak',cur);localStorage.setItem('streak_date',today);}
+    const el=document.getElementById('streakNum');if(el)el.textContent=cur;
+    const msg=document.getElementById('streakMsg');if(msg){
+      if(cur===1)msg.textContent='¡Primer día! La racha comienza ahora.';
+      else if(cur<3)msg.textContent=`¡${cur} días seguidos! Vuelve mañana para continuar.`;
+      else if(cur<7)msg.textContent=`🔥 ¡${cur} días de racha! ¡Sigue así!`;
+      else msg.textContent=`⭐ ¡INCREÍBLE! ${cur} días de racha. ¡Eres una maestra del manga!`;
+    }
+  }catch(e){}
+}
+function streakCheck(){
+  streakDailyCheck();addXP(5);renderSellos();
+  const msg=document.getElementById('streakMsg');if(msg)msg.textContent='✓ Actividad marcada hoy. +5 XP';
+}
+function streakReset(){
+  try{localStorage.setItem('streak','0');localStorage.setItem('streak_date','');}catch(e){}
+  const el=document.getElementById('streakNum');if(el)el.textContent='0';
+}
+INIT['29']=()=>{streakDailyCheck();renderSellos();};
+
+// ================= KISHŌTENKETSU LAB =================
+const KST_EXAMPLE={
+  ki:'Koji Kabuto, huérfano de 16 años, vive solo en el laboratorio de su abuelo. Mientras explora el sótano, descubre una gigantesca figura metálica cubierta de polvo.',
+  sho:'Su abuelo le explica que esa figura es Mazinger Z, construida con Super Alloy Z. Koji aprende que las fuerzas del Doctor Infierno atacarán pronto para robar la fórmula.',
+  ten:'El Doctor Infierno ataca el laboratorio. El abuelo, herido, grita a Koji que suba al Hover Pilder y lo inserte en la cabeza de Mazinger Z. ¡Koji nunca ha pilotado nada!',
+  ketsu:'Con el Pilder acoplado, Mazinger Z cobra vida obedeciendo los movimientos de Koji. El primer combate es torpe y caótico — pero es una victoria. Koji comprende: él mismo es parte del robot.'
+};
+function kstEval(){
+  const vals=['ki','sho','ten','ketsu'].map(k=>document.getElementById('kst'+k[0].toUpperCase()+k.slice(1))?.value?.trim()||'');
+  const filled=vals.filter(v=>v.length>20).length;
+  const r=document.getElementById('kstResult');if(!r)return;
+  if(filled<2){r.style.display='block';r.innerHTML='<b style="color:#C00000">Escribe al menos 2 actos (más de 20 caracteres cada uno) para evaluar.</b>';return;}
+  const xp=filled*7+2;addXP(xp);
+  r.style.display='block';
+  r.innerHTML=`<b class="t">Tu kishōtenketsu</b>
+  ${vals[0]?`<b>起 KI:</b> ${vals[0].slice(0,80)}${vals[0].length>80?'...':''}<br>`:''}
+  ${vals[1]?`<b>承 SHŌ:</b> ${vals[1].slice(0,80)}${vals[1].length>80?'...':''}<br>`:''}
+  ${vals[2]?`<b style="color:#C00000">転 TEN:</b> ${vals[2].slice(0,80)}${vals[2].length>80?'...':''}<br>`:''}
+  ${vals[3]?`<b>結 KETSU:</b> ${vals[3].slice(0,80)}${vals[3].length>80?'...':''}<br>`:''}
+  <br><b>+${xp} XP</b> · ${filled===4?'¡Historia completa! Los 4 actos bien definidos.':filled===3?'¡Casi completa! Falta un acto.':'Tienes los pilares. Desarrolla los otros actos.'}`;
+  if(filled>=3){unlockSello('kishoten');try{localStorage.setItem('sello_kst','true');}catch(e){}}
+}
+function kstClear(){['Ki','Sho','Ten','Ketsu'].forEach(k=>{const el=document.getElementById('kst'+k);if(el)el.value='';});const r=document.getElementById('kstResult');if(r)r.style.display='none';}
+function kstExample(){
+  document.getElementById('kstKi').value=KST_EXAMPLE.ki;
+  document.getElementById('kstSho').value=KST_EXAMPLE.sho;
+  document.getElementById('kstTen').value=KST_EXAMPLE.ten;
+  document.getElementById('kstKetsu').value=KST_EXAMPLE.ketsu;
+}
+
+// Pulso CSS para la cta del home
+const pulseStyle=document.createElement('style');
+pulseStyle.textContent='@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}';
+document.head.appendChild(pulseStyle);
 
 </script>
 </body>
