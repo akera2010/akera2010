@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BeisbolIQ · Sandra Blanco</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+  --bg:#f4f7fb;--s1:#edf2f8;--s2:#e2eaf4;--s3:#cdd8e8;
+  --acc:#1d4ed8;--acc2:#5b21b6;--green:#15803d;--yellow:#a16207;
+  --orange:#c2410c;--red:#b91c1c;--text:#0f172a;--muted:#475569;
+  --border:#94a3b8;--card:#ffffff;--radius:12px;
+  --shadow:0 2px 14px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+@keyframes metalShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+body{background:#f4f7fb;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+#app{max-width:1200px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text);line-height:1.2}
+.logo-text .sub-brand{display:block;font-size:.8rem;font-weight:600;color:var(--text);margin-top:2px}
+.logo-text .sub-algo{display:block;font-size:.72rem;color:var(--muted);margin-top:1px}
+.match-meta{font-size:.7rem;color:var(--muted);font-weight:400;margin-left:4px;white-space:nowrap}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--acc);padding:6px 12px;border-radius:8px;border:1px solid var(--acc)}
+#pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
+#pdfBtn:hover{opacity:.85}
+#statusBar{font-size:.8rem;color:var(--muted);padding:4px 10px;background:var(--s2);border-radius:6px;border:1px solid var(--border)}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--s1);padding:4px;border-radius:10px;border:1px solid var(--border)}
+.tab{flex:1;padding:10px;text-align:center;cursor:pointer;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--muted);transition:all .2s}
+.tab.active{background:var(--acc);color:#fff}
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-val{font-size:1.6rem;font-weight:700;color:var(--acc)}
+.stat-lbl{font-size:.75rem;color:var(--muted);margin-top:2px}
+.picks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.pick-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.pick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.pick-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.pick-match{font-weight:700;font-size:.95rem}
+.pick-league{font-size:.75rem;color:var(--muted);margin-top:2px}
+.pick-badge{background:#dbeafe;color:#c00000;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;border:1px solid #93c5fd}
+.pick-badge.high{background:#dcfce7;color:#c00000;border-color:#86efac}
+.pick-badge.med{background:#fef9c3;color:#c00000;border-color:#fde047}
+.markets-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.mkt{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
+.ring-wrap{position:relative;width:40px;height:40px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:3}
+.ring-fg{fill:none;stroke-width:3;stroke-linecap:round}
+.ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700}
+.mkt-name{font-size:.6rem;color:var(--muted);text-align:center}
+.best-pick-row{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:10px}
+.bp-left .bp-type{font-size:.75rem;color:var(--muted)}
+.bp-left .bp-pick{font-weight:700;font-size:.9rem;color:var(--acc)}
+.bp-odds-box{text-align:right}
+.bp-prob{font-size:.75rem;color:var(--muted)}
+.bp-odds{font-weight:700;font-size:1rem;color:var(--green)}
+.lambdas{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.lam{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.75rem;text-align:center;flex:1;min-width:70px;color:var(--muted)}
+.lam span{display:block;font-weight:700;color:var(--acc);font-size:.9rem}
+.pitchers-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.pitcher{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.75rem;flex:1;min-width:110px;color:var(--muted)}
+.pitcher strong{display:block;font-weight:700;color:var(--text);font-size:.78rem;margin-top:2px}
+.combo-section{margin-top:0}
+.combo-title{font-size:1rem;font-weight:700;color:var(--acc2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.combo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.combo-card{background:var(--card);border:1px solid var(--acc2);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.combo-card::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--acc2),var(--acc));margin:-16px -16px 12px;border-radius:var(--radius) var(--radius) 0 0}
+.combo-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.combo-pick-row{display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--s2);border-radius:6px;margin-bottom:6px}
+.cpr-left{font-size:.8rem}
+.cpr-left em{color:var(--muted);font-style:normal;font-size:.7rem;display:block}
+.cpr-odds{color:var(--green);font-weight:700;font-size:.85rem}
+.cpr-p{color:var(--muted);font-size:.75rem}
+.hist-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.hist-table th{background:var(--s2);padding:8px 10px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border)}
+.hist-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.hist-table tr:hover td{background:var(--s2)}
+.badge-hit{background:var(--green);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem}
+.badge-miss{background:var(--red);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem}
+.cal-chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+#loadingOverlay{position:fixed;inset:0;background:rgba(244,247,251,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
+#loadingOverlay .spin{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingOverlay p{color:var(--muted);font-size:.9rem;text-align:center;max-width:300px}
+.hidden{display:none!important}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+@media(max-width:600px){.picks-grid,.combo-cards{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}}
+.time-dual{font-size:.74rem;color:var(--muted);display:block;margin-top:5px;line-height:1.6}
+.time-dual .tz-name{font-size:.64rem;opacity:.7;margin:0 3px}
+.site-footer{text-align:center;padding:14px 0 8px;margin-top:28px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚾</div>
+      <div class="logo-text">
+        <h1>Béisbol<span style="color:#c00000">IQ</span></h1>
+        <span class="sub-brand">Por Data Science Sandra Blanco</span>
+        <span class="sub-algo">Análisis Bayesiano · Poisson · Monte Carlo 50K · MLB + Caribe</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="dateLabel">—</div>
+      <span id="statusBar">Iniciando…</span>
+      <button id="pdfBtn" onclick="exportPDF()">⬇ PDF</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="picks" onclick="switchTab('picks')">🎯 Picks del Día</div>
+    <div class="tab" data-tab="combos" onclick="switchTab('combos')">🎲 Combinados</div>
+    <div class="tab" data-tab="record" onclick="switchTab('record')">📊 Historial</div>
+  </div>
+
+  <div id="statsStrip" class="stats-strip"></div>
+  <div id="tabPicks"><div id="picksGrid" class="picks-grid"></div></div>
+  <div id="tabCombos" class="hidden"><div id="combosContainer"></div></div>
+  <div id="tabRecord" class="hidden"><div id="recordContainer"></div></div>
+  <footer class="site-footer">Por Data Science Sandra Blanco | akera2011@protonmail.com</footer>
+</div>
+
+<div id="loadingOverlay">
+  <div class="spin"></div>
+  <p id="loadingMsg">Cargando partidos de hoy…</p>
+</div>
+
+<script>
+'use strict';
+/* ===== CONSTANTES ===== */
+const PRM=Object.freeze({
+  VERSION:'1.0',N:50000,UMBRAL:0.63,TOP:8,
+  MIN_P:5,MIN_ODDS:1.10,
+});
+const LS='biq1-';
+const BANNED=new Set([]);
+
+/* ===== UTILIDADES ===== */
+function fmtTime(iso){
+  if(!iso)return'';
+  const d=new Date(iso);
+  const mad=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'});
+  const car=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'America/Caracas'});
+  return`<span class="time-dual">${mad}<span class="tz-name">MAD</span> · ${car}<span class="tz-name">CCS</span></span>`;
+}
+function todayMadrid(){
+  return new Date().toLocaleString('en-CA',{timeZone:'Europe/Madrid'}).slice(0,10);
+}
+
+/* ===== MATH ===== */
+const rng=seed=>{let s=seed>>>0;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296;};};
+function poisPmf(k,lam){if(lam<=0)return k===0?1:0;let r=Math.exp(-lam);for(let i=1;i<=k;i++)r=r*lam/i;return r;}
+function poisInv(u,lam){let k=0,cum=0;while(cum<u){cum+=poisPmf(k,lam);if(cum>=u)return k;k++;if(k>30)return k;}return k;}
+
+function runMC(lh,la,seed){
+  const N=PRM.N,half=N/2,r=rng(seed^0xBEEF);
+  let c1=0,c2=0,cAlta=0,cBaja=0,cRL1=0,cRL2=0;
+  for(let i=0;i<half;i++){
+    const u1=r(),u2=r();
+    [[poisInv(u1,lh),poisInv(u2,la)],[poisInv(1-u1,lh),poisInv(1-u2,la)]].forEach(([rh,ra])=>{
+      if(rh>ra){c1++;if(rh-ra>=2)cRL1++;}else c2++;
+      if(ra>=rh||rh-ra<=1)cRL2++;
+      if(rh+ra>6.5)cAlta++;else cBaja++;
+    });
+  }
+  return{p1:c1/N,p2:c2/N,alta:cAlta/N,baja:cBaja/N,rl1:cRL1/N,rl2:cRL2/N};
+}
+
+function impliedOdds(p){return p<=0||p>=1?1.01:Math.round((1/p)*0.95*100)/100;}
+
+function allMkts(R){
+  const mc=R.mc;
+  return[
+    {code:'1',label:'Victoria Local',p:mc.p1},
+    {code:'2',label:'Victoria Visitante',p:mc.p2},
+    {code:'alta',label:'Alta +6.5 Carreras',p:mc.alta},
+    {code:'baja',label:'Baja -6.5 Carreras',p:mc.baja},
+    {code:'rl1',label:'Run Line Local (-1.5)',p:mc.rl1},
+    {code:'rl2',label:'Run Line Visit. (+1.5)',p:mc.rl2},
+  ].map(m=>({...m,odds:impliedOdds(m.p)}))
+   .filter(m=>m.p>0.01&&m.p<0.99&&m.odds>=PRM.MIN_ODDS&&!BANNED.has(m.code));
+}
+
+function mktFamily(code){
+  if(code==='1'||code==='2')return'ml';
+  if(code==='rl1'||code==='rl2')return'rl';
+  return'ou';
+}
+
+function stability(hist){
+  if(!hist||hist.length<3)return 0.5;
+  const diffs=hist.slice(0,8).map(x=>x.gf-x.ga);
+  const mu=diffs.reduce((a,v)=>a+v,0)/diffs.length;
+  const v=diffs.reduce((a,v)=>a+(v-mu)**2,0)/diffs.length;
+  return Math.max(0,1-Math.sqrt(v)/3);
+}
+function pscore(mkt,R){
+  const stab=stability(R.hH||[]),rel=Math.min(1,(R.hH||[]).length/PRM.MIN_P);
+  const ob=mkt.odds>=PRM.MIN_ODDS?0.02:0;
+  return mkt.p+0.05*stab+0.03*rel+ob;
+}
+function normTeam(n){
+  return(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/\b(fc|cf|sc|afc|bfc|ac|ss|as|ud|rc|sd|cd|rb|vfb|vfl|bvb)\b/g,'')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+function statzKey(h,a){return normTeam(h)+'|'+normTeam(a);}
+
+/* ===== COMBINADOS ===== */
+function buildCombos(picks){
+  if(picks.length<3)return[];
+  const combos=[];
+  for(let i=0;i<Math.min(picks.length,6);i++){
+    for(let j=i+1;j<Math.min(picks.length,6);j++){
+      for(let k=j+1;k<Math.min(picks.length,6);k++){
+        const pa=picks[i],pb=picks[j],pc=picks[k];
+        const getAlt=p=>p.markets.filter(m=>m.code!==p.bestMkt.code&&m.p>=0.55&&!BANNED.has(m.code))[0]||(p.bestMkt.p>=0.60?p.bestMkt:null);
+        const ma=getAlt(pa),mb=getAlt(pb),mc2=getAlt(pc);
+        if(!ma||!mb||!mc2)continue;
+        const pComb=ma.p*mb.p*mc2.p;
+        if(pComb<0.25)continue;
+        combos.push({
+          name:`Combinado ${combos.length+1}`,
+          pComb,oddsComb:parseFloat((ma.odds*mb.odds*mc2.odds).toFixed(2)),
+          picks:[
+            {match:`${pa.home} vs ${pa.away}`,label:ma.label,p:ma.p,odds:ma.odds},
+            {match:`${pb.home} vs ${pb.away}`,label:mb.label,p:mb.p,odds:mb.odds},
+            {match:`${pc.home} vs ${pc.away}`,label:mc2.label,p:mc2.p,odds:mc2.odds},
+          ]
+        });
+        if(combos.length>=10)break;
+      }
+      if(combos.length>=10)break;
+    }
+    if(combos.length>=10)break;
+  }
+  combos.sort((a,b)=>b.pComb-a.pComb);
+  return combos.slice(0,2);
+}
+
+/* ===== STATZ REMOTE FETCH (baseball_data.json) ===== */
+const STATZ_REMOTE_URL='https://raw.githubusercontent.com/akera2010/akera2010/ccr-302eb251-8ontw0/baseball_data.json';
+let STATZ_CACHE_B={};
+let STATZ_FIXTURES_B=[];
+
+async function fetchStatzData(){
+  try{
+    const r=await fetch(STATZ_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok){console.warn('[BeisbolIQ] baseball_data.json HTTP',r.status);return;}
+    const d=await r.json();
+    if(d.cache&&typeof d.cache==='object'){
+      Object.keys(STATZ_CACHE_B).forEach(k=>delete STATZ_CACHE_B[k]);
+      Object.assign(STATZ_CACHE_B,d.cache);
+    }
+    if(Array.isArray(d.fixtures)&&d.fixtures.length){
+      STATZ_FIXTURES_B.length=0;
+      STATZ_FIXTURES_B.push(...d.fixtures);
+    }
+    if(Array.isArray(d.picks)&&d.picks.length&&d.updated===todayMadrid()){
+      STATE.bakedPicks=d.picks;
+      STATE.bakedCombos=Array.isArray(d.combos)?d.combos:[];
+    }
+    console.info('[BeisbolIQ] Datos del día cargados:',d.updated||'?');
+  }catch(e){
+    console.warn('[BeisbolIQ] fetch remoto fallido — usando caché local:',e.message);
+  }
+}
+
+function computePicksFromStatz(){
+  const W=0.65,today=todayMadrid();
+  const LG_AVG={mlb:4.5,'ven.1':4.2,'mex.1':4.3,'dom.1':4.4};
+  const games=STATZ_FIXTURES_B.filter(sf=>{
+    if(!sf.time)return false;
+    const d=new Date(sf.time).toLocaleString('en-CA',{timeZone:'Europe/Madrid'}).slice(0,10);
+    return d===today;
+  });
+  if(!games.length)return[];
+  const results=[];
+  for(const g of games){
+    const k=statzKey(g.home,g.away);
+    const sd=STATZ_CACHE_B[k]||{};
+    const lgAvg=LG_AVG[g.leagueId]||4.3;
+    let lh=sd.xRH||(sd.winH?(sd.winH>0.5?lgAvg*1.1:lgAvg*0.9):lgAvg);
+    let la=sd.xRA||(sd.winA?(sd.winA>0.5?lgAvg*1.1:lgAvg*0.9):lgAvg);
+
+    let hs=0xDEADBEEF;
+    const ss=(g.home+g.away).toLowerCase();
+    for(let i=0;i<ss.length;i++){hs=Math.imul(hs^ss.charCodeAt(i),0x9e3779b9);hs^=hs>>>16;}
+    const mc=runMC(lh,la,hs>>>0);
+
+    if(sd.winH!==undefined){mc.p1=mc.p1*(1-W)+sd.winH*W;}
+    if(sd.winA!==undefined){mc.p2=mc.p2*(1-W)+sd.winA*W;}
+    if(sd.total!==undefined){
+      mc.alta=mc.alta*(1-W)+(sd.total>8.5?0.68:sd.total<7.5?0.35:0.52)*W;
+      mc.baja=1-mc.alta;
+    }
+    const totML=mc.p1+mc.p2;if(totML>0){mc.p1/=totML;mc.p2/=totML;}
+
+    const R={mc,lh,la,hH:[],hA:[],pitcherH:sd.pitcherH||null,pitcherA:sd.pitcherA||null};
+    const mkts=allMkts(R);mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
+    if(!mkts.length)continue;
+    const best=mkts[0];const sc=pscore(best,R);
+    if(sc<PRM.UMBRAL)continue;
+    results.push({...g,R,markets:mkts,bestMkt:best,score:sc,pitcherH:sd.pitcherH||null,pitcherA:sd.pitcherA||null,dataQ:0,statz:true});
+  }
+  results.sort((a,b)=>b.score-a.score);
+  const mlbP=results.filter(r=>r.leagueId==='mlb');
+  const carP=results.filter(r=>r.leagueId!=='mlb');
+  if(mlbP.length>=5)return[...mlbP.slice(0,5),...carP.slice(0,3)];
+  const famC={},divP=[];
+  for(const r of results){
+    const f=mktFamily(r.bestMkt.code);
+    if((famC[f]||0)<2){famC[f]=(famC[f]||0)+1;divP.push(r);}
+    if(divP.length>=PRM.TOP)break;
+  }
+  return divP.length>=PRM.TOP?divP:results.slice(0,PRM.TOP);
+}
+
+/* ===== STATE ===== */
+let STATE={picks:[],combos:[],date:'',loading:false,lastFetch:0,bakedPicks:null,bakedCombos:null};
+
+async function boot(){
+  if(STATE.loading)return;
+  STATE.loading=true;
+  const ov=document.getElementById('loadingOverlay');
+  const lm=document.getElementById('loadingMsg');
+  ov.classList.remove('hidden');
+  lm.textContent='Cargando partidos de hoy…';
+  document.getElementById('statusBar').textContent='Actualizando…';
+  try{
+    STATE.date=todayMadrid();
+    document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Madrid'});
+    lm.textContent='Actualizando estadísticas del día…';
+    STATE.bakedPicks=null;STATE.bakedCombos=null;
+    await fetchStatzData();
+    if(STATE.bakedPicks&&STATE.bakedPicks.length){
+      STATE.picks=STATE.bakedPicks;
+      STATE.combos=STATE.bakedCombos&&STATE.bakedCombos.length?STATE.bakedCombos:buildCombos(STATE.picks);
+    }else{
+      lm.textContent='Calculando picks del día…';
+      STATE.picks=computePicksFromStatz();
+      STATE.combos=buildCombos(STATE.picks);
+    }
+  }catch(err){
+    console.error('[BeisbolIQ] boot error:',err);
+    STATE.picks=computePicksFromStatz();
+    STATE.combos=buildCombos(STATE.picks);
+  }
+  STATE.lastFetch=Date.now();
+  if(!STATE.combos.length&&STATE.picks.length)STATE.combos=buildCombos(STATE.picks);
+  saveRecord();
+  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ${STATE.date} · v${PRM.VERSION} · MLB+Caribe`;
+  STATE.loading=false;
+  ov.classList.add('hidden');
+  renderAll();
+  scheduleRefresh();
+}
+
+function saveRecord(){
+  try{
+    const h=getHist();
+    const idx=h.findIndex(r=>r.date===STATE.date);
+    const entry={date:STATE.date,picks:STATE.picks.map(p=>({match:`${p.home} vs ${p.away}`,pick:p.bestMkt.label,p:p.bestMkt.p,odds:p.bestMkt.odds})),result:'pending'};
+    if(idx>=0)h[idx]=entry;else h.unshift(entry);
+    localStorage.setItem(LS+'history',JSON.stringify(h.slice(0,60)));
+  }catch(e){}
+}
+function getHist(){try{return JSON.parse(localStorage.getItem(LS+'history')||'[]');}catch(e){return[];}}
+
+/* ===== RENDER ===== */
+function ringColor(p){return p>=.85?'#22c55e':p>=.75?'#eab308':p>=.60?'#f97316':'#ef4444';}
+function ringHTML(p,label){
+  const r=15.9,c=2*Math.PI*r,off=c*(1-p),col=ringColor(p),pct=Math.round(p*100);
+  return`<div class="mkt"><div class="ring-wrap"><svg width="40" height="40" viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="${r}"/><circle class="ring-fg" cx="18" cy="18" r="${r}" stroke="${col}" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="ring-val" style="color:${col}">${pct}</div></div><div class="mkt-name">${label}</div></div>`;
+}
+
+function renderAll(){renderStats();renderPicks();renderCombos();renderRecord();}
+
+function renderStats(){
+  const p=STATE.picks,h=getHist();
+  const avg=p.length?p.reduce((a,x)=>a+x.score,0)/p.length:0;
+  const avgo=p.length?p.reduce((a,x)=>a+x.bestMkt.odds,0)/p.length:0;
+  const hits=h.filter(x=>x.result==='hit').length,tot=h.length;
+  document.getElementById('statsStrip').innerHTML=`
+    <div class="stat-card"><div class="stat-val">${p.length}</div><div class="stat-lbl">Picks de Hoy</div></div>
+    <div class="stat-card"><div class="stat-val">${(avg*100).toFixed(1)}%</div><div class="stat-lbl">x̅ Probabilidad</div></div>
+    <div class="stat-card"><div class="stat-val">${avgo.toFixed(2)}</div><div class="stat-lbl">x̅ Cuota</div></div>
+    <div class="stat-card"><div class="stat-val">${STATE.combos.length}</div><div class="stat-lbl">Combinados</div></div>
+    <div class="stat-card"><div class="stat-val">${tot?Math.round(hits/tot*100)+'%':'—'}</div><div class="stat-lbl">Precisión</div></div>
+  `;
+}
+
+function renderPicks(){
+  const grid=document.getElementById('picksGrid');
+  if(!STATE.picks.length){grid.innerHTML='<div class="empty-state"><p>No hay picks disponibles</p></div>';return;}
+  grid.innerHTML=STATE.picks.map((p,i)=>{
+    const mc=p.R.mc,sc=p.score;
+    const cls=sc>=.85?'high':sc>=.75?'med':'';
+    const pitcherH=p.pitcherH||p.R.pitcherH||null;
+    const pitcherA=p.pitcherA||p.R.pitcherA||null;
+    const pitchersHTML=(pitcherH||pitcherA)?`<div class="pitchers-row">
+      <div class="pitcher"><span>🤾 Local</span><strong>${pitcherH||'Por confirmar'}</strong></div>
+      <div class="pitcher"><span>🤾 Visita</span><strong>${pitcherA||'Por confirmar'}</strong></div>
+    </div>`:'';
+    return`<div class="pick-card">
+      <div class="pick-header">
+        <div>
+          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}</div>
+          <div class="pick-league">${p.league} · Pick #${i+1}</div>
+          ${p.time?fmtTime(p.time):''}
+        </div>
+        <div class="pick-badge ${cls}">${(sc*100).toFixed(0)}%</div>
+      </div>
+      <div class="lambdas">
+        <div class="lam">Runs Esp. Local<span>${p.R.lh.toFixed(2)}</span></div>
+        <div class="lam">Runs Esp. Visita<span>${p.R.la.toFixed(2)}</span></div>
+      </div>
+      ${pitchersHTML}
+      <div class="markets-row">
+        ${ringHTML(mc.p1,'Local')}${ringHTML(mc.p2,'Visita')}${ringHTML(mc.alta,'Alta')}${ringHTML(mc.baja,'Baja')}${ringHTML(mc.rl2,'RL+1.5')}
+      </div>
+      <div class="best-pick-row">
+        <div class="bp-left">
+          <div class="bp-type">Mejor Pick (${PRM.N.toLocaleString()} sim MC)</div>
+          <div class="bp-pick">${p.bestMkt.label}</div>
+        </div>
+        <div class="bp-odds-box">
+          <div class="bp-prob">${(p.bestMkt.p*100).toFixed(1)}% probabilidad</div>
+          <div class="bp-odds">@${p.bestMkt.odds}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCombos(){
+  const c=document.getElementById('combosContainer');
+  if(!STATE.combos.length){c.innerHTML='<div class="empty-state"><p>Sin combinados disponibles</p></div>';return;}
+  c.innerHTML=`<div class="combo-section">
+    <div class="combo-title">🎲 Combinados del Día <span style="font-size:.8rem;color:var(--muted);font-weight:400">(picks distintos a los simples)</span></div>
+    <div class="combo-cards">${STATE.combos.map(cb=>`
+      <div class="combo-card">
+        <div class="combo-header">
+          <strong>${cb.name}</strong>
+          <div>Cuota <strong style="color:var(--acc)">${cb.oddsComb}</strong> · P.comb <strong style="color:var(--green)">${(cb.pComb*100).toFixed(1)}%</strong></div>
+        </div>
+        ${cb.picks.map(pk=>`<div class="combo-pick-row"><div class="cpr-left"><em>${pk.match||'—'}</em><div>${pk.label}</div></div><div><div class="cpr-odds">@${pk.odds}</div><div class="cpr-p">${(pk.p*100).toFixed(1)}%</div></div></div>`).join('')}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderRecord(){
+  const h=getHist();
+  const hits=h.filter(x=>x.result==='hit').length;
+  const misses=h.filter(x=>x.result==='miss').length;
+  const pending=h.filter(x=>x.result==='pending').length;
+  const bs=brierScore(h);
+  document.getElementById('recordContainer').innerHTML=`
+    <div class="stats-strip" style="margin-bottom:16px">
+      <div class="stat-card"><div class="stat-val">${h.length}</div><div class="stat-lbl">Días Registrados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green)">${hits}</div><div class="stat-lbl">Días Acertados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red)">${misses}</div><div class="stat-lbl">Días Fallados</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--yellow)">${pending}</div><div class="stat-lbl">Pendientes</div></div>
+      <div class="stat-card"><div class="stat-val">${bs!==null?(bs*100).toFixed(2)+'%':'—'}</div><div class="stat-lbl">Brier Score</div></div>
+    </div>
+    ${calChart(h)}
+    <div style="display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:.78rem;color:var(--muted);flex:1">Historial de precisión guardado en este dispositivo.</span>
+      <button onclick="exportHistPDF()" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600">⬇ PDF Historial</button>
+    </div>
+    <table class="hist-table">
+      <thead><tr><th>Fecha</th><th>Partido</th><th>Pick</th><th>Prob</th><th>Cuota</th><th>Resultado</th><th></th></tr></thead>
+      <tbody>${h.length?h.flatMap((r,ri)=>(r.picks||[]).map((p,pi)=>`
+        <tr>
+          <td>${r.date}</td><td style="font-size:.78rem">${p.match||'—'}</td><td>${p.pick}</td>
+          <td>${(p.p*100).toFixed(1)}%</td><td>${p.odds}</td>
+          <td>${r.result==='pending'?'<span style="color:var(--yellow)">Pendiente</span>':r.result==='hit'?'<span class="badge-hit">✓</span>':'<span class="badge-miss">✗</span>'}</td>
+          <td>${ri===0&&pi===0&&r.result==='pending'?`<button onclick="markR('${r.date}','hit')" style="background:var(--green);color:#fff;border:none;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.7rem;margin-right:3px">✓</button><button onclick="markR('${r.date}','miss')" style="background:var(--red);color:#fff;border:none;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.7rem">✗</button>`:''}
+          </td>
+        </tr>`)).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Sin historial</td></tr>'}
+      </tbody>
+    </table>`;
+}
+
+function brierScore(h){
+  const r=h.filter(x=>x.result!=='pending'&&x.picks);
+  if(!r.length)return null;
+  let s=0,n=0;
+  r.forEach(x=>x.picks.forEach(p=>{const o=x.result==='hit'?1:0;s+=(p.p-o)**2;n++;}));
+  return n?s/n:null;
+}
+function calChart(h){
+  const r=h.filter(x=>x.result!=='pending'&&x.picks);
+  if(!r.length)return'<div class="cal-chart-wrap"><p style="color:var(--muted);text-align:center;padding:20px">Sin datos de calibración aún</p></div>';
+  const bins=Array.from({length:5},(_,i)=>({min:i*.2,max:(i+1)*.2,tot:0,hit:0}));
+  r.forEach(x=>x.picks.forEach(p=>{
+    const o=x.result==='hit'?1:0;
+    const b=bins.find(b=>p.p>=b.min&&p.p<b.max)||bins[4];
+    b.tot++;b.hit+=o;
+  }));
+  return`<div class="cal-chart-wrap">
+    <div style="font-weight:700;margin-bottom:12px;color:var(--acc)">Curva de Calibración</div>
+    ${bins.map(b=>{const a=b.tot?b.hit/b.tot:0,exp=(b.min+b.max)/2;return`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:.8rem">
+      <span style="width:70px;color:var(--muted)">${Math.round(b.min*100)}–${Math.round(b.max*100)}%</span>
+      <div style="flex:1;height:16px;background:var(--s3);border-radius:4px;overflow:hidden;position:relative">
+        <div style="width:${a*100}%;height:100%;background:${ringColor(a)}"></div>
+        <div style="position:absolute;top:0;bottom:0;left:${exp*100}%;width:2px;background:rgba(255,255,255,.35)"></div>
+      </div>
+      <span style="width:55px;text-align:right">${b.tot?`${(a*100).toFixed(0)}% (${b.tot})`:'—'}</span>
+    </div>`;}).join('')}
+    <div style="font-size:.7rem;color:var(--muted);margin-top:8px">Línea blanca = probabilidad esperada · Izquierda = real</div>
+  </div>`;
+}
+
+window.markR=function(date,res){
+  const h=getHist();const r=h.find(x=>x.date===date);
+  if(r){r.result=res;try{localStorage.setItem(LS+'history',JSON.stringify(h));}catch(e){}renderRecord();}
+};
+
+window.exportHistPDF=function(){
+  const{jsPDF}=window.jspdf;if(!jsPDF)return;
+  const h=getHist();if(!h.length){alert('Sin historial todavía');return;}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297,H=210,ML=14,MR=14;
+  doc.setFillColor(237,242,248);doc.rect(0,0,W,32,'F');
+  doc.setFillColor(192,0,0);doc.rect(0,32,W,1.2,'F');
+  doc.setFontSize(20);doc.setFont('helvetica','bold');
+  doc.setTextColor(15,23,42);doc.text('Beisbol',ML,16);
+  const wF=doc.getTextWidth('Beisbol');
+  doc.setTextColor(192,0,0);doc.text('IQ',ML+wF,16);
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Historial de Precisión · Por Data Science Sandra Blanco',ML,23);
+  const hits=h.filter(x=>x.result==='hit').length;
+  const misses=h.filter(x=>x.result==='miss').length;
+  const pending=h.filter(x=>x.result==='pending').length;
+  const acc=hits+misses?Math.round(hits/(hits+misses)*100)+'%':'—';
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(192,0,0);
+  doc.text(`${h.length} dias · Acertados ${hits} · Fallados ${misses} · Pendientes ${pending} · Precision ${acc}`,W-MR,16,{align:'right'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text(new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),W-MR,23,{align:'right'});
+  const rows=h.flatMap(r=>(r.picks||[]).map(p=>[r.date,p.match||'—',p.pick,`${(p.p*100).toFixed(1)}%`,`${p.odds}`,r.result==='hit'?'Acierto':r.result==='miss'?'Fallo':'Pendiente']));
+  doc.autoTable({
+    startY:36,
+    head:[['Fecha','Partido','Pick','Prob','Cuota','Resultado']],
+    body:rows,
+    styles:{fillColor:[255,255,255],textColor:[15,23,42],fontSize:8,lineColor:[148,163,184],lineWidth:.25,cellPadding:2.5},
+    headStyles:{fillColor:[29,78,216],textColor:[255,255,255],fontStyle:'bold',fontSize:7.5,halign:'center'},
+    alternateRowStyles:{fillColor:[237,242,248]},
+    columnStyles:{0:{cellWidth:22,halign:'center'},1:{cellWidth:70},2:{cellWidth:40},3:{cellWidth:16,halign:'center'},4:{cellWidth:16,halign:'center'},5:{cellWidth:24,halign:'center'}},
+    theme:'grid',margin:{left:ML,right:MR},
+    didDrawCell:d=>{
+      if(d.column.index===5&&d.section==='body'){
+        const v=d.cell.raw;
+        if(v==='Acierto')d.doc.setTextColor(21,128,61);
+        else if(v==='Fallo')d.doc.setTextColor(185,28,28);
+        else d.doc.setTextColor(161,98,7);
+      }
+    },
+  });
+  doc.setDrawColor(148,163,184);doc.setLineWidth(.4);doc.line(ML,H-10,W-MR,H-10);
+  doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco  |  akera2011@protonmail.com',ML,H-5);
+  doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Analisis Bayesiano · Poisson · Monte Carlo 50.000 sim · MLB + Caribe',W-MR,H-5,{align:'right'});
+  doc.save(`beisboliq-historial-${new Date().toISOString().slice(0,10)}.pdf`);
+};
+
+/* ===== TABS ===== */
+function switchTab(t){
+  ['picks','combos','record'].forEach(id=>{
+    const el=document.getElementById('tab'+id.charAt(0).toUpperCase()+id.slice(1));
+    el.classList.toggle('hidden',id!==t);
+  });
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+}
+
+/* ===== PDF PICKS ===== */
+function exportPDF(){
+  const{jsPDF}=window.jspdf;
+  if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297,H=210,ML=14,MR=14;
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+  doc.setFillColor(237,242,248);doc.rect(0,0,W,36,'F');
+  doc.setFillColor(192,0,0);doc.rect(0,36,W,1.2,'F');
+  doc.setFontSize(22);doc.setFont('helvetica','bold');
+  doc.setTextColor(15,23,42);
+  doc.text('Beisbol',ML,17);
+  const wB=doc.getTextWidth('Beisbol');
+  doc.setTextColor(192,0,0);
+  doc.text('IQ',ML+wB,17);
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,24);
+  doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Analisis Bayesiano · Poisson · Monte Carlo 50.000 sim · MLB + Caribe',ML,30);
+  const fechaStr=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(192,0,0);
+  doc.text(fechaStr,W-MR,17,{align:'right'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Generado: '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),W-MR,24,{align:'right'});
+  const pdfT=(iso,tz)=>iso?new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:tz}):'—';
+  const rows=STATE.picks.map((p,i)=>[
+    '',`${i+1}`,`${p.home} vs ${p.away}`,p.league,
+    pdfT(p.time,'Europe/Madrid'),pdfT(p.time,'America/Caracas'),
+    p.bestMkt.label,`${(p.bestMkt.p*100).toFixed(1)}%`,`${p.bestMkt.odds}`,`${(p.score*100).toFixed(0)}%`,
+  ]);
+  doc.autoTable({
+    startY:40,
+    head:[['V','#','Partido','Liga','MAD','CCS','Pick','Prob.','Cuota','Score']],
+    body:rows,
+    styles:{fillColor:[255,255,255],textColor:[15,23,42],fontSize:8.5,lineColor:[148,163,184],lineWidth:.25,cellPadding:2.8},
+    headStyles:{fillColor:[29,78,216],textColor:[255,255,255],fontStyle:'bold',fontSize:8,halign:'center'},
+    alternateRowStyles:{fillColor:[237,242,248]},
+    columnStyles:{
+      0:{cellWidth:8,halign:'center'},1:{cellWidth:7,halign:'center'},
+      2:{cellWidth:65},3:{cellWidth:28},
+      4:{cellWidth:16,halign:'center'},5:{cellWidth:16,halign:'center'},
+      6:{cellWidth:38},7:{cellWidth:14,halign:'center'},
+      8:{cellWidth:14,halign:'center'},9:{cellWidth:14,halign:'center'},
+    },
+    theme:'grid',margin:{left:ML,right:MR},
+    didDrawCell:function(data){
+      if(data.column.index===0&&data.section==='body'){
+        const cx=data.cell.x+(data.cell.width-4)/2;
+        const cy=data.cell.y+(data.cell.height-4)/2;
+        data.doc.setDrawColor(100,100,120);data.doc.setLineWidth(.4);data.doc.rect(cx,cy,4,4);
+      }
+    },
+  });
+  if(STATE.combos.length){
+    let y=doc.lastAutoTable.finalY+9;
+    if(y>H-25){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(29,78,216);
+    doc.text('Combinados Sugeridos',ML,y);y+=7;
+    STATE.combos.forEach(cb=>{
+      if(y>H-22){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+      doc.setDrawColor(100,100,120);doc.setLineWidth(.4);doc.rect(ML,y-3.2,3.8,3.8);
+      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+      doc.text(`  ${cb.name}   Cuota @${cb.oddsComb}   P.combinado ${(cb.pComb*100).toFixed(1)}%`,ML+5,y);y+=5;
+      cb.picks.forEach(pk=>{
+        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(71,85,105);
+        doc.text(`      •  ${pk.match||'—'}:  ${pk.label}  @${pk.odds}  (${(pk.p*100).toFixed(1)}%)`,ML+5,y);y+=4;
+      });
+      y+=3;
+    });
+  }
+  doc.setDrawColor(148,163,184);doc.setLineWidth(.4);doc.line(ML,H-10,W-MR,H-10);
+  doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,H-5);
+  const wBrand=doc.getTextWidth('Por Data Science Sandra Blanco');
+  doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('  |  akera2011@protonmail.com',ML+wBrand,H-5);
+  doc.setFontSize(7);
+  doc.text('Analisis Bayesiano · Poisson · Monte Carlo 50.000 sim · MLB + Caribe',W-MR,H-5,{align:'right'});
+  doc.save(`beisboliq-${STATE.date||new Date().toISOString().slice(0,10)}.pdf`);
+}
+
+/* ===== AUTO-REFRESH ===== */
+function scheduleRefresh(){
+  const now=new Date();
+  const mad=new Date(now.toLocaleString('en-US',{timeZone:'Europe/Madrid'}));
+  const next=new Date(mad);next.setDate(next.getDate()+1);next.setHours(9,0,0,0);
+  setTimeout(()=>{boot();scheduleRefresh();},next-mad);
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded',()=>{boot();});
+window.addEventListener('pageshow',(e)=>{if(e.persisted&&!STATE.loading)boot();});
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&!STATE.loading){
+    const age=Date.now()-(STATE.lastFetch||0);
+    if(age>10*60*1000)boot();
+  }
+});
+setInterval(()=>{if(STATE.picks.length&&!STATE.loading)renderAll();},60000);
+</script>
+</body>
+</html>
