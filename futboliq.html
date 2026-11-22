@@ -8,15 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
-  --bg:#1b2d50;--s1:#223368;--s2:#293c76;--s3:#2f4480;
-  --acc:#4f8eff;--acc2:#7c5cfc;--green:#22c55e;--yellow:#eab308;
-  --orange:#f97316;--red:#ef4444;--text:#e8eef8;--muted:#a0b4cc;
-  --border:#3d5882;--card:#1e3058;--radius:12px;
-  --shadow:0 4px 24px rgba(0,0,0,.3);
+  --bg:#060c06;--s1:#0e170e;--s2:#152015;--s3:#1c2d1c;
+  --acc:#22c55e;--acc2:#15803d;--green:#4ade80;--yellow:#fbbf24;
+  --orange:#fb923c;--red:#f87171;--text:#e2f5e2;--muted:#78a07a;
+  --border:#1f3a1f;--card:#0a120a;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 @keyframes metalShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-body{background:linear-gradient(-45deg,#1a2a48,#243a6e,#2d4878,#1f3360);background-size:400% 400%;animation:metalShimmer 15s ease infinite;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+body{background:linear-gradient(-45deg,#040904,#08130a,#0d1c0d,#060e06);background-size:400% 400%;animation:metalShimmer 18s ease infinite;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
 #app{max-width:1200px;margin:0 auto;padding:16px}
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:10px}
@@ -24,7 +24,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text)}
 .logo-text span{font-size:.75rem;color:var(--muted)}
 .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-#dateLabel{font-size:.85rem;color:var(--muted);background:var(--s2);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+#dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--s2);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
 #refreshBtn,#pdfBtn{background:var(--acc);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
 #pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b)}
 #refreshBtn:hover,#pdfBtn:hover{opacity:.85}
@@ -99,6 +99,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .tz-clock-item em{color:var(--muted);font-style:normal;font-size:.68rem;margin-right:3px}
 .time-dual{font-size:.74rem;color:var(--muted);display:block;margin-top:5px;line-height:1.5}
 .time-dual .tz-name{font-size:.64rem;opacity:.7;margin:0 3px}
+.site-footer{text-align:center;padding:14px 0 8px;margin-top:28px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -108,7 +109,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
       <div class="logo-icon">⚽</div>
       <div class="logo-text">
         <h1>FútbolIQ · Sandra Blanco</h1>
-        <span>Dixon-Coles · ELO · Monte Carlo 10K · ⚡ Statz AI</span>
+        <span>Análisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100K</span>
       </div>
     </div>
     <div class="header-right">
@@ -138,6 +139,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
   <div id="tabPicks"><div id="picksGrid" class="picks-grid"></div></div>
   <div id="tabCombos" class="hidden"><div id="combosContainer"></div></div>
   <div id="tabRecord" class="hidden"><div id="recordContainer"></div></div>
+  <footer class="site-footer">Por Data Science Sandra Blanco | akera2011@protonmail.com</footer>
 </div>
 
 <div id="loadingOverlay">
@@ -149,9 +151,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 'use strict';
 /* ===== CONSTANTES ===== */
 const PRM=Object.freeze({
-  VERSION:'4.0',MEDIA_GOLES:1.35,K_MU:8,VENTAJA:0.20,
-  RHO:-0.05,HL:3.0,N:10000,UMBRAL:0.80,TOP:8,
-  MIN_P:5,MAX_G:6,K_SHR:4,DIAS:120,MIN_ODDS:1.40,
+  VERSION:'5.0',MEDIA_GOLES:1.35,K_MU:8,VENTAJA:0.20,
+  RHO:-0.05,HL:3.0,N:100000,UMBRAL:0.80,TOP:8,
+  MIN_P:5,MAX_G:6,K_SHR:4,DIAS:120,MIN_ODDS:1.45,
 });
 const LS='fiq4-';
 const BANNED=new Set(['btts_no']);
@@ -175,6 +177,14 @@ function tickClock(){
   if(ec)ec.textContent=now.toLocaleTimeString('es-ES',{...o,timeZone:'America/Caracas'});
 }
 
+/* ===== MEDIAS POR LIGA (goles/partido) ===== */
+const LEAGUE_MEANS={
+  'eng.1':2.90,'ger.1':3.15,'ned.1':3.25,'fra.1':2.65,'esp.1':2.80,
+  'ita.1':2.75,'por.1':2.80,'tur.1':2.95,'bel.1':2.95,'gre.1':2.65,
+  'sco.1':2.75,'aut.1':3.00,'sui.1':2.90,'den.1':3.00,'nor.1':3.00,
+  'swe.1':2.85,'eng.2':2.70,'ger.2':3.00,'esp.2':2.50,'ita.2':2.55,
+  'fra.2':2.55,'cze.1':2.80,'pol.1':2.65,'rou.1':2.65,
+};
 /* ===== MATH ===== */
 const rng=seed=>{let s=seed>>>0;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296;};};
 function poisPmf(k,lam){if(lam<=0)return k===0?1:0;let p=Math.exp(-lam),r=p;for(let i=1;i<=k;i++)r=r*lam/i;return r;}
@@ -188,14 +198,16 @@ function calcElo(hist){
   const wr=swr/sw,agd=sgd/sw;
   return 1500+50*(wr-0.5)*100/50+8*agd;
 }
-function shrink(avg,n){return(n*avg+PRM.K_SHR*PRM.MEDIA_GOLES)/(n+PRM.K_SHR);}
-function calcLambdas(hH,hA){
-  const avgH=hH.length?hH.reduce((a,x)=>a+x.gf,0)/hH.length:PRM.MEDIA_GOLES;
-  const avgA=hA.length?hA.reduce((a,x)=>a+x.ga,0)/hA.length:PRM.MEDIA_GOLES;
-  const avgHc=hH.length?hH.reduce((a,x)=>a+x.ga,0)/hH.length:PRM.MEDIA_GOLES;
-  const avgAc=hA.length?hA.reduce((a,x)=>a+x.gf,0)/hA.length:PRM.MEDIA_GOLES;
-  let lh=shrink(avgH,hH.length)*shrink(avgAc,hA.length)/PRM.MEDIA_GOLES;
-  let la=shrink(avgA,hA.length)*shrink(avgHc,hH.length)/PRM.MEDIA_GOLES;
+function shrink(avg,n,mean){const m=mean||PRM.MEDIA_GOLES;return(n*avg+PRM.K_SHR*m)/(n+PRM.K_SHR);}
+function calcLambdas(hH,hA,lgId){
+  const mean=(LEAGUE_MEANS[lgId]||PRM.MEDIA_GOLES)/2;
+  const avgH=hH.length?hH.reduce((a,x)=>a+x.gf,0)/hH.length:mean;
+  const avgA=hA.length?hA.reduce((a,x)=>a+x.ga,0)/hA.length:mean;
+  const avgHc=hH.length?hH.reduce((a,x)=>a+x.ga,0)/hH.length:mean;
+  const avgAc=hA.length?hA.reduce((a,x)=>a+x.gf,0)/hA.length:mean;
+  const lgMean=LEAGUE_MEANS[lgId]||PRM.MEDIA_GOLES;
+  let lh=shrink(avgH,hH.length,lgMean/2)*shrink(avgAc,hA.length,lgMean/2)/(lgMean/2);
+  let la=shrink(avgA,hA.length,lgMean/2)*shrink(avgHc,hH.length,lgMean/2)/(lgMean/2);
   const diff=(calcElo(hH)-calcElo(hA))/400;
   const elo=1+0.15*Math.tanh(diff);
   lh*=elo*(1+PRM.VENTAJA);la/=elo;
@@ -203,17 +215,17 @@ function calcLambdas(hH,hA){
 }
 function runMC(lh,la,seed){
   const N=PRM.N,half=N/2,r=rng(seed^0xDEAD);
-  let c1=0,cX=0,c2=0,c15=0,c25=0,cBT=0;
+  let c1=0,cX=0,c2=0,c15=0,c25=0,cBT=0,c35=0,c0=0;
   for(let i=0;i<half;i++){
     const u1=r(),u2=r();
     [[poisInv(u1,lh),poisInv(u2,la)],[poisInv(1-u1,lh),poisInv(1-u2,la)]].forEach(([gh,ga])=>{
       const t=gh+ga;
       if(gh>ga)c1++;else if(gh===ga)cX++;else c2++;
-      if(t>1.5)c15++;if(t>2.5)c25++;
+      if(t>1.5)c15++;if(t>2.5)c25++;if(t>3.5)c35++;if(t===0)c0++;
       if(gh>0&&ga>0)cBT++;
     });
   }
-  return{p1:c1/N,pX:cX/N,p2:c2/N,BTTS:cBT/N,'G+1.5':c15/N,'G-1.5':1-c15/N,'G+2.5':c25/N,'G-2.5':1-c25/N};
+  return{p1:c1/N,pX:cX/N,p2:c2/N,BTTS:cBT/N,'G+1.5':c15/N,'G-1.5':1-c15/N,'G+2.5':c25/N,'G-2.5':1-c25/N,'G+3.5':c35/N,'G-3.5':1-c35/N,'G-0.5':c0/N,'G+0.5':1-c0/N};
 }
 function stability(hist){
   if(!hist||hist.length<3)return 0.5;
@@ -239,6 +251,9 @@ function allMkts(R){
     {code:'g15m',label:'Menos 1.5 Goles',p:mc['G-1.5']},
     {code:'g25m',label:'Menos 2.5 Goles',p:mc['G-2.5']},
     {code:'btts',label:'BTTS Sí',p:mc.BTTS},
+    {code:'g35p',label:'Más 3.5 Goles',p:mc['G+3.5']},
+    {code:'g35m',label:'Menos 3.5 Goles',p:mc['G-3.5']},
+    {code:'g05m',label:'Sin Goles',p:mc['G-0.5']},
   ].map(m=>({...m,odds:impliedOdds(m.p)})).filter(m=>m.p>0.01&&m.p<0.99&&m.odds>=PRM.MIN_ODDS);
 }
 
@@ -286,6 +301,13 @@ const LEAGUES=[
   {id:'fra.1',name:'Ligue 1',flag:'🇫🇷'},{id:'por.1',name:'Primeira Liga',flag:'🇵🇹'},
   {id:'ned.1',name:'Eredivisie',flag:'🇳🇱'},{id:'tur.1',name:'Süper Lig',flag:'🇹🇷'},
   {id:'bel.1',name:'Jupiler Pro',flag:'🇧🇪'},{id:'gre.1',name:'Super League',flag:'🇬🇷'},
+  {id:'sco.1',name:'Scottish Prem',flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'},{id:'aut.1',name:'Austrian BL',flag:'🇦🇹'},
+  {id:'sui.1',name:'Swiss SL',flag:'🇨🇭'},{id:'den.1',name:'Superligaen',flag:'🇩🇰'},
+  {id:'nor.1',name:'Eliteserien',flag:'🇳🇴'},{id:'swe.1',name:'Allsvenskan',flag:'🇸🇪'},
+  {id:'eng.2',name:'Championship',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},{id:'ger.2',name:'Bundesliga 2',flag:'🇩🇪'},
+  {id:'esp.2',name:'Segunda Div',flag:'🇪🇸'},{id:'ita.2',name:'Serie B',flag:'🇮🇹'},
+  {id:'fra.2',name:'Ligue 2',flag:'🇫🇷'},{id:'cze.1',name:'Czech Liga',flag:'🇨🇿'},
+  {id:'pol.1',name:'Ekstraklasa',flag:'🇵🇱'},{id:'rou.1',name:'Liga 1',flag:'🇷🇴'},
 ];
 async function fetchT(url,ms=8000){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
@@ -293,24 +315,22 @@ async function fetchT(url,ms=8000){
 }
 async function fetchGames(){
   const ds=new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const all=[];
-  for(const lg of LEAGUES){
-    try{
-      const r=await fetchT(`${BASE}/${lg.id}/scoreboard?dates=${ds}&limit=50`);
-      if(!r.ok)continue;
-      const d=await r.json();
-      (d.events||[]).filter(e=>e.status?.type?.state==='pre').forEach(e=>{
+  const fetches=LEAGUES.map(lg=>
+    fetchT(`${BASE}/${lg.id}/scoreboard?dates=${ds}&limit=50`)
+      .then(r=>r.ok?r.json():{events:[]})
+      .then(d=>(d.events||[]).filter(e=>e.status?.type?.state==='pre').map(e=>{
         const comp=e.competitions?.[0];
         const hm=comp?.competitors?.find(c=>c.homeAway==='home');
         const aw=comp?.competitors?.find(c=>c.homeAway==='away');
-        if(!hm||!aw)return;
-        all.push({id:e.id,league:lg.name,flag:lg.flag,leagueId:lg.id,
+        if(!hm||!aw)return null;
+        return{id:e.id,league:lg.name,flag:lg.flag,leagueId:lg.id,
           home:hm.team.displayName,homeId:hm.team.id,
-          away:aw.team.displayName,awayId:aw.team.id,time:e.date});
-      });
-    }catch(e){}
-  }
-  // Suplementar con fixtures de Statz para hoy
+          away:aw.team.displayName,awayId:aw.team.id,time:e.date};
+      }).filter(Boolean))
+      .catch(()=>[])
+  );
+  const settled=await Promise.allSettled(fetches);
+  const all=settled.flatMap(r=>r.status==='fulfilled'?r.value:[]);
   const today=new Date().toISOString().slice(0,10);
   const espnKeys=new Set(all.map(g=>statzKey(g.home,g.away)));
   STATZ_FIXTURES.forEach(sf=>{
@@ -339,7 +359,7 @@ async function fetchHist(lgId,teamId){
 /* ===== MOTOR ===== */
 async function computeGame(g,idx){
   const[hH,hA]=await Promise.all([fetchHist(g.leagueId,g.homeId),fetchHist(g.leagueId,g.awayId)]);
-  const{lh,la}=calcLambdas(hH,hA);
+  const{lh,la}=calcLambdas(hH,hA,g.leagueId);
   const seed=(+g.homeId||idx+1)*31+(+g.awayId||idx+1);
   const mc=runMC(lh,la,seed);
   // Integrar probabilidades Statz AI
@@ -449,6 +469,7 @@ function buildCombos(picks){
   return combos;
 }
 
+function mktFamily(code){if(code==='1'||code==='X'||code==='2')return'1x2';if(code==='btts')return'btts';return'goles';}
 /* ===== STATE ===== */
 let STATE={picks:[],combos:[],date:'',loading:false};
 
@@ -474,7 +495,9 @@ async function boot(){
       if(r)results.push(r);
     }
     results.sort((a,b)=>b.score-a.score);
-    STATE.picks=results.slice(0,PRM.TOP);
+    const famC={};const divP=[];
+    for(const r of results){const f=mktFamily(r.bestMkt.code);if((famC[f]||0)<2){famC[f]=(famC[f]||0)+1;divP.push(r);}if(divP.length>=PRM.TOP)break;}
+    STATE.picks=divP.length>=PRM.TOP?divP:results.slice(0,PRM.TOP);
     if(!STATE.picks.length){STATE.picks=fallbackPicks();}
   }catch(err){
     console.error(err);
@@ -482,7 +505,7 @@ async function boot(){
   }
   STATE.combos=buildCombos(STATE.picks);
   saveRecord();
-  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ${new Date().toLocaleTimeString('es-ES')} · ⚡Statz ${STATZ_UPDATED}`;
+  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · Actualizado ${new Date().toLocaleTimeString('es-ES')} · v${PRM.VERSION}`;
   STATE.loading=false;
   ov.classList.add('hidden');
   renderAll();
@@ -533,7 +556,7 @@ function renderPicks(){
     return`<div class="pick-card">
       <div class="pick-header">
         <div>
-          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}${p.statz?'<span style="font-size:.62rem;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;padding:1px 6px;border-radius:4px;margin-left:7px;vertical-align:middle">⚡Statz</span>':''}</div>
+          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}</div>
           <div class="pick-league">${p.league} · Pick #${i+1}</div>
           ${p.time?fmtTime(p.time):''}
         </div>
@@ -687,28 +710,35 @@ function exportPDF(){
   const{jsPDF}=window.jspdf;
   if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
   const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  doc.setFillColor(7,9,26);doc.rect(0,0,297,210,'F');
+  // Fondo blanco profesional
+  doc.setFillColor(255,255,255);doc.rect(0,0,297,210,'F');
+  // Banda superior verde
+  doc.setFillColor(21,128,61);doc.rect(0,0,297,28,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(18);doc.setFont('helvetica','bold');
-  doc.text('FútbolIQ · Sandra Blanco',14,16);
-  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);
-  doc.text(`${new Date().toLocaleString('es-ES')} · Dixon-Coles + ELO + Monte Carlo ${PRM.N.toLocaleString()} sim · v${PRM.VERSION}`,14,22);
+  doc.text('FútbolIQ · Sandra Blanco',14,13);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(220,255,220);
+  const fechaStr=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  doc.text(`${fechaStr} · ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})} · Dixon-Coles + ELO + Monte Carlo ${PRM.N.toLocaleString()} sim`,14,21);
   const pdfT=(iso,tz)=>iso?new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:tz}):'—';
   const rows=STATE.picks.map((p,i)=>[`#${i+1}`,`${p.home} vs ${p.away}`,p.league,pdfT(p.time,'Europe/Madrid'),pdfT(p.time,'America/Caracas'),p.bestMkt.label,`${(p.bestMkt.p*100).toFixed(1)}%`,`${p.bestMkt.odds}`,`${(p.score*100).toFixed(0)}%`]);
-  doc.autoTable({startY:26,head:[['#','Partido','Liga','Hora MAD','Hora CCS','Pick','Prob.','Cuota','Score']],body:rows,
-    styles:{fillColor:[15,23,41],textColor:[226,232,240],fontSize:9,lineColor:[30,45,74],lineWidth:.3},
-    headStyles:{fillColor:[79,142,255],textColor:[255,255,255],fontStyle:'bold'},
-    alternateRowStyles:{fillColor:[13,18,37]},theme:'grid'});
+  doc.autoTable({startY:32,head:[['#','Partido','Liga','Hora MAD','Hora CCS','Pick','Prob.','Cuota','Score']],body:rows,
+    styles:{fillColor:[255,255,255],textColor:[20,30,20],fontSize:9,lineColor:[200,220,200],lineWidth:.3},
+    headStyles:{fillColor:[21,128,61],textColor:[255,255,255],fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[240,250,240]},theme:'grid'});
   if(STATE.combos.length){
     let y=doc.lastAutoTable.finalY+10;
-    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(124,92,252);
-    doc.text('Combinados',14,y);y+=6;
+    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(21,128,61);
+    doc.text('Combinados Sugeridos',14,y);y+=6;
     STATE.combos.forEach(cb=>{
-      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);
+      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(20,30,20);
       doc.text(`${cb.name} · @${cb.oddsComb} · P.combo ${(cb.pComb*100).toFixed(1)}%`,14,y);y+=5;
-      cb.picks.forEach(pk=>{doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);doc.text(`  • ${pk.match}: ${pk.label} @${pk.odds} (${(pk.p*100).toFixed(1)}%)`,18,y);y+=4;});
+      cb.picks.forEach(pk=>{doc.setFont('helvetica','normal');doc.setTextColor(60,80,60);doc.text(`  • ${pk.match}: ${pk.label} @${pk.odds} (${(pk.p*100).toFixed(1)}%)`,18,y);y+=4;});
       y+=3;
     });
   }
+  // Pie de página
+  doc.setFontSize(7);doc.setTextColor(100,120,100);
+  doc.text('Por Data Science Sandra Blanco | akera2011@protonmail.com',14,205);
   doc.save(`futboliq-${STATE.date||'hoy'}.pdf`);
 }
 
