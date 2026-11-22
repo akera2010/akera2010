@@ -10,9 +10,10 @@ Vault Obsidian: `~/.claude/obsidian/`
 Repo GitHub: `akera2010/akera2010`
 
 ## Al inicio de cada sesión (OBLIGATORIO)
-1. `cd ~/.claude && git pull origin HEAD --quiet` — sincronizar últimos cambios
+1. `cd /home/user/akera2010 && git pull origin HEAD --quiet` — sincronizar últimos cambios
 2. Revisar `~/.claude/obsidian/04-Inbox/` — notas pendientes del móvil o Toshiba
 3. Revisar nota diaria en `~/.claude/obsidian/01-Diario/` para contexto del día
+4. Leer `~/.claude/obsidian/00-Index/README.md` — proyectos activos y reglas
 
 ## Al terminar trabajo significativo
 - Hacer `git add -A && git commit -m "descripción" && git push origin HEAD`
