@@ -3,11 +3,22 @@
 const fs = require('fs');
 
 const PRM = {
-  VERSION: '1.0', N: 50000, UMBRAL: 0.63, TOP: 8,
+  VERSION: '1.1', N: 50000, UMBRAL: 0.63, TOP: 8,
   MIN_P: 5, MIN_ODDS: 1.10,
   LG_AVG: { mlb: 4.5, 'ven.1': 4.2, 'mex.1': 4.3, 'dom.1': 4.4 },
 };
 const BANNED = new Set([]);
+
+// Detección automática de temporadas por calendario
+function activeLeagues() {
+  const m = new Date().getMonth() + 1; // 1-12
+  return {
+    mlb:   m >= 4 && m <= 10,  // abr-oct
+    'ven.1': m >= 10 || m <= 2, // oct-feb (LVBP)
+    'mex.1': m >= 10 || m <= 2, // oct-feb (LMP)
+    'dom.1': m >= 10 || m <= 2, // oct-feb (LIDOM)
+  };
+}
 
 function rng(seed) {
   let s = seed >>> 0;
@@ -165,12 +176,15 @@ function main() {
   }
 
   results.sort((a, b) => b.score - a.score);
-  const mlb = results.filter(r => r.leagueId === 'mlb');
+  const active = activeLeagues();
+  const mlb = active.mlb ? results.filter(r => r.leagueId === 'mlb') : [];
   const car = results.filter(r => r.leagueId !== 'mlb');
   let finalPicks;
   if (mlb.length >= 5) {
+    // Temporada MLB activa: 5 MLB + 3 Caribe
     finalPicks = [...mlb.slice(0, 5), ...car.slice(0, 3)];
   } else {
+    // Off-season MLB (nov-mar) o pocos juegos MLB: solo diversidad Caribe
     const famC = {}, divP = [];
     for (const r of results) {
       const f = mktFamily(r.bestMkt.code);
@@ -179,6 +193,7 @@ function main() {
     }
     finalPicks = divP.length >= PRM.TOP ? divP : results.slice(0, PRM.TOP);
   }
+  console.log(`[Ligas activas] MLB:${active.mlb} LVBP:${active['ven.1']} LMP:${active['mex.1']} LIDOM:${active['dom.1']}`);
 
   const combos = buildCombos(finalPicks);
   data.picks = finalPicks;
