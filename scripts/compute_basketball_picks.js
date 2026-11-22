@@ -52,7 +52,8 @@ function projectGame(h, a, isNBA) {
   const netH = h.net || 0;
   const netA = a.net || 0;
   const projMargin = netH - netA + lg.hAdv;
-  const base = lg.ortg;
+  // Puntos/equipo = ORtg × Pace/100; para NBA pace≈100 → ~ORtg; para Euroliga pace≈73.5 → ~79 pts
+  const base = isNBA ? lg.ortg : lg.ortg * lg.pace / 100;
   const projH = base + netH * 0.5;
   const projA = base + netA * 0.5;
   const projTotal = projH + projA;
@@ -133,10 +134,14 @@ const dataFile = process.argv[2] || path.join(__dirname, '..', 'basketball_data.
 let _data = { updated: today, fixtures: [], picks: [], combos: [] };
 try { _data = JSON.parse(fs.readFileSync(dataFile, 'utf8')); } catch {}
 
-// COMPATIBILIDAD: si hay fixtures en JSON los usa; sino usa array vacío
+// NBA: solo partidos de hoy. Europa (Euroliga/EuroCup/ACB): incluir próximos 4 días
 const FIXTURES_JSON = (_data.fixtures || []).filter(f => {
   if (!f.time) return false;
-  return new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10) === today;
+  const fDay = new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
+  if (f.isNBA) return fDay === today;
+  // Ligas europeas: juegan martes-jueves; mostrar próximos 4 días
+  const diff = (new Date(fDay) - new Date(today)) / 86400000;
+  return diff >= 0 && diff <= 4;
 });
 
 // Legacy: fixtures hardcodeados solo si JSON está vacío Y no hay fecha actualizada

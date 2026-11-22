@@ -138,25 +138,30 @@ function fetchESPN(league) {
 }
 
 /* ===== FETCH EUROLIGA API OFICIAL ===== */
-function fetchEuroliga(today, competition, name, flag, leagueId, totalBase) {
+// Estructura real de la API: g.local = home, g.road = away
+function fetchEuroliga(targetDate, competition, name, flag, leagueId, totalBase) {
   try {
-    const mo = parseInt(today.slice(5, 7));
-    const year = parseInt(today.slice(0, 4));
-    const seasonEnd = mo >= 9 ? year + 1 : year;
-    const code = `${competition}${seasonEnd}`;
+    const mo = parseInt(targetDate.slice(5, 7));
+    const year = parseInt(targetDate.slice(0, 4));
+    // Año de INICIO de temporada: sep-dic→año actual, ene-ago→año anterior
+    const seasonStart = mo >= 9 ? year : year - 1;
+    const code = `${competition}${seasonStart}`;
     const url = `https://${EURO_HOST}/v2/competitions/${competition}/seasons/${code}/games`;
     const d = getJSON(url);
     const fixtures = [];
     for (const g of (d.data || [])) {
       const gDate = (g.utcDate || g.date || '').slice(0, 10);
-      if (gDate !== today) continue;
+      if (gDate !== targetDate) continue;
+      const homeClub = g.local?.club  || {};
+      const awayClub = g.road?.club   || {};
+      const homeName = homeClub.name  || homeClub.abbreviatedName || '?';
+      const awayName = awayClub.name  || awayClub.abbreviatedName || '?';
       fixtures.push({
         id: `${leagueId.slice(0,3)}${fixtures.length + 1}`,
         league: name, flag, leagueId, isNBA: false,
-        home: g.homeTeam?.name || g.home?.name || '?',
-        away: g.awayTeam?.name || g.away?.name || '?',
-        time: g.utcDate || g.date || `${today}T20:00:00Z`,
-        status: g.status || 'Scheduled',
+        home: homeName, away: awayName,
+        time: g.utcDate || g.date || `${targetDate}T20:00:00Z`,
+        status: g.gameStatus || 'Scheduled',
         spreadLine: 0, totalLine: totalBase,
         H: { ortg: null, drtg: null, pace: null, net: 0, record: '?', injuries: [] },
         A: { ortg: null, drtg: null, pace: null, net: 0, record: '?', injuries: [] },
@@ -166,6 +171,51 @@ function fetchEuroliga(today, competition, name, flag, leagueId, totalBase) {
     return fixtures;
   } catch (e) {
     console.warn(`  [WARN] Euroliga ${name}: ${e.message.slice(0, 80)}`);
+    return [];
+  }
+}
+
+// Busca el próximo día con partidos en una competición (hasta maxDays adelante)
+function findEuroligaDayGames(competition, name, flag, leagueId, totalBase, fromDate, maxDays = 4) {
+  try {
+    const mo = parseInt(fromDate.slice(5, 7));
+    const year = parseInt(fromDate.slice(0, 4));
+    // Año de INICIO de temporada: sep-dic→año actual, ene-ago→año anterior
+    const seasonStart = mo >= 9 ? year : year - 1;
+    const code = `${competition}${seasonStart}`;
+    const url = `https://${EURO_HOST}/v2/competitions/${competition}/seasons/${code}/games`;
+    const d = getJSON(url);
+    const allGames = d.data || [];
+
+    for (let offset = 0; offset <= maxDays; offset++) {
+      const checkDate = new Date(fromDate);
+      checkDate.setDate(checkDate.getDate() + offset);
+      const targetDate = checkDate.toISOString().slice(0, 10);
+      const dayGames = allGames.filter(g => (g.utcDate || g.date || '').slice(0, 10) === targetDate);
+      if (dayGames.length > 0) {
+        const fixtures = dayGames.map((g, i) => {
+          const homeClub = g.local?.club || {};
+          const awayClub = g.road?.club  || {};
+          return {
+            id: `${leagueId.slice(0,3)}${i + 1}`,
+            league: name, flag, leagueId, isNBA: false,
+            home: homeClub.name || homeClub.abbreviatedName || '?',
+            away: awayClub.name || awayClub.abbreviatedName || '?',
+            time: g.utcDate || g.date || `${targetDate}T19:45:00Z`,
+            status: g.gameStatus || 'Scheduled',
+            spreadLine: 0, totalLine: totalBase,
+            H: { ortg: null, drtg: null, pace: null, net: 0, record: '?', injuries: [] },
+            A: { ortg: null, drtg: null, pace: null, net: 0, record: '?', injuries: [] },
+            rest: { H: 1, A: 1 },
+          };
+        });
+        if (offset > 0) console.log(`  ${name}: sin partidos hoy → encontrados ${fixtures.length} en ${targetDate} (+${offset}d)`);
+        return fixtures;
+      }
+    }
+    return [];
+  } catch (e) {
+    console.warn(`  [WARN] ${name} lookahead: ${e.message.slice(0, 80)}`);
     return [];
   }
 }
@@ -224,24 +274,28 @@ async function main() {
     allFixtures.push(...f);
   }
 
-  // Euroliga API oficial (complemento si ESPN no la cubre)
-  if (allFixtures.filter(f => f.leagueId === 'euro').length === 0) {
-    const f = fetchEuroliga(today, 'E', 'Euroliga', '🌍', 'euro', 162.0);
+  // Euroliga API oficial — busca hoy; si no hay, busca próximos 4 días
+  const euroFromESPN = allFixtures.filter(f => f.leagueId === 'euro').length;
+  if (euroFromESPN === 0) {
+    const f = findEuroligaDayGames('E', 'Euroliga', '🌍', 'euro', 162.0, today, 4);
     console.log(`  Euroliga API: ${f.length} juegos`);
     allFixtures.push(...f);
   }
-  if (allFixtures.filter(f => f.leagueId === 'eurocup').length === 0) {
-    const f = fetchEuroliga(today, 'U', 'EuroCup', '🌍', 'eurocup', 160.0);
+  const eurocupFromESPN = allFixtures.filter(f => f.leagueId === 'eurocup').length;
+  if (eurocupFromESPN === 0) {
+    const f = findEuroligaDayGames('U', 'EuroCup', '🌍', 'eurocup', 160.0, today, 4);
     console.log(`  EuroCup API: ${f.length} juegos`);
     allFixtures.push(...f);
   }
 
-  // Filtrar por fecha Madrid y deduplicar
-  const fixtures = dedup(allFixtures.filter(f => {
-    if (!f.time) return false;
+  // NBA: filtrar solo por hoy. Europa: incluir hoy + próximos días (lookahead)
+  const nbaFixtures = allFixtures.filter(f => {
+    if (!f.isNBA || !f.time) return false;
     const fDay = new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
     return fDay === today;
-  }));
+  });
+  const euroFixtures = allFixtures.filter(f => !f.isNBA);
+  const fixtures = dedup([...nbaFixtures, ...euroFixtures]);
 
   console.log(`\n[fetch] Total partidos de hoy: ${fixtures.length}`);
 
