@@ -274,28 +274,24 @@ async function main() {
     allFixtures.push(...f);
   }
 
-  // Euroliga API oficial — busca hoy; si no hay, busca próximos 4 días
-  const euroFromESPN = allFixtures.filter(f => f.leagueId === 'euro').length;
-  if (euroFromESPN === 0) {
-    const f = findEuroligaDayGames('E', 'Euroliga', '🌍', 'euro', 162.0, today, 4);
+  // Euroliga API oficial — solo partidos de HOY
+  if (allFixtures.filter(f => f.leagueId === 'euro').length === 0) {
+    const f = fetchEuroliga(today, 'E', 'Euroliga', '🌍', 'euro', 162.0);
     console.log(`  Euroliga API: ${f.length} juegos`);
     allFixtures.push(...f);
   }
-  const eurocupFromESPN = allFixtures.filter(f => f.leagueId === 'eurocup').length;
-  if (eurocupFromESPN === 0) {
-    const f = findEuroligaDayGames('U', 'EuroCup', '🌍', 'eurocup', 160.0, today, 4);
+  if (allFixtures.filter(f => f.leagueId === 'eurocup').length === 0) {
+    const f = fetchEuroliga(today, 'U', 'EuroCup', '🌍', 'eurocup', 160.0);
     console.log(`  EuroCup API: ${f.length} juegos`);
     allFixtures.push(...f);
   }
 
-  // NBA: filtrar solo por hoy. Europa: incluir hoy + próximos días (lookahead)
-  const nbaFixtures = allFixtures.filter(f => {
-    if (!f.isNBA || !f.time) return false;
+  // Filtrar estrictamente por HOY en zona Madrid para todas las ligas
+  const fixtures = dedup(allFixtures.filter(f => {
+    if (!f.time) return false;
     const fDay = new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
     return fDay === today;
-  });
-  const euroFixtures = allFixtures.filter(f => !f.isNBA);
-  const fixtures = dedup([...nbaFixtures, ...euroFixtures]);
+  }));
 
   console.log(`\n[fetch] Total partidos de hoy: ${fixtures.length}`);
 
