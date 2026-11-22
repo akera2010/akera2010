@@ -2304,7 +2304,6 @@ function addXP(n){
   const lv=LEVELS.filter(l=>S.xp>=l[0]).length;
   S.xp+=n;save();renderXP();xpFlash();
   const lv2=LEVELS.filter(l=>S.xp>=l[0]).length;
-  if(lv2>lv)playLevelUp();else playXP();
 }
 
 // DARK MODE
@@ -2427,7 +2426,6 @@ function renderProgress(){
 }
 const INIT={};
 function show(id){
-  playNav();
   if(!STS.find(s=>s.dataset.id===id)) id="0";
   STS.forEach(s=>s.classList.toggle("show",s.dataset.id===id));
   $$("#nav a").forEach(a=>a.classList.toggle("cur",a.dataset.id===id));
@@ -2477,7 +2475,6 @@ function qCard(q,onAns){
   d.addEventListener("click",e=>{const b=e.target.closest(".op");if(!b||d.classList.contains("answered"))return;
     d.classList.add("answered");const ok=b.dataset.v===correct;
     $$(".op",d).forEach(x=>{if(x.dataset.v===correct)x.classList.add("ok")});if(!ok)b.classList.add("ko");
-    if(ok)playCorrect();else playWrong();
     stat(ok);onAns&&onAns(ok);});
   return d;
 }
@@ -2630,15 +2627,15 @@ function playFanfare(){
 function whoosh(){const c=getCtx();if(!c)return;const t=c.currentTime;noiseHit(c,t,0.35,0.2,2000);boom(c,t+0.3)}
 
 // ===== UI SFX — Todo integrado con Web Audio API =====
-function _sfx(hz,st,dur,type,vol){try{const c=getCtx();if(!c)return;const o=c.createOscillator(),g=c.createGain(),now=c.currentTime;o.type=type||'sine';o.frequency.value=hz;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,now+st);g.gain.linearRampToValueAtTime(vol||.1,now+st+.012);g.gain.exponentialRampToValueAtTime(.0001,now+st+dur);o.start(now+st);o.stop(now+st+dur+.05)}catch(e){}}
-function playClick(){_sfx(900,0,.07,'sine',.05)}
-function playCorrect(){[[523,0,.14,'sine',.11],[659,.12,.14,'sine',.11],[784,.24,.18,'sine',.1],[1047,.38,.35,'sine',.09]].forEach(a=>_sfx(...a))}
-function playWrong(){_sfx(220,0,.12,'sawtooth',.12);_sfx(165,.1,.22,'sawtooth',.1)}
-function playXP(){_sfx(1046,0,.06,'sine',.08);_sfx(1319,.07,.12,'sine',.07)}
-function playLevelUp(){[[523,0,.13,'sine',.13],[659,.12,.13,'sine',.13],[784,.24,.13,'sine',.13],[1047,.36,.13,'sine',.13],[1319,.48,.5,'sine',.12]].forEach(a=>_sfx(...a))}
-function playNav(){_sfx(600,0,.08,'sine',.04)}
-function playBattle(){_sfx(300,0,.04,'square',.18);_sfx(220,.04,.18,'sawtooth',.12)}
-function playFlip(){_sfx(800,0,.05,'sine',.06);_sfx(1000,.04,.08,'sine',.04)}
+function _sfx(){}
+function playClick(){}
+function playCorrect(){}
+function playWrong(){}
+function playXP(){}
+function playLevelUp(){}
+function playNav(){}
+function playBattle(){}
+function playFlip(){}
 
 // ===== CANVAS DEMOS: mazIntro, mazEpisode, mazTiming2 =====
 (function initMazDemos(){
@@ -2681,7 +2678,7 @@ function playFlip(){_sfx(800,0,.05,'sine',.06);_sfx(1000,.04,.08,'sine',.04)}
     ];
     let cur=0;
     function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle=pls[cur].bg;ctx.fillRect(0,0,W,H);pls[cur].draw(ctx,W,H);ctx.font='11px monospace';ctx.fillStyle=pls[cur].bg==='#fff'?'rgba(0,0,0,0.3)':'rgba(255,255,255,0.4)';ctx.textAlign='right';ctx.fillText(`${cur+1}/${pls.length} · clic`,W-6,H-6)}
-    draw();ce.addEventListener('click',()=>{cur=(cur+1)%pls.length;draw();playFlip();});
+    draw();ce.addEventListener('click',()=>{cur=(cur+1)%pls.length;draw();});
   }
 
   // --- TIMING2: Animation timing visual ---
@@ -3717,7 +3714,6 @@ function bAttack(atkIdx){
   const dmg=rnd(atk.min,atk.max);
   bState.eneHp=Math.max(0,bState.eneHp-dmg);
   bLog(`<span class="lhit">Mazinger Z → ${atk.icon} ${atk.name} → ${dmg} de daño!</span>`);
-  playBattle();
   // Shake enemy
   const eu=document.getElementById('enemyUnit');if(eu){eu.classList.add('shake');setTimeout(()=>eu.classList.remove('shake'),350);}
   bRender();
@@ -3732,7 +3728,6 @@ function bAttack(atkIdx){
     const edmg=rnd(e.dmg[ei]-2,e.dmg[ei]+2);
     bState.mazHp=Math.max(0,bState.mazHp-edmg);
     bLog(`<span class="lenemy">${e.icon} ${e.name} usa ${e.atks[ei]} → ${edmg} de daño a Mazinger Z</span>`);
-    playBattle();
     const mu=document.getElementById('mazUnit');if(mu){mu.classList.add('shake');setTimeout(()=>mu.classList.remove('shake'),350);}
     bRender();
     if(bState.mazHp<=0){bDefeat();return;}
@@ -3834,7 +3829,6 @@ function fcRender(){
 }
 function fcFlip(){
   if(fcIdx>=fcDeck.length)return;
-  playFlip();
   document.getElementById('fcCard').classList.toggle('flipped');
   fcFlipped=!fcFlipped;
   const sr=document.getElementById('srsRow');if(sr)sr.style.display=fcFlipped?'flex':'none';
