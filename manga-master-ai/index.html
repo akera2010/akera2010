@@ -208,6 +208,9 @@ canvas{max-width:100%;display:block;touch-action:none}
   .quote::before{font-size:44px;left:8px}
   .quote p{font-size:17px}
 }
+.panel.avanzado{background:linear-gradient(135deg,var(--tone) 0%,#e8f4ff 100%);border-left:5px solid var(--blue)}
+.tip-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+.tip-card{background:#fff;border:2px solid var(--ink);padding:10px;text-align:center;font-size:13px;box-shadow:3px 3px 0 var(--ink)}
 </style>
 </head>
 <body>
@@ -607,6 +610,95 @@ canvas{max-width:100%;display:block;touch-action:none}
   <div id="vinScore" style="display:none;margin-top:12px"></div>
 </div>
 <div class="mini" data-tag="cl"></div>
+</section>
+
+<!-- 21 -->
+<section class="st" data-id="21" data-t="Explorador Manga" data-k="探">
+<div class="sthead"><div class="num">21</div><div class="tt"><h2>Explorador Manga</h2><div class="jp">探索 · マンガデックス</div></div><div class="kj">探</div></div>
+<p>Explora el catálogo mundial de manga en tiempo real. Busca cualquier título, descubre portadas, géneros y sinopsis.</p>
+<div class="panel">
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <input id="mxSearch" type="text" placeholder="Buscar manga: Berserk, Vinland…" style="flex:1;padding:8px 12px;border:3px solid var(--ink);font-family:var(--body);font-size:15px">
+    <button class="btn red" id="mxSearchBtn">Buscar</button>
+  </div>
+  <div id="mxResults" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+  <div id="mxLoader" hidden style="text-align:center;padding:20px;color:var(--sky)">Cargando...</div>
+</div>
+<div class="panel" style="margin-top:14px">
+  <h3>🔥 Trending esta semana</h3>
+  <div id="mxTrending" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+</div>
+</section>
+
+<!-- 22 -->
+<section class="st" data-id="22" data-t="Top Mundial" data-k="位">
+<div class="sthead"><div class="num">22</div><div class="tt"><h2>Top Mundial</h2><div class="jp">世界ランキング · Top 50</div></div><div class="kj">位</div></div>
+<p>Los manga con mejor puntuación de la historia según MyAnimeList. Más de 1 millón de lectores han votado.</p>
+<div class="panel">
+  <div class="chips" id="topFilter">
+    <button class="chip on" data-genre="">Todo</button>
+    <button class="chip" data-genre="shonen">Shōnen</button>
+    <button class="chip" data-genre="seinen">Seinen</button>
+    <button class="chip" data-genre="shoujo">Shōjo</button>
+    <button class="chip" data-genre="josei">Josei</button>
+  </div>
+  <div id="topMangaList" style="margin-top:14px"></div>
+  <div id="topLoader" style="text-align:center;padding:20px;color:var(--sky)">Cargando rankings...</div>
+</div>
+</section>
+
+<!-- 23 -->
+<section class="st" data-id="23" data-t="Manga Lab" data-k="研">
+<div class="sthead"><div class="num">23</div><div class="tt"><h2>Manga Lab</h2><div class="jp">研究室 · Análisis técnico</div></div><div class="kj">研</div></div>
+<p>Laboratorio de análisis técnico. Aprende a leer un manga como lo haría un investigador: paneles, globos, ritmo visual y flujo de lectura.</p>
+<div class="panel avanzado">
+<h3>Anatomía de una página de manga</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+  <div>
+    <b>Elementos que detecta Manga109:</b>
+    <ul style="margin-top:8px;padding-left:18px;line-height:1.9">
+      <li><b>Body</b> — cuerpo del personaje</li>
+      <li><b>Face</b> — rostro (bbox + landmarks)</li>
+      <li><b>Frame</b> — viñeta / panel</li>
+      <li><b>Text</b> — globos y onomatopeyas</li>
+    </ul>
+  </div>
+  <div>
+    <b>Métricas de un buen panel:</b>
+    <ul style="margin-top:8px;padding-left:18px;line-height:1.9">
+      <li>Ratio área personaje/panel: 40–70%</li>
+      <li>Globos: máx 25% del panel</li>
+      <li>Espacio negativo: mínimo 15%</li>
+      <li>Punto de fuga visible: si hay fondo</li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="panel" style="margin-top:14px">
+<h3>Ejercicio: Analiza este panel</h3>
+<p>Dibuja rectángulos sobre la imagen del panel e identifica los 4 elementos. Puntúa tu análisis.</p>
+<div id="labCanvas" style="position:relative;border:3px solid var(--ink);display:inline-block;width:100%;max-width:560px">
+  <canvas id="labDraw" width="560" height="380" style="cursor:crosshair;width:100%;display:block"></canvas>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+  <button class="btn sm lab-tag" data-tag="Body" style="background:#C00000;color:#fff">Marcar Body</button>
+  <button class="btn sm lab-tag" data-tag="Face" style="background:#1b4a8f;color:#fff">Marcar Face</button>
+  <button class="btn sm lab-tag" data-tag="Frame" style="background:#2d7a2d;color:#fff">Marcar Frame</button>
+  <button class="btn sm lab-tag" data-tag="Text" style="background:#8b4513;color:#fff">Marcar Text</button>
+  <button class="btn sm" id="labClear">Limpiar</button>
+  <button class="btn red" id="labEval">Evaluar análisis</button>
+</div>
+<div id="labResult" hidden></div>
+</div>
+<div class="panel avanzado" style="margin-top:14px">
+<h3>Cómo funciona el OCR en manga</h3>
+<div class="tip-cards">
+  <div class="tip-card"><b>1. Detección</b><br>YOLO detecta regiones de texto en la página</div>
+  <div class="tip-card"><b>2. Segmentación</b><br>Cada globo de texto se recorta individualmente</div>
+  <div class="tip-card"><b>3. MangaOCR</b><br>Modelo transformer lee kanji vertical/horizontal</div>
+  <div class="tip-card"><b>4. Traducción</b><br>Traducción con contexto manga (argot, honoríficos)</div>
+</div>
+</div>
 </section>
 </template>
 <script>
@@ -1951,6 +2043,73 @@ INIT["20"]=function(){
 // ================= BOOT =================
 $$(".mini").forEach(m=>{const sec=m.closest("section");const id=sec.dataset.id;const prev=INIT[id];INIT[id]=function(){prev&&prev();renderMini(m)}});
 renderXP();renderProgress();route();
+
+// ============ ESTACIÓN 21: MangaDex Explorer ============
+function buildMangaCard(m,coverFile){
+  const title=m.attributes?.title?.en||Object.values(m.attributes?.title||{})[0]||'Sin título';
+  const coverUrl=coverFile?`https://uploads.mangadex.org/covers/${m.id}/${coverFile}.256.jpg`:null;
+  const card=document.createElement('div');
+  card.style.cssText='border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);overflow:hidden;cursor:pointer;transition:transform .15s';
+  card.onmouseenter=()=>card.style.transform='translateY(-3px)';
+  card.onmouseleave=()=>card.style.transform='';
+  card.innerHTML=`${coverUrl?`<img src="${coverUrl}" style="width:100%;aspect-ratio:2/3;object-fit:cover" loading="lazy">`:`<div style="width:100%;aspect-ratio:2/3;background:var(--tone);display:grid;place-items:center;font-size:40px">📖</div>`}<div style="padding:8px;font-size:12px;font-weight:900;line-height:1.3">${title.substring(0,40)}</div>`;
+  return card;
+}
+async function mxFetchTrending(){
+  const el=document.getElementById('mxTrending');if(!el)return;
+  try{const r=await fetch('https://api.mangadex.org/manga?limit=12&order[followedCount]=desc&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive');
+    const j=await r.json();el.innerHTML='';
+    for(const m of j.data||[]){const cr=m.relationships.find(r=>r.type==='cover_art');el.appendChild(buildMangaCard(m,cr?.attributes?.fileName));}
+  }catch(e){el.innerHTML='<p style="color:#888">No se pudo conectar a MangaDex en este momento.</p>';}
+}
+async function mxSearch(q){
+  const el=document.getElementById('mxResults'),loader=document.getElementById('mxLoader');if(!el||!q.trim())return;
+  el.innerHTML='';if(loader)loader.hidden=false;
+  try{const r=await fetch(`https://api.mangadex.org/manga?limit=12&title=${encodeURIComponent(q)}&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive`);
+    const j=await r.json();if(loader)loader.hidden=true;el.innerHTML='';
+    for(const m of j.data||[]){const cr=m.relationships.find(r=>r.type==='cover_art');el.appendChild(buildMangaCard(m,cr?.attributes?.fileName));}
+    if(!j.data?.length)el.innerHTML='<p>Sin resultados.</p>';addXP(10);
+  }catch(e){if(loader)loader.hidden=true;el.innerHTML='<p style="color:#888">Error de conexión.</p>';}
+}
+document.getElementById('mxSearchBtn')?.addEventListener('click',()=>mxSearch(document.getElementById('mxSearch')?.value||''));
+document.getElementById('mxSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter')mxSearch(e.target.value);});
+(()=>{const st=document.querySelector('[data-id="21"]');if(!st)return;const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){mxFetchTrending();obs.disconnect();}},{threshold:0.1});obs.observe(st);})();
+
+// ============ ESTACIÓN 22: Top Mundial (Jikan + AniList) ============
+let topData=[],topFilterVal='';
+async function fetchTopManga(){
+  const el=document.getElementById('topMangaList'),loader=document.getElementById('topLoader');if(!el)return;
+  try{const r=await fetch('https://api.jikan.moe/v4/top/manga?limit=25&type=manga');
+    const j=await r.json();topData=j.data||[];if(loader)loader.remove();renderTopManga();
+  }catch(e){
+    try{const r2=await fetch('https://graphql.anilist.co',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:`{Page(perPage:25){media(type:MANGA,sort:SCORE_DESC,format:MANGA){id title{romaji english}averageScore popularity genres}}}`})});
+      const j2=await r2.json();topData=(j2.data?.Page?.media||[]).map((m,i)=>({rank:i+1,title:m.title.english||m.title.romaji,score:m.averageScore?m.averageScore/10:null,genres:m.genres}));
+      if(loader)loader.remove();renderTopManga();
+    }catch(e2){if(el)el.innerHTML='<p>No se pudo cargar el ranking.</p>';}
+  }
+}
+function renderTopManga(){
+  const el=document.getElementById('topMangaList');if(!el)return;
+  const filtered=topFilterVal?topData.filter(m=>{const g=(m.genres||[]).map(x=>(x.name||x).toLowerCase());return g.some(x=>x.includes(topFilterVal));}) :topData;
+  el.innerHTML=filtered.slice(0,20).map(m=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:2px solid var(--tone)"><div style="font-family:var(--disp);font-size:22px;color:var(--red);min-width:36px;text-align:right">#${m.rank||m.mal_id||''}</div><div style="flex:1"><b style="font-size:14px">${m.title||''}</b><div style="font-size:12px;color:#666;margin-top:2px">${(m.genres||[]).slice(0,3).map(g=>g.name||g).join(' · ')}</div></div><div style="text-align:center;min-width:48px"><div style="font-family:var(--disp);font-size:18px;color:var(--blue)">${m.score?Number(m.score).toFixed(1):'—'}</div><div style="font-size:10px;color:#888">/10</div></div></div>`).join('');
+}
+document.getElementById('topFilter')?.addEventListener('click',e=>{const btn=e.target.closest('.chip');if(!btn)return;document.querySelectorAll('#topFilter .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');topFilterVal=btn.dataset.genre;renderTopManga();});
+(()=>{const st=document.querySelector('[data-id="22"]');if(!st)return;const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){fetchTopManga();obs.disconnect();}},{threshold:0.1});obs.observe(st);})();
+
+// ============ ESTACIÓN 23: Manga Lab canvas ============
+(function labSetup(){
+  const canvas=document.getElementById('labDraw');if(!canvas)return;
+  const ctx=canvas.getContext('2d');let drawing=false,currentTag='Body',startX=0,startY=0,annotations=[];
+  const tagColors={Body:'#C00000',Face:'#1b4a8f',Frame:'#2d7a2d',Text:'#8b4513'};
+  function drawBg(){ctx.fillStyle='#f9f7f0';ctx.fillRect(0,0,560,380);ctx.strokeStyle='#0d2a5c';ctx.lineWidth=3;ctx.strokeRect(10,10,540,360);ctx.fillStyle='#dbe6f6';ctx.fillRect(60,60,180,260);ctx.fillRect(290,60,210,120);ctx.fillRect(290,220,210,100);ctx.strokeStyle='#0d2a5c';ctx.lineWidth=2;ctx.strokeRect(60,60,180,260);ctx.strokeRect(290,60,210,120);ctx.strokeRect(290,220,210,100);ctx.fillStyle='#0d2a5c';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('Panel grande',150,200);ctx.fillText('Panel derecho 1',395,130);ctx.fillText('Panel derecho 2',395,278);ctx.fillStyle='rgba(255,255,255,0.8)';ctx.fillRect(80,280,100,24);ctx.strokeRect(80,280,100,24);ctx.fillStyle='#0d2a5c';ctx.font='11px sans-serif';ctx.fillText('Texto / globo',130,296);ctx.textAlign='left';}
+  drawBg();
+  document.querySelectorAll('.lab-tag').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.lab-tag').forEach(b=>b.style.opacity='0.6');btn.style.opacity='1';currentTag=btn.dataset.tag;});});
+  function getPos(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height];}
+  canvas.addEventListener('mousedown',e=>{drawing=true;[startX,startY]=getPos(e);});
+  canvas.addEventListener('mouseup',e=>{if(!drawing)return;drawing=false;const[ex,ey]=getPos(e);const w=ex-startX,h=ey-startY;if(Math.abs(w)>12&&Math.abs(h)>12){annotations.push({tag:currentTag,x:startX,y:startY,w,h});ctx.strokeStyle=tagColors[currentTag];ctx.lineWidth=3;ctx.strokeRect(startX,startY,w,h);ctx.fillStyle=tagColors[currentTag];ctx.font='bold 12px sans-serif';ctx.fillText(currentTag,startX+4,startY+16);}});
+  document.getElementById('labClear')?.addEventListener('click',()=>{annotations=[];drawBg();const r=document.getElementById('labResult');if(r)r.hidden=true;});
+  document.getElementById('labEval')?.addEventListener('click',()=>{const result=document.getElementById('labResult');if(!result)return;const found=new Set(annotations.map(a=>a.tag));const xp=found.size*25;result.hidden=false;result.innerHTML=`<div class="panel" style="margin-top:10px;background:${found.size>=3?'#eaffea':'#fff9e6'}"><b>Análisis: ${found.size}/4 tipos identificados</b> (+${xp} XP)<br>${['Body','Face','Frame','Text'].map(t=>`${found.has(t)?'✅':'❌'} ${t}`).join(' · ')}<br><small>Basado en la metodología Manga109. ${found.size>=3?'¡Excelente análisis!':'Intenta marcar más elementos.'}</small></div>`;if(xp>0)addXP(xp);});
+})();
 
 </script>
 </body>
