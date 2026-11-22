@@ -713,6 +713,77 @@ canvas{max-width:100%;display:block;touch-action:none}
   <div class="tip-card"><b>4. Traducción</b><br>Traducción con contexto manga (argot, honoríficos)</div>
 </div>
 </div>
+
+<div class="panel avanzado" style="margin-top:14px">
+<h3>Manga109 — Anotaciones visualizadas</h3>
+<p style="margin:0 0 12px">El dataset Manga109 anota 109 volúmenes con 4 categorías. Estudia cómo se marcan los elementos en un panel real:</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+  <div class="panel" style="margin:0;padding:12px">
+    <b style="color:var(--red)">Body — detección corporal</b>
+    <svg viewBox="0 0 180 220" width="100%" style="border:2px solid var(--ink);display:block;margin-top:6px;background:#fafcff">
+      <rect x="60" y="12" width="60" height="45" rx="4" fill="none" stroke="#C00000" stroke-width="2" stroke-dasharray="4,2"/>
+      <ellipse cx="90" cy="30" rx="22" ry="20" fill="none" stroke="#0d2a5c" stroke-width="2"/>
+      <rect x="66" y="57" width="48" height="70" rx="3" fill="none" stroke="#0d2a5c" stroke-width="2"/>
+      <line x1="66" y1="68" x2="30" y2="110" stroke="#0d2a5c" stroke-width="2"/>
+      <line x1="114" y1="68" x2="150" y2="110" stroke="#0d2a5c" stroke-width="2"/>
+      <line x1="75" y1="127" x2="70" y2="195" stroke="#0d2a5c" stroke-width="2"/>
+      <line x1="105" y1="127" x2="110" y2="195" stroke="#0d2a5c" stroke-width="2"/>
+      <rect x="55" y="8" width="70" height="55" rx="4" fill="none" stroke="#C00000" stroke-width="2.5" stroke-dasharray="6,2"/>
+      <text x="58" y="6" font-size="9" fill="#C00000" font-weight="bold">Body bbox</text>
+    </svg>
+    <p class="small" style="margin:4px 0 0">Bounding box sobre el cuerpo completo del personaje.</p>
+  </div>
+  <div class="panel" style="margin:0;padding:12px">
+    <b style="color:var(--blue)">Face — detección facial</b>
+    <svg viewBox="0 0 180 220" width="100%" style="border:2px solid var(--ink);display:block;margin-top:6px;background:#fafcff">
+      <ellipse cx="90" cy="88" rx="52" ry="60" fill="none" stroke="#0d2a5c" stroke-width="2"/>
+      <ellipse cx="68" cy="78" rx="12" ry="10" fill="#0d2a5c"/>
+      <ellipse cx="112" cy="78" rx="12" ry="10" fill="#0d2a5c"/>
+      <ellipse cx="69" cy="76" rx="4" ry="3.5" fill="#fff"/>
+      <ellipse cx="113" cy="76" rx="4" ry="3.5" fill="#fff"/>
+      <path d="M75,100 Q90,112 105,100" fill="none" stroke="#0d2a5c" stroke-width="2"/>
+      <line x1="55" y1="60" x2="80" y2="65" stroke="#0d2a5c" stroke-width="3" stroke-linecap="round"/>
+      <line x1="100" y1="65" x2="125" y2="60" stroke="#0d2a5c" stroke-width="3" stroke-linecap="round"/>
+      <rect x="34" y="24" width="112" height="128" rx="4" fill="none" stroke="#1b4a8f" stroke-width="2.5" stroke-dasharray="6,2"/>
+      <text x="34" y="22" font-size="9" fill="#1b4a8f" font-weight="bold">Face bbox</text>
+    </svg>
+    <p class="small" style="margin:4px 0 0">Bbox facial con landmarks: ojos, nariz, boca y cejas.</p>
+  </div>
+  <div class="panel" style="margin:0;padding:12px">
+    <b style="color:#2d7a2d">Frame — viñeta / panel</b>
+    <svg viewBox="0 0 180 220" width="100%" style="border:2px solid var(--ink);display:block;margin-top:6px;background:#fafcff">
+      <rect x="8" y="8" width="164" height="204" fill="#f5f8ff" stroke="#0d2a5c" stroke-width="3"/>
+      <rect x="8" y="8" width="78" height="100" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>
+      <rect x="94" y="8" width="78" height="100" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>
+      <rect x="8" y="116" width="164" height="96" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>
+      <text x="30" y="62" font-size="9" fill="#2d7a2d" font-weight="bold">Frame 01</text>
+      <text x="108" y="62" font-size="9" fill="#2d7a2d" font-weight="bold">Frame 02</text>
+      <text x="72" y="168" font-size="9" fill="#2d7a2d" font-weight="bold">Frame 03 (splash)</text>
+      <rect x="4" y="4" width="172" height="212" rx="2" fill="none" stroke="#2d7a2d" stroke-width="2" stroke-dasharray="6,3"/>
+      <text x="4" y="2" font-size="9" fill="#2d7a2d" font-weight="bold">Página completa</text>
+    </svg>
+    <p class="small" style="margin:4px 0 0">Cada panel se anota como un rectángulo Frame independiente.</p>
+  </div>
+  <div class="panel" style="margin:0;padding:12px">
+    <b style="color:#8b4513">Text — globos y onomatopeyas</b>
+    <svg viewBox="0 0 180 220" width="100%" style="border:2px solid var(--ink);display:block;margin-top:6px;background:#fafcff">
+      <ellipse cx="100" cy="50" rx="58" ry="34" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>
+      <polygon points="80,84 95,66 110,84" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>
+      <text x="58" y="45" font-size="10" fill="#0d2a5c" font-weight="bold">やあ！ hola…</text>
+      <text x="68" y="62" font-size="10" fill="#0d2a5c">そうか？</text>
+      <rect x="28" y="12" width="140" height="78" rx="4" fill="none" stroke="#8b4513" stroke-width="2.5" stroke-dasharray="6,2"/>
+      <text x="28" y="10" font-size="9" fill="#8b4513" font-weight="bold">Text bbox</text>
+      <text x="30" y="140" font-size="22" fill="#C00000" font-weight="bold" transform="rotate(-10,100,140)">ドカン!</text>
+      <rect x="18" y="118" width="144" height="56" rx="4" fill="none" stroke="#8b4513" stroke-width="2.5" stroke-dasharray="6,2"/>
+      <text x="18" y="116" font-size="9" fill="#8b4513" font-weight="bold">Onomatopeya bbox</text>
+    </svg>
+    <p class="small" style="margin:4px 0 0">Globos de diálogo y onomatopeyas: cada texto tiene su bbox.</p>
+  </div>
+</div>
+<div style="margin-top:12px;padding:10px;background:var(--tone);border:2px solid var(--ink)">
+  <b>Acceso al dataset:</b> <a href="http://www.manga109.org/en/index.html" target="_blank" rel="noopener">manga109.org</a> — disponible gratis para investigación académica. Incluye +20.000 imágenes de 109 volúmenes. API Python: <code>pip install manga109api</code>
+</div>
+</div>
 </section>
 
 <section class="st" data-id="24" data-t="Museos y Festivales" data-k="館">
@@ -2096,7 +2167,16 @@ INIT["18"]=function(){
      eval:function(pixels,w,h){const cx=Math.floor(w*.5),cy=Math.floor(h*.44);let radHit=0;const tS=30;for(let s=0;s<tS;s++){const a=s*Math.PI*2/tS;let hit=false;for(let r2=w*.08;r2<Math.min(w,h)*.54;r2+=4){const px=Math.round(cx+Math.cos(a)*r2),py=Math.round(cy+Math.sin(a)*r2);if(px>=0&&px<w&&py>=0&&py<h){const idx=(py*w+px)*4;if(pixels[idx]<100&&pixels[idx+3]>80){hit=true;break}}}if(hit)radHit++;}let cD=0;for(let y=Math.floor(h*.12);y<Math.floor(h*.76);y++)for(let x=Math.floor(w*.18);x<Math.floor(w*.82);x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)cD++;}const cov=cD/(Math.floor(h*.64)*Math.floor(w*.64));if(cD<5&&radHit<3)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};let sc=0,fb=[];if(radHit>=18){sc+=45;fb.push("¡Líneas de impacto espectaculares!")}else if(radHit>=10){sc+=25;fb.push(`${radHit}/${tS} sectores cubiertos.`)}else{sc+=5;fb.push(`Solo ${radHit} sectores. Añade más líneas.`)}if(cov>.14){sc+=40;fb.push("¡El puño domina el plano!")}else if(cov>.07){sc+=20;fb.push("El puño central necesita más tamaño.")}sc=Math.min(100,sc+15);return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}},
     {id:"mirada",n:"10 · La mirada expresiva",instr:"<b class='t'>Objetivo:</b> Dibuja un par de ojos manga con pupila, iris, reflejo de luz y cejas expresivas en la zona central del canvas.",
      drawRef:function(rc,w,h){const lx=w*.32,rx=w*.68,ey=h*.47;rc.strokeStyle="#0d2a5c";[lx,rx].forEach(cx=>{rc.lineWidth=3;rc.beginPath();rc.ellipse(cx,ey,w*.1,h*.17,0,0,Math.PI*2);rc.stroke();rc.fillStyle="#0d2a5c";rc.beginPath();rc.ellipse(cx,ey+h*.02,w*.068,h*.12,0,0,Math.PI*2);rc.fill();rc.fillStyle="#fff";rc.beginPath();rc.ellipse(cx+w*.03,ey-h*.05,w*.02,h*.03,0,0,Math.PI*2);rc.fill();rc.lineWidth=4;rc.strokeStyle="#0d2a5c";rc.beginPath();rc.moveTo(cx-w*.12,ey-h*.2);rc.quadraticCurveTo(cx,ey-h*.25,cx+w*.12,ey-h*.18);rc.stroke();});rc.fillStyle="rgba(13,42,92,0.4)";rc.font=`bold ${w*.022}px sans-serif`;rc.fillText("Ojos con pupila, iris, reflejo y cejas",w*.04,h*.08);rc.strokeStyle="#0d2a5c";rc.lineWidth=2;rc.strokeRect(5,5,w-10,h-10);},
-     eval:function(pixels,w,h){function zC(x1,x2,y1,y2){let n=0;for(let y=y1;y<y2;y++)for(let x=x1;x<x2;x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)n++;}return n;}const lC=zC(Math.floor(w*.12),Math.floor(w*.5),Math.floor(h*.25),Math.floor(h*.75)),rC=zC(Math.floor(w*.5),Math.floor(w*.88),Math.floor(h*.25),Math.floor(h*.75)),tot=lC+rC;if(tot<5)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};let sc=0,fb=[];if(lC>50&&rC>50){sc+=60;fb.push("¡Ambos ojos detectados!")}else if(lC>30||rC>30){sc+=30;fb.push("Un solo ojo — dibuja los dos.")}else{sc+=10;fb.push("Dibuja ambos ojos en la zona central.")}sc=Math.min(100,sc+(tot>400?30:tot>200?15:5));return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}}
+     eval:function(pixels,w,h){function zC(x1,x2,y1,y2){let n=0;for(let y=y1;y<y2;y++)for(let x=x1;x<x2;x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)n++;}return n;}const lC=zC(Math.floor(w*.12),Math.floor(w*.5),Math.floor(h*.25),Math.floor(h*.75)),rC=zC(Math.floor(w*.5),Math.floor(w*.88),Math.floor(h*.25),Math.floor(h*.75)),tot=lC+rC;if(tot<5)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};let sc=0,fb=[];if(lC>50&&rC>50){sc+=60;fb.push("¡Ambos ojos detectados!")}else if(lC>30||rC>30){sc+=30;fb.push("Un solo ojo — dibuja los dos.")}else{sc+=10;fb.push("Dibuja ambos ojos en la zona central.")}sc=Math.min(100,sc+(tot>400?30:tot>200?15:5));return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}},
+    {id:"cubo3d",n:"11 · Cubo en perspectiva 3D",instr:"<b class='t'>Objetivo:</b> Dibuja un cubo en perspectiva de 2 puntos de fuga. Las líneas horizontales deben converger a izquierda y derecha. El cubo debe mostrar al menos 2 caras visibles.",
+     drawRef:function(rc,w,h){rc.strokeStyle="#999";rc.lineWidth=1;rc.setLineDash([4,4]);rc.beginPath();rc.moveTo(0,h*.42);rc.lineTo(w,h*.42);rc.stroke();rc.setLineDash([]);rc.fillStyle="#C00000";[w*.08,w*.92].forEach(vx=>{rc.beginPath();rc.arc(vx,h*.42,5,0,Math.PI*2);rc.fill();rc.font=`bold ${w*.02}px sans-serif`;rc.fillStyle="#C00000";rc.fillText("VP",vx-8,h*.38);});const lx=w*.28,rx=w*.72,ty=h*.18,by=h*.75,mx=w*.5,my=h*.42;rc.strokeStyle="#0d2a5c";rc.lineWidth=2.5;rc.lineCap="round";[[mx,ty,lx,ty],[lx,ty,lx,by],[lx,by,rx,by],[rx,by,rx,ty],[rx,ty,mx,ty]].forEach(([x1,y1,x2,y2])=>{rc.beginPath();rc.moveTo(x1,y1);rc.lineTo(x2,y2);rc.stroke();});rc.lineWidth=2;rc.setLineDash([5,4]);[[lx,ty,w*.08,h*.42],[rx,ty,w*.92,h*.42],[lx,by,w*.08,h*.42],[rx,by,w*.92,h*.42],[mx,ty,w*.08,h*.42],[mx,ty,w*.92,h*.42]].forEach(([x1,y1,x2,y2])=>{rc.beginPath();rc.moveTo(x1,y1);rc.lineTo(x2,y2);rc.stroke();});rc.setLineDash([]);rc.fillStyle="rgba(13,42,92,0.07)";rc.beginPath();rc.moveTo(mx,ty);rc.lineTo(rx,ty);rc.lineTo(rx,by);rc.lineTo(mx,my);rc.closePath();rc.fill();rc.fillStyle="rgba(13,42,92,0.04)";rc.beginPath();rc.moveTo(mx,ty);rc.lineTo(lx,ty);rc.lineTo(lx,by);rc.lineTo(mx,my);rc.closePath();rc.fill();rc.fillStyle="rgba(13,42,92,0.4)";rc.font=`bold ${w*.021}px sans-serif`;rc.textAlign="center";rc.fillText("2 caras visibles + perspectiva convergente",w*.5,h*.9);rc.textAlign="left";rc.strokeStyle="#0d2a5c";rc.lineWidth=2;rc.strokeRect(5,5,w-10,h-10);},
+     eval:function(pixels,w,h){const lZ={x0:0,x1:Math.floor(w*.5)},rZ={x0:Math.floor(w*.5),x1:w},tZ={y0:0,y1:Math.floor(h*.5)},bZ={y0:Math.floor(h*.5),y1:h};function zC(xr,yr){let n=0;for(let y=yr.y0;y<yr.y1;y++)for(let x=xr.x0;x<xr.x1;x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)n++;}return n;}const tl=zC(lZ,tZ),tr=zC(rZ,tZ),bl=zC(lZ,bZ),br=zC(rZ,bZ),tot=tl+tr+bl+br;if(tot<5)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};const twoFaces=(tl>20&&tr>20)||(tl>20&&bl>20)||(tr>20&&br>20);let sc=0,fb=[];if(twoFaces){sc+=65;fb.push("¡Dos caras del cubo detectadas!")}else{sc+=20;fb.push("Dibuja el cubo mostrando al menos 2 caras.")}const spread=Math.max(tl,tr,bl,br)/Math.max(1,Math.min(tl,tr,bl,br));if(spread<10){sc+=25;fb.push("Distribución equilibrada — perspectiva convincente.")}else{sc+=8;fb.push("Las líneas de perspectiva deben converger a los VP.")}sc=Math.min(100,sc+(tot>300?10:5));return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}},
+    {id:"cilindro3d",n:"12 · Cilindro y esfera 3D",instr:"<b class='t'>Objetivo:</b> Dibuja un cilindro (elipse arriba + cuerpo) y una esfera con área de luz (zona vacía) en la parte superior derecha. Clásicos del diseño mecha.",
+     drawRef:function(rc,w,h){rc.strokeStyle="#0d2a5c";rc.lineWidth=2.5;rc.lineCap="round";rc.beginPath();rc.ellipse(w*.3,h*.22,w*.13,h*.075,0,0,Math.PI*2);rc.stroke();rc.beginPath();rc.moveTo(w*.17,h*.22);rc.lineTo(w*.17,h*.72);rc.quadraticCurveTo(w*.17,h*.8,w*.3,h*.8);rc.quadraticCurveTo(w*.43,h*.8,w*.43,h*.72);rc.lineTo(w*.43,h*.22);rc.stroke();rc.setLineDash([4,4]);rc.beginPath();rc.ellipse(w*.3,h*.8,w*.13,h*.075,0,0,Math.PI);rc.stroke();rc.setLineDash([]);rc.fillStyle="rgba(13,42,92,0.09)";rc.beginPath();rc.rect(w*.17,h*.22,w*.26,h*.58);rc.fill();rc.strokeStyle="#0d2a5c";rc.lineWidth=2.5;rc.beginPath();rc.arc(w*.72,h*.45,w*.16,0,Math.PI*2);rc.stroke();rc.fillStyle="rgba(13,42,92,0.15)";rc.beginPath();rc.arc(w*.72,h*.45,w*.16,0,Math.PI*2);rc.fill();rc.fillStyle="rgba(255,255,255,0.75)";rc.beginPath();rc.ellipse(w*.76,h*.35,w*.05,h*.04,-.4,0,Math.PI*2);rc.fill();rc.fillStyle="rgba(13,42,92,0.4)";rc.font=`bold ${w*.021}px sans-serif`;rc.fillText("Cilindro  →  elipse + cuerpo",w*.04,h*.05);rc.fillText("Esfera  →  masa + reflejo de luz",w*.04,h*.92);rc.strokeStyle="#0d2a5c";rc.lineWidth=2;rc.strokeRect(5,5,w-10,h-10);},
+     eval:function(pixels,w,h){function zC(x0,x1,y0,y1){let n=0;for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)n++;}return n;}const cylZ=zC(Math.floor(w*.1),Math.floor(w*.5),Math.floor(h*.1),Math.floor(h*.9)),sphZ=zC(Math.floor(w*.5),Math.floor(w*.95),Math.floor(h*.2),Math.floor(h*.75)),tot=cylZ+sphZ;if(tot<5)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};let sc=0,fb=[];if(cylZ>80){sc+=45;fb.push("¡Cilindro detectado!")}else if(cylZ>30){sc+=25;fb.push("Cilindro parcial — añade la elipse superior.")}else{sc+=10;fb.push("Dibuja el cilindro en la mitad izquierda.")}if(sphZ>50){sc+=40;fb.push("¡Esfera detectada!")}else if(sphZ>20){sc+=20;fb.push("Esfera parcial — añade el volumen circular.")}else{sc+=5;fb.push("Dibuja la esfera en la mitad derecha.")}sc=Math.min(100,sc+15);return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}},
+    {id:"mecha3d",n:"13 · Mecha modular 3D",instr:"<b class='t'>Objetivo:</b> Dibuja una figura mecha construida con cajas 3D (cúbicas): cabeza + torso + hombros. El secreto de Mazinger Z y todos los super robots.",
+     drawRef:function(rc,w,h){function box3d(rc,x,y,bw,bh,depth){const d=depth||18;rc.strokeStyle="#0d2a5c";rc.lineWidth=2;rc.fillStyle="rgba(230,237,247,0.6)";rc.fillRect(x,y,bw,bh);rc.strokeRect(x,y,bw,bh);rc.fillStyle="rgba(13,42,92,0.09)";rc.beginPath();rc.moveTo(x,y);rc.lineTo(x+d,y-d);rc.lineTo(x+bw+d,y-d);rc.lineTo(x+bw,y);rc.closePath();rc.fill();rc.stroke();rc.fillStyle="rgba(13,42,92,0.06)";rc.beginPath();rc.moveTo(x+bw,y);rc.lineTo(x+bw+d,y-d);rc.lineTo(x+bw+d,y+bh-d);rc.lineTo(x+bw,y+bh);rc.closePath();rc.fill();rc.stroke();}const cx=w*.5;box3d(rc,cx-w*.1,h*.07,w*.2,h*.17,14);box3d(rc,cx-w*.17,h*.28,w*.34,h*.3,20);box3d(rc,cx-w*.3,h*.29,w*.12,h*.22,12);box3d(rc,cx+w*.18,h*.29,w*.12,h*.22,12);box3d(rc,cx-w*.11,h*.6,w*.11,h*.28,14);box3d(rc,cx,h*.6,w*.11,h*.28,14);rc.fillStyle="rgba(192,0,0,0.3)";rc.beginPath();rc.arc(cx,h*.16,w*.04,0,Math.PI*2);rc.fill();rc.strokeStyle="#C00000";rc.lineWidth=2;rc.beginPath();rc.arc(cx,h*.16,w*.04,0,Math.PI*2);rc.stroke();rc.fillStyle="rgba(13,42,92,0.4)";rc.font=`bold ${w*.021}px sans-serif`;rc.textAlign="center";rc.fillText("Mecha = cajas 3D apiladas",w*.5,h*.92);rc.textAlign="left";rc.strokeStyle="#0d2a5c";rc.lineWidth=2;rc.strokeRect(5,5,w-10,h-10);},
+     eval:function(pixels,w,h){const zones=[{x0:Math.floor(w*.3),x1:Math.floor(w*.7),y0:Math.floor(h*.03),y1:Math.floor(h*.3)},{x0:Math.floor(w*.25),x1:Math.floor(w*.75),y0:Math.floor(h*.3),y1:Math.floor(h*.65)},{x0:Math.floor(w*.3),x1:Math.floor(w*.7),y0:Math.floor(h*.65),y1:Math.floor(h*.95)}];function zC(z){let n=0;for(let y=z.y0;y<z.y1;y++)for(let x=z.x0;x<z.x1;x++){const idx=(y*w+x)*4;if(pixels[idx]<100&&pixels[idx+3]>80)n++;}return n;}const counts=zones.map(zC),filled=counts.filter(c=>c>20).length,tot=counts.reduce((a,b)=>a+b,0);if(tot<5)return{score:0,stars:"☆☆☆",feedback:["Sin trazo."]};let sc=0,fb=[];if(filled===3){sc+=70;fb.push("¡Las 3 zonas del mecha detectadas!")}else if(filled===2){sc+=45;fb.push("2 de 3 módulos — añade la pieza que falta.")}else{sc+=20;fb.push("Dibuja cabeza, torso y piernas como cajas 3D.")}sc=Math.min(100,sc+(tot>500?30:tot>250?15:5));return{score:sc,stars:sc>=80?"★★★":sc>=50?"★★☆":"★☆☆",feedback:fb}}}
   ];
   let curEx=0,drawing=false,curTool="pencil",hist=[];
   const dojoCv=document.getElementById("dojoCv");const dojoRef=document.getElementById("dojoRef");
