@@ -688,12 +688,6 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <span id="homeXpLabel" style="font-family:var(--disp);font-size:13px;color:var(--ink)">0 XP · 見習い</span>
   </div>
 
-  <!-- EXPORTAR -->
-  <div style="margin-top:18px;padding:16px 18px;border:2px solid var(--red);border-radius:12px;background:var(--paper)">
-    <div style="font-family:var(--disp);font-size:16px;font-weight:900;color:var(--red);margin-bottom:6px">⬇ Exportar aplicación</div>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Descarga el HTML completo con videos y sonidos integrados. Funciona sin internet en cualquier navegador.</p>
-    <button class="btn blue" onclick="exportarHTML()" style="font-size:14px;padding:10px 20px">Descargar manga-master.html</button>
-  </div>
 </div>
 </section>
 
@@ -4291,28 +4285,27 @@ function initMazHead(){
 
 // ===== EXPORTAR HTML =====
 async function exportarHTML(){
-  _toast('Paso 1: iniciando…');
-  let dl=null;
-  try{dl=await claude.use('downloads');}catch(e){_toast('Error capability: '+String(e));return;}
-  if(!dl){_toast('Descarga no disponible en esta vista.');return;}
-  _toast('Paso 2: preparando HTML…');
-  const vids=document.querySelectorAll('video[data-mv]');
-  const savedSrc=[];
-  vids.forEach(v=>{savedSrc.push(v.getAttribute('src')||'');v.removeAttribute('src');});
-  const preamble=document.querySelector('head script:first-child');
-  const preambleParent=preamble&&preamble.parentNode;
-  if(preamble&&preamble.textContent.includes('__FRAME_PREAMBLE'))preamble.remove();
-  const pageHtml='<!DOCTYPE html>'+document.documentElement.outerHTML;
-  vids.forEach((v,i)=>{if(savedSrc[i])v.setAttribute('src',savedSrc[i]);});
-  if(preamble&&preambleParent)preambleParent.insertBefore(preamble,preambleParent.firstChild);
-  const blob=new Blob([pageHtml],{type:'text/html'});
-  _toast('Paso 3: '+Math.round(blob.size/1024/1024*10)/10+'MB — confirma el diálogo de guardado');
   try{
+    _toast('⏳ Preparando descarga…');
+    let dl=null;
+    try{dl=await claude.use('downloads');}catch(e){dl=null;}
+    if(!dl){_toast('⚠️ Descarga no disponible en esta vista.');return;}
+    const vids=document.querySelectorAll('video[data-mv]');
+    const savedSrc=[];
+    vids.forEach(v=>{savedSrc.push(v.getAttribute('src')||'');v.removeAttribute('src');});
+    const preamble=document.querySelector('head script:first-child');
+    const preambleParent=preamble&&preamble.parentNode;
+    if(preamble&&preamble.textContent.includes('__FRAME_PREAMBLE'))preamble.remove();
+    const pageHtml='<!DOCTYPE html>'+document.documentElement.outerHTML;
+    vids.forEach((v,i)=>{if(savedSrc[i])v.setAttribute('src',savedSrc[i]);});
+    if(preamble&&preambleParent)preambleParent.insertBefore(preamble,preambleParent.firstChild);
+    const blob=new Blob([pageHtml],{type:'text/html'});
+    _toast(Math.round(blob.size/1024/1024*10)/10+'MB — acepta el diálogo de guardado');
     const r=await dl.save({filename:'manga-master.html',data:blob});
-    _toast('✓ '+r.status+'. Abre el .html en cualquier navegador.');
+    _toast('✓ Descarga lista. Abre el .html en cualquier navegador.');
   }catch(e){
     if(e&&e.code==='declined')return;
-    _toast('Error: '+(e&&(e.code||e.message)||String(e)));
+    _toast('❌ Error: '+(e&&(e.code||e.message)||String(e)));
   }
 }
 function _toast(msg){
