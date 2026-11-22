@@ -261,40 +261,75 @@ canvas{max-width:100%;display:block;touch-action:none}
   <g id="stars" fill="#fff" opacity=".7"></g>
   <g id="rays" opacity="0" fill="#ffe9cf"></g>
   <circle id="sun" cx="600" cy="560" r="230" fill="url(#gSun)"/>
-  <!-- robot (original design) -->
+  <!-- MAZINGER Z — Go Nagai 1972 · homenaje -->
   <g id="robot" transform="translate(0,520)">
-    <g transform="translate(410,120)">
-      <!-- legs -->
-      <path d="M118 420 L170 420 L176 560 L112 560 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M210 420 L262 420 L268 560 L204 560 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- arms -->
-      <rect x="22" y="200" width="66" height="150" rx="26" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
-      <rect x="292" y="200" width="66" height="150" rx="26" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
-      <rect x="14" y="342" width="82" height="70" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <rect x="284" y="342" width="82" height="70" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M24 362 h60 M24 380 h60 M294 362 h60 M294 380 h60" stroke="#0d2a5c" stroke-width="3" opacity=".6"/>
-      <!-- shoulders -->
-      <path d="M8 196 Q14 150 96 152 L112 230 Q54 238 8 214 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M372 196 Q366 150 284 152 L268 230 Q326 238 372 214 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M30 168 Q60 160 92 164" stroke="#e8f1ff" stroke-width="4" fill="none" opacity=".8"/>
-      <path d="M350 168 Q320 160 288 164" stroke="#e8f1ff" stroke-width="4" fill="none" opacity=".8"/>
-      <!-- torso -->
-      <path d="M96 150 L284 150 L304 330 L190 400 L76 330 Z" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
-      <path d="M118 175 L262 175 L276 300 L190 352 L104 300 Z" fill="none" stroke="#0d2a5c" stroke-width="3" opacity=".55"/>
-      <path d="M100 160 L140 160 L128 320 L84 300 Z" fill="#fff" opacity=".35"/>
-      <rect x="150" y="390" width="80" height="40" rx="8" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- core -->
+    <g transform="translate(400,110)">
+      <!-- PIERNAS -->
+      <path d="M105 400 L158 400 L165 570 L98 570 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
+      <path d="M220 400 L273 400 L280 570 L213 570 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
+      <!-- Aleta tobillo izq -->
+      <path d="M70 535 L98 535 L98 570 L70 570 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- Aleta tobillo der -->
+      <path d="M280 535 L308 535 L308 570 L280 570 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- Pies -->
+      <rect x="84" y="562" width="94" height="28" rx="4" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="4"/>
+      <rect x="200" y="562" width="94" height="28" rx="4" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- CINTURA -->
+      <rect x="133" y="378" width="112" height="30" rx="7" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
+      <!-- BRAZO IZQUIERDO -->
+      <rect x="20" y="192" width="64" height="138" rx="24" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
+      <!-- Puño de cohete izq -->
+      <rect x="12" y="323" width="80" height="76" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
+      <path d="M18 340 h66 M18 357 h66 M18 374 h66" stroke="#0d2a5c" stroke-width="2.5" opacity=".55"/>
+      <!-- Hombro izq -->
+      <path d="M5 190 Q9 140 92 146 L108 220 Q46 232 5 210 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
+      <path d="M24 156 Q52 148 86 152" stroke="#e8f1ff" stroke-width="3.5" fill="none" opacity=".8"/>
+      <!-- BRAZO DERECHO -->
+      <rect x="294" y="192" width="64" height="138" rx="24" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
+      <!-- Puño de cohete der -->
+      <rect x="286" y="323" width="80" height="76" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
+      <path d="M292 340 h66 M292 357 h66 M292 374 h66" stroke="#0d2a5c" stroke-width="2.5" opacity=".55"/>
+      <!-- Hombro der -->
+      <path d="M373 190 Q369 140 286 146 L270 220 Q332 232 373 210 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
+      <path d="M354 156 Q326 148 292 152" stroke="#e8f1ff" stroke-width="3.5" fill="none" opacity=".8"/>
+      <!-- TORSO -->
+      <path d="M92 148 L286 148 L308 332 L189 412 L70 332 Z" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
+      <path d="M112 168 L266 168 L282 316 L189 376 L96 316 Z" fill="none" stroke="#0d2a5c" stroke-width="2.5" opacity=".5"/>
+      <!-- Reflejo pecho -->
+      <path d="M96 155 L134 155 L122 328 L86 307 Z" fill="#fff" opacity=".3"/>
+      <!-- ALETAS DE PECHO (icónicas Mazinger Z) -->
+      <path d="M92 148 L130 148 L120 192 L92 182 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <path d="M286 148 L248 148 L258 192 L286 182 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- NÚCLEO DE ENERGÍA FOTÓNICA -->
       <g id="core" opacity=".25" filter="url(#fGlow)">
-        <polygon points="190,206 228,228 228,272 190,294 152,272 152,228" fill="url(#gCore)" stroke="#0d2a5c" stroke-width="5"/>
+        <polygon points="189,210 221,228 221,268 189,286 157,268 157,228" fill="url(#gCore)" stroke="#0d2a5c" stroke-width="5"/>
       </g>
-      <!-- neck/head -->
-      <rect x="166" y="120" width="48" height="34" fill="#6a7c9b" stroke="#0d2a5c" stroke-width="5"/>
-      <rect x="132" y="38" width="116" height="96" rx="36" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
-      <path d="M190 -14 L176 44 L204 44 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M142 112 Q190 128 238 112" stroke="#0d2a5c" stroke-width="4" fill="none"/>
-      <rect x="148" y="72" width="84" height="22" rx="11" fill="#2a0b0b" stroke="#0d2a5c" stroke-width="4"/>
-      <rect id="visor" x="152" y="76" width="76" height="14" rx="7" fill="url(#gVisor)" opacity=".3" filter="url(#fGlow)"/>
-      <path d="M146 50 Q170 42 200 44" stroke="#fff" stroke-width="5" fill="none" opacity=".85" stroke-linecap="round"/>
+      <!-- Cruz fotónica en pecho -->
+      <path d="M159 248 L219 248 M189 210 L189 286" stroke="var(--red)" stroke-width="5" opacity=".85"/>
+      <!-- CUELLO -->
+      <rect x="161" y="118" width="56" height="36" fill="#6a7c9b" stroke="#0d2a5c" stroke-width="5"/>
+      <!-- CABEZA — rectangular, característica de Mazinger Z -->
+      <rect x="114" y="18" width="150" height="106" rx="8" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
+      <!-- Placa azul frente -->
+      <rect x="122" y="18" width="134" height="40" rx="5" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- Armadura mentón -->
+      <path d="M122 98 L256 98 L251 124 L127 124 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- Alojamiento visor -->
+      <rect x="118" y="62" width="142" height="33" rx="4" fill="#150000" stroke="#0d2a5c" stroke-width="4"/>
+      <!-- Visor · ojos rayo fotónico -->
+      <rect id="visor" x="122" y="66" width="134" height="25" rx="3" fill="url(#gVisor)" opacity=".4" filter="url(#fGlow)"/>
+      <!-- Reflejo cabeza -->
+      <path d="M122 24 Q142 18 178 20" stroke="#fff" stroke-width="5" fill="none" opacity=".85" stroke-linecap="round"/>
+      <!-- TRIPLE CUERNO / SCRANDER — lo más icónico de Mazinger Z -->
+      <!-- Cuerno izquierdo -->
+      <path d="M142 18 L126 -48 L156 -50 L160 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
+      <!-- Cuerno derecho -->
+      <path d="M236 18 L252 -48 L222 -50 L218 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
+      <!-- Pico central — lanzador de haz fotónico -->
+      <path d="M189 18 L180 -66 L189 -82 L198 -66 L198 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
+      <!-- Detalles cuernos -->
+      <path d="M130 -30 L152 -32" stroke="#fff" stroke-width="2" opacity=".6"/>
+      <path d="M248 -30 L226 -32" stroke="#fff" stroke-width="2" opacity=".6"/>
     </g>
   </g>
   <g id="burst" opacity="0" stroke="#fff" stroke-width="3"></g>
