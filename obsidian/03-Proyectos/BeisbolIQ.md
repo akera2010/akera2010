@@ -1,6 +1,6 @@
 # BeisbolIQ v1.0
 
-## Estado: EN CONSTRUCCIÓN 🔧
+## Estado: ACTIVO ✅
 
 ## Ligas
 - MLB (🇺🇸), LVBP (🇻🇪), LMP (🇲🇽), LIDOM (🇩🇴)
@@ -26,9 +26,12 @@
 - Si ≥5 juegos MLB disponibles: 5 MLB + 3 Caribe
 - Si no hay MLB: hasta 8 Caribe
 
+## Artifact
+URL: https://claude.ai/artifact/QKEKC71XUqKmzJwaxJzwwY (Version 1)
+
 ## Trigger Diario
-Hora prevista: 09:00 Madrid
-(en creación por agente fork)
+ID: trig_01W6NopuKVxRgtPFYbXEmT2w
+Hora: 09:00 Madrid (CRON_TZ=Europe/Madrid 0 9 * * *)
 
 ## GitHub Raw
 URL: https://raw.githubusercontent.com/akera2010/akera2010/ccr-302eb251-8ontw0/baseball_data.json
