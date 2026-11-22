@@ -352,97 +352,130 @@ function switchTab(tab){
 /* ===== PDF ===== */
 function exportPDF(){
   const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
   const picks=STATE.bakedPicks||BAKED_PICKS_K;
   const combos=STATE.bakedCombos||BAKED_COMBOS_K;
-  const fecha=todayMadrid();
+  if(!picks||!picks.length){alert('Sin picks disponibles para exportar.');return;}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297,H=210,ML=14,MR=14;
 
-  // Cabecera azul
-  doc.setFillColor(29,78,216);doc.rect(0,0,210,28,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(18);doc.setFont('helvetica','bold');
-  doc.text('Baloncesto IQ',14,13);
-  doc.setFontSize(8);doc.setFont('helvetica','normal');
-  doc.text('Análisis Bayesiano · Regresión de Crestas · Ratings NBA/Europa',14,21);
-  doc.text(fecha,196,21,{align:'right'});
+  // ── FONDO BLANCO ──
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
 
-  // Nota de horarios
-  doc.setTextColor(60,60,60);doc.setFontSize(7.5);
-  doc.text('Horarios: ET = hora del Este EEUU · CCS = Caracas · MAD = Madrid  |  🌙 = Madrugada Madrid',14,34);
+  // ── ENCABEZADO — mismo estilo que FútbolIQ pero con acento azul NBA ──
+  doc.setFillColor(237,242,248);doc.rect(0,0,W,36,'F');
+  doc.setFillColor(29,78,216);doc.rect(0,36,W,1.2,'F');  // línea azul NBA
 
-  // Tabla picks
-  doc.setTextColor(0,0,0);doc.setFontSize(11);doc.setFont('helvetica','bold');
-  doc.text('Picks del Día',14,41);
+  // Título "Baloncesto" negro + "IQ" rojo
+  doc.setFontSize(22);doc.setFont('helvetica','bold');
+  doc.setTextColor(15,23,42);
+  doc.text('Baloncesto',ML,17);
+  const wBal=doc.getTextWidth('Baloncesto');
+  doc.setTextColor(192,0,0);
+  doc.text('IQ',ML+wBal,17);
 
-  const fmtET=iso=>{
-    if(!iso)return'—';
-    const d2=new Date(iso);
-    const et=d2.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'});
-    const car=d2.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'America/Caracas'});
-    const mad=d2.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'});
-    const madH=parseInt(d2.toLocaleString('en-CA',{hour:'2-digit',hour12:false,timeZone:'Europe/Madrid'}));
-    return `${et} ET\n${car} CCS\n${mad} MAD${madH<7?' 🌙':''}`;
-  };
+  // Sub-brand
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,24);
 
-  const rows=picks.map(p=>[
-    p.home+'\nvs '+p.away,
+  // Sub-algo
+  doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Analisis Bayesiano · Regresion de Crestas · Ratings NBA/Europa · MC 100.000 sim',ML,30);
+
+  // Fecha (derecha) — destacada en azul NBA
+  const fechaStr=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(29,78,216);
+  doc.text(fechaStr,W-MR,17,{align:'right'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Generado: '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),W-MR,24,{align:'right'});
+  doc.text('Partidos NBA: tarde/noche ET = madrugada MAD',W-MR,30,{align:'right'});
+
+  // ── PICKS ──
+  const pdfT=(iso,tz)=>iso?new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:tz}):'—';
+  const rows=picks.map((p,i)=>[
+    '',  // casilla (se dibuja en didDrawCell)
+    `${i+1}`,
+    `${p.home} vs ${p.away}`,
     p.league,
+    pdfT(p.time,'America/New_York'),
+    pdfT(p.time,'America/Caracas'),
+    pdfT(p.time,'Europe/Madrid'),
     p.bestMkt.label,
-    (p.bestMkt.p*100).toFixed(1)+'%',
-    '@'+p.bestMkt.odds.toFixed(2),
+    `${(p.bestMkt.p*100).toFixed(1)}%`,
+    `${p.bestMkt.odds.toFixed(2)}`,
     p.confidence||confidenceLabel(p),
-    fmtET(p.time),
   ]);
 
   doc.autoTable({
-    head:[['Partido','Liga','Pick','P%','Cuota','Conf.','Hora']],
-    body:rows,startY:45,
-    styles:{fontSize:7,cellPadding:2.5,lineColor:[200,210,230],lineWidth:0.2},
-    headStyles:{fillColor:[29,78,216],textColor:255,fontStyle:'bold',fontSize:7.5},
+    startY:40,
+    head:[['V','#','Partido','Liga','ET','CCS','MAD','Pick','Prob.','Cuota','Conf.']],
+    body:rows,
+    styles:{fillColor:[255,255,255],textColor:[15,23,42],fontSize:8.5,lineColor:[148,163,184],lineWidth:.25,cellPadding:2.8},
+    headStyles:{fillColor:[29,78,216],textColor:[255,255,255],fontStyle:'bold',fontSize:8,halign:'center'},
+    alternateRowStyles:{fillColor:[237,242,248]},
     columnStyles:{
-      0:{cellWidth:42},1:{cellWidth:18},2:{cellWidth:48},
-      3:{cellWidth:12,halign:'center'},4:{cellWidth:14,halign:'center'},
-      5:{cellWidth:14,halign:'center'},6:{cellWidth:28,fontSize:6.5},
+      0:{cellWidth:8,halign:'center'},
+      1:{cellWidth:7,halign:'center'},
+      2:{cellWidth:60},
+      3:{cellWidth:22},
+      4:{cellWidth:14,halign:'center'},
+      5:{cellWidth:14,halign:'center'},
+      6:{cellWidth:14,halign:'center'},
+      7:{cellWidth:48},
+      8:{cellWidth:14,halign:'center'},
+      9:{cellWidth:14,halign:'center'},
+      10:{cellWidth:14,halign:'center'},
     },
-    didParseCell(data){
-      if(data.column.index===5&&data.section==='body'){
+    theme:'grid',
+    margin:{left:ML,right:MR},
+    didDrawCell:function(data){
+      if(data.column.index===0&&data.section==='body'){
+        const cx=data.cell.x+(data.cell.width-4)/2;
+        const cy=data.cell.y+(data.cell.height-4)/2;
+        data.doc.setDrawColor(100,100,120);
+        data.doc.setLineWidth(.4);
+        data.doc.rect(cx,cy,4,4);
+      }
+    },
+    didParseCell:function(data){
+      if(data.column.index===10&&data.section==='body'){
         if(data.cell.raw==='Alto')data.cell.styles.textColor=[21,128,61];
         else if(data.cell.raw==='Medio')data.cell.styles.textColor=[161,98,7];
       }
     },
-    alternateRowStyles:{fillColor:[240,245,255]},
   });
 
-  // Combinados
+  // ── COMBINADOS ──
   if(combos&&combos.length){
-    let y=doc.lastAutoTable.finalY+10;
-    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(0,0,0);
-    doc.text('Combinados del Día',14,y);
-    const cRows=combos.map(c=>[
-      c.name,
-      c.picks.map(x=>x.match).join('\n'),
-      c.picks.map(x=>x.label).join('\n'),
-      (c.pComb*100).toFixed(1)+'%',
-      '@'+c.oddsComb.toFixed(2),
-    ]);
-    doc.autoTable({
-      head:[['Nombre','Partidos','Selecciones','P%','Cuota']],
-      body:cRows,startY:y+4,
-      styles:{fontSize:7,cellPadding:2},
-      headStyles:{fillColor:[91,33,182],textColor:255,fontStyle:'bold'},
-      columnStyles:{1:{cellWidth:45},2:{cellWidth:50}},
-      alternateRowStyles:{fillColor:[248,240,255]},
+    let y=doc.lastAutoTable.finalY+9;
+    if(y>H-25){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(29,78,216);
+    doc.text('Combinados Sugeridos',ML,y);y+=7;
+    combos.forEach(cb=>{
+      if(y>H-22){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+      doc.setDrawColor(100,100,120);doc.setLineWidth(.4);doc.rect(ML,y-3.2,3.8,3.8);
+      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+      doc.text(`  ${cb.name}   Cuota @${cb.oddsComb.toFixed(2)}   P.combinado ${(cb.pComb*100).toFixed(1)}%`,ML+5,y);y+=5;
+      cb.picks.forEach(pk=>{
+        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(71,85,105);
+        doc.text(`      •  ${pk.match||'—'}:  ${pk.label}  @${pk.odds}  (${(pk.p*100).toFixed(1)}%)`,ML+5,y);y+=4;
+      });
+      y+=3;
     });
   }
 
-  // Footer
-  const fy=(doc.lastAutoTable?.finalY||180)+10;
-  doc.setDrawColor(200,210,230);doc.line(14,fy,196,fy);
-  doc.setFontSize(7.5);doc.setTextColor(100,116,139);doc.setFont('helvetica','normal');
-  doc.text('Por Data Science Sandra Blanco | akera2011@protonmail.com',14,fy+5);
-  doc.text('Proyecciones orientativas. No constituyen asesoramiento de inversión.',14,fy+10);
+  // ── PIE DE PÁGINA ──
+  doc.setDrawColor(148,163,184);doc.setLineWidth(.4);
+  doc.line(ML,H-10,W-MR,H-10);
+  doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,H-5);
+  const wBrand=doc.getTextWidth('Por Data Science Sandra Blanco');
+  doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('  |  akera2011@protonmail.com',ML+wBrand,H-5);
+  doc.setFontSize(7);
+  doc.text('Analisis Bayesiano · Regresion de Crestas · Ratings NBA/Europa · MC 100.000 sim',W-MR,H-5,{align:'right'});
 
-  doc.save(`BaloncestoIQ_${fecha}.pdf`);
+  doc.save(`baloncestoiq-${todayMadrid()}.pdf`);
 }
 
 /* ===== REMOTE FETCH ===== */

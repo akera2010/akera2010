@@ -836,6 +836,7 @@ function switchTab(t){
 function exportPDF(){
   const{jsPDF}=window.jspdf;
   if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
+  if(!STATE.picks||!STATE.picks.length){alert('Sin picks disponibles para exportar.');return;}
   const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
   const W=297,H=210;
   const ML=14,MR=14; // márgenes
