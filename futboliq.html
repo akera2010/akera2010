@@ -712,36 +712,120 @@ function exportPDF(){
   const{jsPDF}=window.jspdf;
   if(!jsPDF){alert('jsPDF no cargado. Verifica la conexión.');return;}
   const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  // Fondo blanco profesional
-  doc.setFillColor(255,255,255);doc.rect(0,0,297,210,'F');
-  // Banda superior verde
-  doc.setFillColor(21,128,61);doc.rect(0,0,297,28,'F');
-  doc.setTextColor(255,255,255);doc.setFontSize(18);doc.setFont('helvetica','bold');
-  doc.text('FútbolIQ · Sandra Blanco',14,13);
-  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(220,255,220);
+  const W=297,H=210;
+  const ML=14,MR=14; // márgenes
+
+  // ── FONDO BLANCO ──
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+
+  // ── ENCABEZADO ──
+  // Banda gris-azul suave (igual que app --s1)
+  doc.setFillColor(237,242,248);doc.rect(0,0,W,36,'F');
+  // Línea roja de acento
+  doc.setFillColor(192,0,0);doc.rect(0,36,W,1.2,'F');
+
+  // Título "Fútbol" negro + "IQ" rojo
+  doc.setFontSize(22);doc.setFont('helvetica','bold');
+  doc.setTextColor(15,23,42);
+  doc.text('Futbol',ML,17);
+  const wFutbol=doc.getTextWidth('Futbol');
+  doc.setTextColor(192,0,0);
+  doc.text('IQ',ML+wFutbol,17);
+
+  // Sub-brand
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,24);
+
+  // Sub-algo
+  doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Analisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100.000 sim',ML,30);
+
+  // Fecha (derecha) — destacada en rojo
   const fechaStr=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  doc.text(`${fechaStr} · ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})} · Dixon-Coles + ELO + Monte Carlo ${PRM.N.toLocaleString()} sim`,14,21);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(192,0,0);
+  doc.text(fechaStr,W-MR,17,{align:'right'});
+  // Hora generación
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('Generado: '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),W-MR,24,{align:'right'});
+
+  // ── PICKS ──
   const pdfT=(iso,tz)=>iso?new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:tz}):'—';
-  const rows=STATE.picks.map((p,i)=>[`#${i+1}`,`${p.home} vs ${p.away}`,p.league,pdfT(p.time,'Europe/Madrid'),pdfT(p.time,'America/Caracas'),p.bestMkt.label,`${(p.bestMkt.p*100).toFixed(1)}%`,`${p.bestMkt.odds}`,`${(p.score*100).toFixed(0)}%`]);
-  doc.autoTable({startY:32,head:[['#','Partido','Liga','Hora MAD','Hora CCS','Pick','Prob.','Cuota','Score']],body:rows,
-    styles:{fillColor:[255,255,255],textColor:[20,30,20],fontSize:9,lineColor:[200,220,200],lineWidth:.3},
-    headStyles:{fillColor:[21,128,61],textColor:[255,255,255],fontStyle:'bold'},
-    alternateRowStyles:{fillColor:[240,250,240]},theme:'grid'});
+  const rows=STATE.picks.map((p,i)=>[
+    '',  // casilla (se dibuja en didDrawCell)
+    `${i+1}`,
+    `${p.home} vs ${p.away}`,
+    p.league,
+    pdfT(p.time,'Europe/Madrid'),
+    pdfT(p.time,'America/Caracas'),
+    p.bestMkt.label,
+    `${(p.bestMkt.p*100).toFixed(1)}%`,
+    `${p.bestMkt.odds}`,
+    `${(p.score*100).toFixed(0)}%`,
+  ]);
+  doc.autoTable({
+    startY:40,
+    head:[['V','#','Partido','Liga','MAD','CCS','Pick','Prob.','Cuota','Score']],
+    body:rows,
+    styles:{fillColor:[255,255,255],textColor:[15,23,42],fontSize:8.5,lineColor:[148,163,184],lineWidth:.25,cellPadding:2.8},
+    headStyles:{fillColor:[29,78,216],textColor:[255,255,255],fontStyle:'bold',fontSize:8,halign:'center'},
+    alternateRowStyles:{fillColor:[237,242,248]},
+    columnStyles:{
+      0:{cellWidth:8,halign:'center'},
+      1:{cellWidth:7,halign:'center'},
+      2:{cellWidth:65},
+      3:{cellWidth:28},
+      4:{cellWidth:16,halign:'center'},
+      5:{cellWidth:16,halign:'center'},
+      6:{cellWidth:38},
+      7:{cellWidth:14,halign:'center'},
+      8:{cellWidth:14,halign:'center'},
+      9:{cellWidth:14,halign:'center'},
+    },
+    theme:'grid',
+    margin:{left:ML,right:MR},
+    didDrawCell:function(data){
+      if(data.column.index===0&&data.section==='body'){
+        const cx=data.cell.x+(data.cell.width-4)/2;
+        const cy=data.cell.y+(data.cell.height-4)/2;
+        data.doc.setDrawColor(100,100,120);
+        data.doc.setLineWidth(.4);
+        data.doc.rect(cx,cy,4,4);
+      }
+    },
+  });
+
+  // ── COMBINADOS ──
   if(STATE.combos.length){
-    let y=doc.lastAutoTable.finalY+10;
-    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(21,128,61);
-    doc.text('Combinados Sugeridos',14,y);y+=6;
+    let y=doc.lastAutoTable.finalY+9;
+    if(y>H-25){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(29,78,216);
+    doc.text('Combinados Sugeridos',ML,y);y+=7;
     STATE.combos.forEach(cb=>{
-      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(20,30,20);
-      doc.text(`${cb.name} · @${cb.oddsComb} · P.combo ${(cb.pComb*100).toFixed(1)}%`,14,y);y+=5;
-      cb.picks.forEach(pk=>{doc.setFont('helvetica','normal');doc.setTextColor(60,80,60);doc.text(`  • ${pk.match}: ${pk.label} @${pk.odds} (${(pk.p*100).toFixed(1)}%)`,18,y);y+=4;});
+      if(y>H-22){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=14;}
+      // Checkbox manual para combo
+      doc.setDrawColor(100,100,120);doc.setLineWidth(.4);doc.rect(ML,y-3.2,3.8,3.8);
+      doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+      doc.text(`  ${cb.name}   Cuota @${cb.oddsComb}   P.combinado ${(cb.pComb*100).toFixed(1)}%`,ML+5,y);y+=5;
+      cb.picks.forEach(pk=>{
+        doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(71,85,105);
+        doc.text(`      •  ${pk.match||'—'}:  ${pk.label}  @${pk.odds}  (${(pk.p*100).toFixed(1)}%)`,ML+5,y);y+=4;
+      });
       y+=3;
     });
   }
-  // Pie de página
-  doc.setFontSize(7);doc.setTextColor(100,120,100);
-  doc.text('Por Data Science Sandra Blanco | akera2011@protonmail.com',14,205);
-  doc.save(`futboliq-${STATE.date||'hoy'}.pdf`);
+
+  // ── PIE DE PÁGINA ──
+  doc.setDrawColor(148,163,184);doc.setLineWidth(.4);
+  doc.line(ML,H-10,W-MR,H-10);
+  doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);
+  doc.text('Por Data Science Sandra Blanco',ML,H-5);
+  const wBrand=doc.getTextWidth('Por Data Science Sandra Blanco');
+  doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
+  doc.text('  |  akera2011@protonmail.com',ML+wBrand,H-5);
+  doc.setFontSize(7);
+  doc.text('Analisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100.000 sim',W-MR,H-5,{align:'right'});
+
+  doc.save(`futboliq-${STATE.date||new Date().toISOString().slice(0,10)}.pdf`);
 }
 
 /* ===== AUTO-REFRESH ===== */
