@@ -364,7 +364,7 @@ function exportPDF(){
 
   // ── ENCABEZADO — mismo estilo que FútbolIQ pero con acento azul NBA ──
   doc.setFillColor(237,242,248);doc.rect(0,0,W,36,'F');
-  doc.setFillColor(29,78,216);doc.rect(0,36,W,1.2,'F');  // línea azul NBA
+  doc.setFillColor(192,0,0);doc.rect(0,36,W,1.2,'F');  // línea roja — identidad familia IQ
 
   // Título "Baloncesto" negro + "IQ" rojo
   doc.setFontSize(22);doc.setFont('helvetica','bold');
@@ -382,9 +382,9 @@ function exportPDF(){
   doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
   doc.text('Analisis Bayesiano · Regresion de Crestas · Ratings NBA/Europa · MC 100.000 sim',ML,30);
 
-  // Fecha (derecha) — destacada en azul NBA
+  // Fecha (derecha) — roja, igual que FútbolIQ y BeisbolIQ
   const fechaStr=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(29,78,216);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(192,0,0);
   doc.text(fechaStr,W-MR,17,{align:'right'});
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(71,85,105);
   doc.text('Generado: '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),W-MR,24,{align:'right'});
