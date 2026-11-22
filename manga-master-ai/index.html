@@ -15,6 +15,36 @@
   --disp:"Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
   --body:"Zen Kaku Gothic New", system-ui, sans-serif;
 }
+/* DARK MODE — activado por .dark-mode en body */
+body.dark-mode{
+  --paper:#0d1a2e; --ink:#e0eaff; --blue:#5b9af0; --sky:#4a80d4; --red:#ff4444;
+  --tone:#111f36; --tone2:#162540; --line:#2a3f60; --muted:#8899bb;
+  color-scheme:dark;
+}
+body.dark-mode #top{background:#0a1424;border-color:#2a3f60}
+body.dark-mode #nav{background:radial-gradient(circle,#162540 1.2px,transparent 1.4px) 0 0/9px 9px,#0a1424}
+body.dark-mode #nav a{background:#0d1a2e;border-color:#2a3f60}
+body.dark-mode #nav a.cur{background:#1b4a8f}
+body.dark-mode #xpbox{background:#111f36}
+body.dark-mode .btn{background:#0d1a2e;color:#e0eaff}
+body.dark-mode .btn.red{background:#a30000;color:#fff}
+body.dark-mode .btn.blue{background:#1b4a8f;color:#fff}
+body.dark-mode .panel{background:#111f36;border-color:#2a3f60}
+body.dark-mode .flip .fa{background:radial-gradient(circle,#162540 1.2px,transparent 1.4px) 0 0/8px 8px,#111f36}
+body.dark-mode .flip .fb{background:#0d1a2e}
+body.dark-mode table.t th{background:#1b4a8f}
+body.dark-mode table.t td{border-color:#2a3f60}
+body.dark-mode table.t tr:nth-child(even) td{background:#111f36}
+body.dark-mode .box{background:#111f36}
+body.dark-mode .box.ojo{background:#2a0a0a}
+body.dark-mode .qz{background:#0d1a2e}
+body.dark-mode .sq-opt{background:#0d1a2e;border-color:#2a3f60}
+body.dark-mode .sq-opt.sq-correct{background:#0a2a1a;border-color:#1a7a3a}
+body.dark-mode .sq-opt.sq-wrong{background:#2a0a0a;border-color:#aa0000}
+body.dark-mode .mp{background:#0d1a2e}
+body.dark-mode .mp:hover{background:#111f36}
+body.dark-mode .mp.red{background:#1a0808}
+body.dark-mode body::before{opacity:.4}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6}
 body{overflow-x:hidden}
@@ -249,6 +279,7 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 #xpbar i{transition:width .5s cubic-bezier(.2,1.4,.4,1)!important}
 #mazMusicBtn.playing{background:var(--red)!important;color:#fff!important;animation:mazPulse .9s ease-in-out infinite alternate}
 @keyframes mazPulse{from{box-shadow:3px 3px 0 var(--ink)}to{box-shadow:3px 3px 0 var(--red),0 0 16px rgba(192,0,0,.55)}}
+@keyframes mazGlowPulse{from{filter:drop-shadow(0 0 22px rgba(192,0,0,.8)) drop-shadow(0 0 6px rgba(27,74,143,.5))}to{filter:drop-shadow(0 0 36px rgba(192,0,0,1)) drop-shadow(0 0 12px rgba(27,74,143,.8)) drop-shadow(0 0 3px rgba(255,200,0,.4))}}
 /* ===== PANEL DE NIVELES XP ===== */
 #xpbox{position:relative;cursor:pointer}
 #xpbox:hover .lvl{text-decoration:underline dotted}
@@ -515,6 +546,7 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     </div>
     <a class="btn sm" href="https://hidrive.ionos.com/lnk/PZLQelmGv" target="_blank" rel="noopener" style="text-decoration:none">📥 Biblioteca de Técnicas</a>
     <button class="btn sm" id="mazMusicBtn" onclick="toggleMazMusic()" title="Tema de Mazinger Z en síntesis Web Audio">🎵 Mazinger Z</button>
+    <button class="btn sm" id="darkToggle" onclick="toggleDark()" title="Cambiar entre modo claro y oscuro">🌙 Modo</button>
     <button class="btn sm" id="replay">Ver intro</button>
     <button class="btn sm" id="reset" title="Pulsa dos veces para borrar el progreso">Reiniciar progreso</button>
   </div>
@@ -537,17 +569,22 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <!-- Faja roja derecha (manga color page accent) -->
     <div style="position:absolute;top:0;right:0;width:5px;height:100%;background:#C00000"></div>
     <!-- Mazinger Z HEAD 3D (Three.js) -->
-    <div style="width:180px;flex-shrink:0;align-self:center;display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0 8px 8px">
-      <canvas id="mazCanvas" width="200" height="230" style="display:block;filter:drop-shadow(0 0 22px rgba(192,0,0,.9)) drop-shadow(0 0 6px rgba(27,74,143,.6));cursor:grab"></canvas>
-      <div style="font-family:var(--disp);font-size:9px;color:rgba(192,0,0,.7);letter-spacing:.2em;text-transform:uppercase;margin-top:2px">マジンガーZ</div>
+    <div style="width:190px;flex-shrink:0;align-self:center;display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0 8px 8px;position:relative">
+      <canvas id="mazCanvas" width="200" height="230" style="display:block;filter:drop-shadow(0 0 28px rgba(192,0,0,1)) drop-shadow(0 0 8px rgba(27,74,143,.7)) drop-shadow(0 0 2px #fff);cursor:grab;animation:mazGlowPulse 2.5s ease-in-out infinite alternate"></canvas>
+      <div id="mazLoading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--disp);font-size:9px;color:rgba(192,0,0,.5);letter-spacing:.15em;pointer-events:none;animation:pulse 1s infinite">CARGANDO...</div>
+      <div style="font-family:var(--disp);font-size:9px;color:rgba(192,0,0,.8);letter-spacing:.2em;text-transform:uppercase;margin-top:3px;text-shadow:0 0 8px rgba(192,0,0,.5)">マジンガーZ · 3D</div>
     </div>
     <!-- Texto de portada -->
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 20px 16px 12px">
-      <div style="font-family:var(--disp);font-size:13px;color:#C00000;letter-spacing:.15em;margin-bottom:4px;text-transform:uppercase">Go Nagai · 1972</div>
-      <div style="font-family:var(--disp);font-size:40px;color:#fff;line-height:.85;text-shadow:4px 4px 0 #C00000,8px 8px 0 rgba(192,0,0,.3);margin-bottom:8px">マジンガーZ</div>
-      <div style="font-family:var(--disp);font-size:22px;color:#cfe0ff;line-height:1;text-shadow:2px 2px 0 rgba(0,0,0,.8);margin-bottom:10px">MANGA<br>MASTER</div>
-      <div style="font-family:var(--disp);font-size:9px;color:#8899bb;letter-spacing:.12em;line-height:1.6">para Noa Bello<br>de Sarah Hernández</div>
-      <div style="margin-top:12px;font-family:var(--disp);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.1em;animation:pulse 2s infinite">↓ PULSA UN PANEL ↓</div>
+      <div style="font-family:var(--disp);font-size:11px;color:#ff7755;letter-spacing:.18em;margin-bottom:5px;text-transform:uppercase;text-shadow:0 0 10px rgba(255,100,50,.5)">Go Nagai · 永井豪 · 1972</div>
+      <div style="font-family:var(--disp);font-size:42px;color:#fff;line-height:.82;text-shadow:4px 4px 0 #C00000,8px 8px 0 rgba(192,0,0,.35),0 0 30px rgba(255,80,0,.4);margin-bottom:9px;letter-spacing:.03em">マジンガーZ</div>
+      <div style="font-family:var(--disp);font-size:24px;color:#cfe0ff;line-height:1;text-shadow:2px 2px 0 rgba(0,0,0,.8),0 0 15px rgba(100,160,255,.4);margin-bottom:10px">MANGA<br>MASTER</div>
+      <div style="font-family:var(--disp);font-size:9px;color:#8899bb;letter-spacing:.14em;line-height:1.7">para Noa Bello<br>de Sarah Hernández</div>
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-family:var(--disp);font-size:8px;color:rgba(255,200,100,.7);border:1px solid rgba(255,200,100,.3);padding:2px 7px;letter-spacing:.1em">30 ESTACIONES</span>
+        <span style="font-family:var(--disp);font-size:8px;color:rgba(100,200,255,.7);border:1px solid rgba(100,200,255,.3);padding:2px 7px;letter-spacing:.1em">3D INTERACTIVO</span>
+      </div>
+      <div style="margin-top:10px;font-family:var(--disp);font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.1em;animation:pulse 2.2s ease-in-out infinite">↓ PULSA UN PANEL ↓</div>
     </div>
     <!-- Número de volumen manga-style -->
     <div style="position:absolute;top:0;left:0;background:#C00000;padding:4px 10px;font-family:var(--disp);font-size:10px;color:#fff;letter-spacing:.12em">VOL.1 · 30 ESTACIONES</div>
@@ -2259,6 +2296,16 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const LEVELS=[[0,"見習い Aprendiz"],[150,"アシスタント Asistente"],[400,"漫画家 Mangaka"],[800,"先生 Sensei"],[1500,"巨匠 Maestro"]];
 function addXP(n){S.xp+=n;save();renderXP();xpFlash();}
+
+// DARK MODE
+function toggleDark(){
+  const dark=document.body.classList.toggle('dark-mode');
+  const btn=document.getElementById('darkToggle');
+  if(btn)btn.textContent=dark?'☀️ Modo':'🌙 Modo';
+  try{localStorage.setItem('mm_dark',dark?'1':'')}catch(e){}
+}
+(function initDark(){try{if(localStorage.getItem('mm_dark')==='1'){document.body.classList.add('dark-mode');const b=document.getElementById('darkToggle');if(b)b.textContent='☀️ Modo';}}catch(e){}})();
+
 function toggleLvlPanel(){
   const p=document.getElementById('lvlPanel');if(!p)return;
   const open=p.classList.toggle('open');
@@ -2385,8 +2432,19 @@ function show(id){
       st.insertBefore(bk,st.firstChild);
     }
   }
-  // Init 3D Mazinger head on home
-  if(id==='0'){setTimeout(initMazHead,120);}
+  // Init 3D Mazinger head on home — retry until THREE.js CDN is loaded
+  if(id==='0'){
+    let _mret=0;
+    const _mwait=()=>{
+      if(typeof THREE!=='undefined'){initMazHead();}
+      else if(_mret++<40){setTimeout(_mwait,80);}
+      else{/* fallback: draw static 2D silhouette */
+        const cv=document.getElementById('mazCanvas');
+        if(cv){const c=cv.getContext('2d');if(c){c.fillStyle='#1a3a70';c.fillRect(50,30,100,120);c.fillStyle='#C00000';c.fillRect(78,20,44,16);c.fillStyle='#ffcc00';c.fillRect(40,65,120,24);}}
+      }
+    };
+    setTimeout(_mwait,100);
+  }
   // Add quiz button if quiz data exists for this station
   if(id!=='0'&&typeof QUIZZES!=='undefined'&&QUIZZES[id]){
     if(!st.querySelector('.sq-trigger')){
@@ -4008,6 +4066,7 @@ function initMazHead(){
   const canvas=document.getElementById('mazCanvas');
   if(!canvas||canvas._maz||typeof THREE==='undefined')return;
   canvas._maz=true;
+  const ld=document.getElementById('mazLoading');if(ld)ld.remove();
   const W=180,H=210;
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
   renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
@@ -4141,6 +4200,24 @@ function initMazHead(){
 
   scene.add(g);
 
+  // — ENERGY PARTICLES (orbiting glowing spheres — mecha effect) —
+  const particles=[];
+  const tGlowP=new THREE.MeshBasicMaterial({color:0xffaa00,transparent:true,opacity:.85});
+  const tBlueP=new THREE.MeshBasicMaterial({color:0x4499ff,transparent:true,opacity:.7});
+  for(let i=0;i<6;i++){
+    const isGold=(i%2===0);
+    const pm=new THREE.Mesh(new THREE.SphereGeometry(.06,8,8),isGold?tGlowP:tBlueP);
+    const ang=(i/6)*Math.PI*2;
+    pm._ang=ang;pm._rad=1.4+(i%3)*.18;pm._spd=.5+i*.15;pm._y=(.5-i*.12)*.8;
+    scene.add(pm);
+    particles.push(pm);
+  }
+  // — SCAN LINE (red laser sweep across visor) —
+  const scanMat=new THREE.MeshBasicMaterial({color:0xff2200,transparent:true,opacity:.6,side:THREE.DoubleSide});
+  const scan=new THREE.Mesh(new THREE.PlaneGeometry(1.9,.04),scanMat);
+  scan.position.set(0,.1,.72);
+  g.add(scan);
+
   // — DRAG / TOUCH INTERACTION —
   let dragging=false,lastX=0,lastY=0,autoT=0,rotY=0,rotX=-.05;
   canvas.style.cursor='grab';
@@ -4169,6 +4246,11 @@ function initMazHead(){
     }
     g.rotation.y+=(rotY-g.rotation.y)*.08;
     g.rotation.x+=(rotX-g.rotation.x)*.08;
+    // Animate particles
+    particles.forEach(p=>{p._ang+=p._spd*.007;p.position.set(Math.cos(p._ang)*p._rad,p._y,Math.sin(p._ang)*p._rad);p.material.opacity=.4+Math.sin(p._ang*3)*.35;});
+    // Scan line pulse
+    scan.material.opacity=.3+Math.sin(autoT*4)*.4;
+    scan.position.y=.1+Math.sin(autoT*2)*.12;
     renderer.render(scene,cam);
   }
   loop();
