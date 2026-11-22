@@ -4,16 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MANGA MASTER · Noa Bello</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<!-- Fuentes del sistema — sin dependencias externas, funciona offline -->
 <!-- Three.js ELIMINADO — motor 3D propio incrustado en Canvas 2D -->
 <style>
 :root{
   --paper:#ffffff; --ink:#0d2a5c; --blue:#1b4a8f; --sky:#2f63b0; --red:#C00000;
   --tone:#e6edf7; --tone2:#cfdcef; --line:#b9c9e2; --muted:#4a5f84;
-  --disp:"Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
-  --body:"Zen Kaku Gothic New", system-ui, sans-serif;
+  --disp:"Dela Gothic One",Impact,"Arial Black","Franklin Gothic Heavy",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Meiryo",system-ui,sans-serif;
 }
 /* DARK MODE — activado por .dark-mode en body */
 body.dark-mode{
@@ -4165,10 +4163,10 @@ function initMazHead(){
         return p?{px:p[0],py:p[1],pz:rz}:null;
       });
       if(pvs.some(v=>!v))continue;
-      // Backface culling
+      // Backface culling (pantalla Y invertida: front-face tiene cross > 0)
       const ax=pvs[1].px-pvs[0].px,ay=pvs[1].py-pvs[0].py;
       const bx=pvs[2].px-pvs[0].px,by=pvs[2].py-pvs[0].py;
-      if(ax*by-ay*bx>0)continue;
+      if(ax*by-ay*bx<0)continue;
       // Profundidad media
       const avgZ=pvs.reduce((s,v)=>s+v.pz,0)/4;
       // Iluminación
