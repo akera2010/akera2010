@@ -8,15 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
-  --bg:#060c06;--s1:#0e170e;--s2:#152015;--s3:#1c2d1c;
-  --acc:#22c55e;--acc2:#15803d;--green:#4ade80;--yellow:#fbbf24;
-  --orange:#fb923c;--red:#f87171;--text:#e2f5e2;--muted:#78a07a;
-  --border:#1f3a1f;--card:#0a120a;--radius:12px;
-  --shadow:0 4px 24px rgba(0,0,0,.55);
+  --bg:#1b2d52;--s1:#22387a;--s2:#2a449a;--s3:#3252b8;
+  --acc:#60a5fa;--acc2:#818cf8;--green:#34d399;--yellow:#fbbf24;
+  --orange:#fb923c;--red:#f87171;--text:#e8f0ff;--muted:#93b4d8;
+  --border:#3252b8;--card:#162242;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 @keyframes metalShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-body{background:linear-gradient(-45deg,#040904,#08130a,#0d1c0d,#060e06);background-size:400% 400%;animation:metalShimmer 18s ease infinite;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+body{background:linear-gradient(-45deg,#1a2d58,#223578,#2a4296,#1e3268);background-size:400% 400%;animation:metalShimmer 15s ease infinite;color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
 #app{max-width:1200px;margin:0 auto;padding:16px}
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:10px}
@@ -540,8 +540,8 @@ function renderStats(){
   const hits=h.filter(x=>x.result==='hit').length,tot=h.length;
   document.getElementById('statsStrip').innerHTML=`
     <div class="stat-card"><div class="stat-val">${p.length}</div><div class="stat-lbl">Picks de Hoy</div></div>
-    <div class="stat-card"><div class="stat-val">${(avg*100).toFixed(1)}%</div><div class="stat-lbl">Prob. Media</div></div>
-    <div class="stat-card"><div class="stat-val">${avgo.toFixed(2)}</div><div class="stat-lbl">Cuota Media</div></div>
+    <div class="stat-card"><div class="stat-val">${(avg*100).toFixed(1)}%</div><div class="stat-lbl">x̅ Probabilidad</div></div>
+    <div class="stat-card"><div class="stat-val">${avgo.toFixed(2)}</div><div class="stat-lbl">x̅ Cuota</div></div>
     <div class="stat-card"><div class="stat-val">${STATE.combos.length}</div><div class="stat-lbl">Combinados</div></div>
     <div class="stat-card"><div class="stat-val">${tot?Math.round(hits/tot*100)+'%':'—'}</div><div class="stat-lbl">Precisión</div></div>
   `;
