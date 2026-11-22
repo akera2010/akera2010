@@ -1,0 +1,3 @@
+#!/bin/sh
+# Wrapper que usa el Gradle del sistema o descarga el wrapper
+exec gradle "$@"
