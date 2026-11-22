@@ -130,762 +130,991 @@
         "name": "Roberto Valdez",
         "era": 3.72
       }
+    },
+    "tiburones de la guaira|cardenales de lara": {
+      "winH": 0.46871420693165905,
+      "winA": 0.5313,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 5.91,
+      "teamEraA": 5.66,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "14-17",
+      "recordA": "15-14"
+    },
+    "criollos de caguas|leones de ponce": {
+      "winH": 0.48973558876662837,
+      "winA": 0.5103,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 3.51,
+      "teamEraA": 3.46,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "8-5",
+      "recordA": "9-5"
+    },
+    "senadores de san juan|indios de mayaguez": {
+      "winH": 0.42595584275713516,
+      "winA": 0.574,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 6.21,
+      "teamEraA": 4.98,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "4-9",
+      "recordA": "6-8"
+    },
+    "estrellas orientales|toros del este": {
+      "winH": 0.6062322946175637,
+      "winA": 0.3938,
+      "xRH": 4.4,
+      "xRA": 4.4,
+      "total": 8.8,
+      "teamEraH": 3.38,
+      "teamEraA": 5.49,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "16-12",
+      "recordA": "10-18"
+    },
+    "aguilas cibaenas|gigantes del cibao": {
+      "winH": 0.4006359300476947,
+      "winA": 0.5994,
+      "xRH": 4.4,
+      "xRA": 4.4,
+      "total": 8.8,
+      "teamEraH": 4.53,
+      "teamEraA": 4.81,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "9-18",
+      "recordA": "14-13"
+    },
+    "tigres del licey|leones del escogido": {
+      "winH": 0.5,
+      "winA": 0.5,
+      "xRH": 4.4,
+      "xRA": 4.4,
+      "total": 8.8,
+      "teamEraH": 3.13,
+      "teamEraA": 4.35,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "17-11",
+      "recordA": "17-11"
+    },
+    "aguilas del zulia|bravos de margarita": {
+      "winH": 0.5113297941214554,
+      "winA": 0.4887,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 5.45,
+      "teamEraA": 5.92,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "13-21",
+      "recordA": "12-21"
+    },
+    "gigantes de carolina|cangrejeros de santurce": {
+      "winH": 0.5330812854442344,
+      "winA": 0.4669,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 4.34,
+      "teamEraA": 4.29,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "7-6",
+      "recordA": "7-8"
+    },
+    "tigres de aragua|caribes de anzoategui": {
+      "winH": 0.5303812219077743,
+      "winA": 0.4696,
+      "xRH": 4.2,
+      "xRA": 4.2,
+      "total": 8.4,
+      "teamEraH": 4.86,
+      "teamEraA": 5.9,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "20-11",
+      "recordA": "17-13"
+    },
+    "charros de jalisco|jaguares de nayarit": {
+      "winH": 0.5288018433179723,
+      "winA": 0.4712,
+      "xRH": 4.3,
+      "xRA": 4.3,
+      "total": 8.6,
+      "teamEraH": 5.22,
+      "teamEraA": 6.06,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "17-17",
+      "recordA": "15-19"
+    },
+    "naranjeros de hermosillo|mayos de navojoa": {
+      "winH": 0.6733921815889029,
+      "winA": 0.3266,
+      "xRH": 4.3,
+      "xRA": 4.3,
+      "total": 8.6,
+      "teamEraH": 3.87,
+      "teamEraA": 5.93,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "20-14",
+      "recordA": "9-25"
+    },
+    "tomateros de culiacan|caneros de los mochis": {
+      "winH": 0.512588116817724,
+      "winA": 0.4874,
+      "xRH": 4.3,
+      "xRA": 4.3,
+      "total": 8.6,
+      "teamEraH": 4.25,
+      "teamEraA": 4.73,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "19-15",
+      "recordA": "18-16"
+    },
+    "yaquis de obregon|aguilas de mexicali": {
+      "winH": 0.4622356495468277,
+      "winA": 0.5378,
+      "xRH": 4.3,
+      "xRA": 4.3,
+      "total": 8.6,
+      "teamEraH": 3.4,
+      "teamEraA": 4.01,
+      "pitcherH": null,
+      "pitcherA": null,
+      "recordH": "17-17",
+      "recordA": "20-14"
     }
   },
   "fixtures": [
     {
-      "id": "v1",
+      "id": "ven1",
       "league": "LVBP",
       "flag": "🇻🇪",
       "leagueId": "ven.1",
-      "home": "Leones del Caracas",
-      "away": "Magallanes",
-      "time": "2026-11-22T21:00:00Z"
+      "home": "Tiburones de La Guaira",
+      "away": "Cardenales de Lara",
+      "time": "2026-11-22T17:00:00Z",
+      "status": "Scheduled"
     },
     {
-      "id": "v2",
-      "league": "LVBP",
-      "flag": "🇻🇪",
-      "leagueId": "ven.1",
-      "home": "Cardenales",
-      "away": "Navegantes",
-      "time": "2026-11-22T21:00:00Z"
+      "id": "pri2",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Criollos de Caguas",
+      "away": "Leones de Ponce",
+      "time": "2026-11-22T20:21:00Z",
+      "status": "Scheduled"
     },
     {
-      "id": "v3",
-      "league": "LVBP",
-      "flag": "🇻🇪",
-      "leagueId": "ven.1",
-      "home": "Caribes de Anzoátegui",
-      "away": "Tiburones de La Guaira",
-      "time": "2026-11-22T21:30:00Z"
+      "id": "pri3",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Senadores de San Juan",
+      "away": "Indios de Mayaguez",
+      "time": "2026-11-22T20:21:00Z",
+      "status": "Scheduled"
     },
     {
-      "id": "m1",
-      "league": "LMP",
-      "flag": "🇲🇽",
-      "leagueId": "mex.1",
-      "home": "Tomateros",
-      "away": "Yaquis",
-      "time": "2026-11-22T23:00:00Z"
-    },
-    {
-      "id": "m2",
-      "league": "LMP",
-      "flag": "🇲🇽",
-      "leagueId": "mex.1",
-      "home": "Charros de Jalisco",
-      "away": "Mayos de Navojoa",
-      "time": "2026-11-22T22:30:00Z"
-    },
-    {
-      "id": "m3",
-      "league": "LMP",
-      "flag": "🇲🇽",
-      "leagueId": "mex.1",
-      "home": "Diablos Rojos del México",
-      "away": "Sultanes de Monterrey",
-      "time": "2026-11-22T22:00:00Z"
-    },
-    {
-      "id": "d1",
-      "league": "LIDOM",
-      "flag": "🇩🇴",
-      "leagueId": "dom.1",
-      "home": "Tigres del Licey",
-      "away": "Águilas Cibaeñas",
-      "time": "2026-11-22T21:30:00Z"
-    },
-    {
-      "id": "d2",
+      "id": "dom4",
       "league": "LIDOM",
       "flag": "🇩🇴",
       "leagueId": "dom.1",
       "home": "Estrellas Orientales",
-      "away": "Gigantes del Cibao",
-      "time": "2026-11-22T22:00:00Z"
-    }
-  ],
-  "picks": [
+      "away": "Toros del Este",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled"
+    },
     {
-      "id": "d1",
+      "id": "dom5",
+      "league": "LIDOM",
+      "flag": "🇩🇴",
+      "leagueId": "dom.1",
+      "home": "Aguilas Cibaenas",
+      "away": "Gigantes del Cibao",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": "dom6",
       "league": "LIDOM",
       "flag": "🇩🇴",
       "leagueId": "dom.1",
       "home": "Tigres del Licey",
-      "away": "Águilas Cibaeñas",
-      "time": "2026-11-22T21:30:00Z",
-      "R": {
-        "mc": {
-          "p1": 0.40679600000000005,
-          "p2": 0.5932040000000001,
-          "alta": 0.5946549999999999,
-          "baja": 0.40534500000000007,
-          "rl1": 0.21074,
-          "rl2": 0.78926
-        },
-        "lh": 3.8,
-        "la": 4.6,
-        "hH": [],
-        "hA": [],
-        "pitcherH": {
-          "name": "Juan Mejía",
-          "era": 3.25
-        },
-        "pitcherA": {
-          "name": "Pedro Santos",
-          "era": 2.98
-        },
-        "teamEraH": 3.85,
-        "teamEraA": 3.65
-      },
-      "markets": [
-        {
-          "code": "rl2",
-          "label": "Run Line Visit. (+1.5)",
-          "p": 0.78926,
-          "odds": 1.2
-        },
-        {
-          "code": "alta",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.5946549999999999,
-          "odds": 1.6
-        },
-        {
-          "code": "2",
-          "label": "Victoria Visitante",
-          "p": 0.5932040000000001,
-          "odds": 1.6
-        },
-        {
-          "code": "1",
-          "label": "Victoria Local",
-          "p": 0.40679600000000005,
-          "odds": 2.34
-        },
-        {
-          "code": "baja",
-          "label": "Baja -6.5 Carreras",
-          "p": 0.40534500000000007,
-          "odds": 2.34
-        },
-        {
-          "code": "rl1",
-          "label": "Run Line Local (-1.5)",
-          "p": 0.21074,
-          "odds": 4.51
-        }
-      ],
-      "bestMkt": {
-        "code": "rl2",
-        "label": "Run Line Visit. (+1.5)",
-        "p": 0.78926,
-        "odds": 1.2
-      },
-      "score": 0.83426,
-      "pitcherH": {
-        "name": "Juan Mejía",
-        "era": 3.25
-      },
-      "pitcherA": {
-        "name": "Pedro Santos",
-        "era": 2.98
-      },
-      "teamEraH": 3.85,
-      "teamEraA": 3.65,
-      "dataQ": 0,
-      "statz": true
+      "away": "Leones del Escogido",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled"
     },
     {
-      "id": "v2",
+      "id": "ven7",
       "league": "LVBP",
       "flag": "🇻🇪",
       "leagueId": "ven.1",
-      "home": "Cardenales",
-      "away": "Navegantes",
+      "home": "Aguilas del Zulia",
+      "away": "Bravos de Margarita",
       "time": "2026-11-22T21:00:00Z",
-      "R": {
-        "mc": {
-          "p1": 0.434913,
-          "p2": 0.565087,
-          "alta": 0.698445,
-          "baja": 0.301555,
-          "rl1": 0.23144,
-          "rl2": 0.76856
-        },
-        "lh": 3.9,
-        "la": 4.5,
-        "hH": [],
-        "hA": [],
-        "pitcherH": {
-          "name": "Ricardo Velásquez",
-          "era": 3.75
-        },
-        "pitcherA": {
-          "name": "Carlos Figueroa",
-          "era": 3.42
-        },
-        "teamEraH": 4.15,
-        "teamEraA": 3.88
-      },
-      "markets": [
-        {
-          "code": "rl2",
-          "label": "Run Line Visit. (+1.5)",
-          "p": 0.76856,
-          "odds": 1.24
-        },
-        {
-          "code": "alta",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.698445,
-          "odds": 1.36
-        },
-        {
-          "code": "2",
-          "label": "Victoria Visitante",
-          "p": 0.565087,
-          "odds": 1.68
-        },
-        {
-          "code": "1",
-          "label": "Victoria Local",
-          "p": 0.434913,
-          "odds": 2.18
-        },
-        {
-          "code": "baja",
-          "label": "Baja -6.5 Carreras",
-          "p": 0.301555,
-          "odds": 3.15
-        },
-        {
-          "code": "rl1",
-          "label": "Run Line Local (-1.5)",
-          "p": 0.23144,
-          "odds": 4.1
-        }
-      ],
-      "bestMkt": {
-        "code": "rl2",
-        "label": "Run Line Visit. (+1.5)",
-        "p": 0.76856,
-        "odds": 1.24
-      },
-      "score": 0.8135600000000001,
-      "pitcherH": {
-        "name": "Ricardo Velásquez",
-        "era": 3.75
-      },
-      "pitcherA": {
-        "name": "Carlos Figueroa",
-        "era": 3.42
-      },
-      "teamEraH": 4.15,
-      "teamEraA": 3.88,
-      "dataQ": 0,
-      "statz": true
+      "status": "Scheduled"
     },
     {
-      "id": "v1",
+      "id": "pri8",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Gigantes de Carolina",
+      "away": "Cangrejeros de Santurce",
+      "time": "2026-11-22T21:21:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": "ven9",
       "league": "LVBP",
       "flag": "🇻🇪",
       "leagueId": "ven.1",
-      "home": "Leones del Caracas",
-      "away": "Magallanes",
-      "time": "2026-11-22T21:00:00Z",
-      "R": {
-        "mc": {
-          "p1": 0.44534758026212934,
-          "p2": 0.5546524197378706,
-          "alta": 0.6983820000000001,
-          "baja": 0.30161799999999994,
-          "rl1": 0.27452,
-          "rl2": 0.72548
-        },
-        "lh": 4.1,
-        "la": 4.3,
-        "hH": [],
-        "hA": [],
-        "pitcherH": {
-          "name": "Alejandro Chacín",
-          "era": 2.85
-        },
-        "pitcherA": {
-          "name": "Eduardo Paredes",
-          "era": 3.95
-        },
-        "teamEraH": 3.72,
-        "teamEraA": 4.08
-      },
-      "markets": [
-        {
-          "code": "rl2",
-          "label": "Run Line Visit. (+1.5)",
-          "p": 0.72548,
-          "odds": 1.31
-        },
-        {
-          "code": "alta",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.6983820000000001,
-          "odds": 1.36
-        },
-        {
-          "code": "2",
-          "label": "Victoria Visitante",
-          "p": 0.5546524197378706,
-          "odds": 1.71
-        },
-        {
-          "code": "1",
-          "label": "Victoria Local",
-          "p": 0.44534758026212934,
-          "odds": 2.13
-        },
-        {
-          "code": "baja",
-          "label": "Baja -6.5 Carreras",
-          "p": 0.30161799999999994,
-          "odds": 3.15
-        },
-        {
-          "code": "rl1",
-          "label": "Run Line Local (-1.5)",
-          "p": 0.27452,
-          "odds": 3.46
-        }
-      ],
-      "bestMkt": {
-        "code": "rl2",
-        "label": "Run Line Visit. (+1.5)",
-        "p": 0.72548,
-        "odds": 1.31
-      },
-      "score": 0.77048,
-      "pitcherH": {
-        "name": "Alejandro Chacín",
-        "era": 2.85
-      },
-      "pitcherA": {
-        "name": "Eduardo Paredes",
-        "era": 3.95
-      },
-      "teamEraH": 3.72,
-      "teamEraA": 4.08,
-      "dataQ": 0,
-      "statz": true
+      "home": "Tigres de Aragua",
+      "away": "Caribes de Anzoategui",
+      "time": "2026-11-22T23:00:00Z",
+      "status": "Scheduled"
     },
     {
-      "id": "m3",
+      "id": "mex10",
       "league": "LMP",
       "flag": "🇲🇽",
       "leagueId": "mex.1",
-      "home": "Diablos Rojos del México",
-      "away": "Sultanes de Monterrey",
-      "time": "2026-11-22T22:00:00Z",
+      "home": "Charros de Jalisco",
+      "away": "Jaguares de Nayarit",
+      "time": "2026-11-22T23:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": "mex11",
+      "league": "LMP",
+      "flag": "🇲🇽",
+      "leagueId": "mex.1",
+      "home": "Naranjeros de Hermosillo",
+      "away": "Mayos de Navojoa",
+      "time": "2026-11-23T00:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": "mex12",
+      "league": "LMP",
+      "flag": "🇲🇽",
+      "leagueId": "mex.1",
+      "home": "Tomateros de Culiacan",
+      "away": "Caneros de los Mochis",
+      "time": "2026-11-23T00:05:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": "mex13",
+      "league": "LMP",
+      "flag": "🇲🇽",
+      "leagueId": "mex.1",
+      "home": "Yaquis de Obregon",
+      "away": "Aguilas de Mexicali",
+      "time": "2026-11-23T00:10:00Z",
+      "status": "Scheduled"
+    }
+  ],
+  "picks": [
+    {
+      "id": "dom4",
+      "league": "LIDOM",
+      "flag": "🇩🇴",
+      "leagueId": "dom.1",
+      "home": "Estrellas Orientales",
+      "away": "Toros del Este",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled",
       "R": {
         "mc": {
-          "p1": 0.5145391586625819,
-          "p2": 0.48546084133741807,
-          "alta": 0.7053750000000001,
-          "baja": 0.2946249999999999,
-          "rl1": 0.34556,
-          "rl2": 0.65444
+          "p1": 0.5451345483087734,
+          "p2": 0.4548654516912265,
+          "alta": 0.713103,
+          "baja": 0.28689699999999996,
+          "rl1": 0.30486,
+          "rl2": 0.69514
         },
-        "lh": 4.5,
-        "la": 4.1,
+        "lh": 4.4,
+        "la": 4.4,
         "hH": [],
         "hA": [],
-        "pitcherH": {
-          "name": "Sergio Morales",
-          "era": 2.88
-        },
-        "pitcherA": {
-          "name": "Roberto Valdez",
-          "era": 3.72
-        },
-        "teamEraH": 3.68,
-        "teamEraA": 4.08
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 3.38,
+        "teamEraA": 5.49
       },
       "markets": [
         {
           "code": "alta",
           "label": "Alta +6.5 Carreras",
-          "p": 0.7053750000000001,
-          "odds": 1.35
+          "p": 0.713103,
+          "odds": 1.33
         },
         {
           "code": "rl2",
           "label": "Run Line Visit. (+1.5)",
-          "p": 0.65444,
-          "odds": 1.45
+          "p": 0.69514,
+          "odds": 1.37
         },
         {
           "code": "1",
           "label": "Victoria Local",
-          "p": 0.5145391586625819,
-          "odds": 1.85
+          "p": 0.5451345483087734,
+          "odds": 1.74
         },
         {
           "code": "2",
           "label": "Victoria Visitante",
-          "p": 0.48546084133741807,
-          "odds": 1.96
+          "p": 0.4548654516912265,
+          "odds": 2.09
         },
         {
           "code": "rl1",
           "label": "Run Line Local (-1.5)",
-          "p": 0.34556,
-          "odds": 2.75
+          "p": 0.30486,
+          "odds": 3.12
         },
         {
           "code": "baja",
           "label": "Baja -6.5 Carreras",
-          "p": 0.2946249999999999,
-          "odds": 3.22
+          "p": 0.28689699999999996,
+          "odds": 3.31
         }
       ],
       "bestMkt": {
         "code": "alta",
         "label": "Alta +6.5 Carreras",
-        "p": 0.7053750000000001,
-        "odds": 1.35
+        "p": 0.713103,
+        "odds": 1.33
       },
-      "score": 0.7503750000000001,
-      "pitcherH": {
-        "name": "Sergio Morales",
-        "era": 2.88
-      },
-      "pitcherA": {
-        "name": "Roberto Valdez",
-        "era": 3.72
-      },
-      "teamEraH": 3.68,
-      "teamEraA": 4.08,
+      "score": 0.7581030000000001,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 3.38,
+      "teamEraA": 5.49,
       "dataQ": 0,
       "statz": true
     },
     {
-      "id": "d2",
+      "id": "dom5",
       "league": "LIDOM",
       "flag": "🇩🇴",
       "leagueId": "dom.1",
-      "home": "Estrellas Orientales",
+      "home": "Aguilas Cibaenas",
       "away": "Gigantes del Cibao",
-      "time": "2026-11-22T22:00:00Z",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled",
       "R": {
         "mc": {
-          "p1": 0.45546132266984174,
-          "p2": 0.5445386773301583,
-          "alta": 0.594543,
-          "baja": 0.40545699999999996,
-          "rl1": 0.29926,
-          "rl2": 0.70074
+          "p1": 0.41183473632388456,
+          "p2": 0.5881652636761154,
+          "alta": 0.712704,
+          "baja": 0.287296,
+          "rl1": 0.30468,
+          "rl2": 0.69532
+        },
+        "lh": 4.4,
+        "la": 4.4,
+        "hH": [],
+        "hA": [],
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 4.53,
+        "teamEraA": 4.81
+      },
+      "markets": [
+        {
+          "code": "alta",
+          "label": "Alta +6.5 Carreras",
+          "p": 0.712704,
+          "odds": 1.33
+        },
+        {
+          "code": "rl2",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69532,
+          "odds": 1.37
+        },
+        {
+          "code": "2",
+          "label": "Victoria Visitante",
+          "p": 0.5881652636761154,
+          "odds": 1.62
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.41183473632388456,
+          "odds": 2.31
+        },
+        {
+          "code": "rl1",
+          "label": "Run Line Local (-1.5)",
+          "p": 0.30468,
+          "odds": 3.12
+        },
+        {
+          "code": "baja",
+          "label": "Baja -6.5 Carreras",
+          "p": 0.287296,
+          "odds": 3.31
+        }
+      ],
+      "bestMkt": {
+        "code": "alta",
+        "label": "Alta +6.5 Carreras",
+        "p": 0.712704,
+        "odds": 1.33
+      },
+      "score": 0.757704,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 4.53,
+      "teamEraA": 4.81,
+      "dataQ": 0,
+      "statz": true
+    },
+    {
+      "id": "dom6",
+      "league": "LIDOM",
+      "flag": "🇩🇴",
+      "leagueId": "dom.1",
+      "home": "Tigres del Licey",
+      "away": "Leones del Escogido",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled",
+      "R": {
+        "mc": {
+          "p1": 0.47641,
+          "p2": 0.52359,
+          "alta": 0.712634,
+          "baja": 0.287366,
+          "rl1": 0.30346,
+          "rl2": 0.69654
+        },
+        "lh": 4.4,
+        "la": 4.4,
+        "hH": [],
+        "hA": [],
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 3.13,
+        "teamEraA": 4.35
+      },
+      "markets": [
+        {
+          "code": "alta",
+          "label": "Alta +6.5 Carreras",
+          "p": 0.712634,
+          "odds": 1.33
+        },
+        {
+          "code": "rl2",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69654,
+          "odds": 1.36
+        },
+        {
+          "code": "2",
+          "label": "Victoria Visitante",
+          "p": 0.52359,
+          "odds": 1.81
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.47641,
+          "odds": 1.99
+        },
+        {
+          "code": "rl1",
+          "label": "Run Line Local (-1.5)",
+          "p": 0.30346,
+          "odds": 3.13
+        },
+        {
+          "code": "baja",
+          "label": "Baja -6.5 Carreras",
+          "p": 0.287366,
+          "odds": 3.31
+        }
+      ],
+      "bestMkt": {
+        "code": "alta",
+        "label": "Alta +6.5 Carreras",
+        "p": 0.712634,
+        "odds": 1.33
+      },
+      "score": 0.757634,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 3.13,
+      "teamEraA": 4.35,
+      "dataQ": 0,
+      "statz": true
+    },
+    {
+      "id": "ven7",
+      "league": "LVBP",
+      "flag": "🇻🇪",
+      "leagueId": "ven.1",
+      "home": "Aguilas del Zulia",
+      "away": "Bravos de Margarita",
+      "time": "2026-11-22T21:00:00Z",
+      "status": "Scheduled",
+      "R": {
+        "mc": {
+          "p1": 0.48267301864689444,
+          "p2": 0.5173269813531055,
+          "alta": 0.594326,
+          "baja": 0.405674,
+          "rl1": 0.29822,
+          "rl2": 0.70178
         },
         "lh": 4.2,
         "la": 4.2,
         "hH": [],
         "hA": [],
-        "pitcherH": {
-          "name": "Carlos Reyes",
-          "era": 3.65
-        },
-        "pitcherA": {
-          "name": "Miguel Torres",
-          "era": 3.45
-        },
-        "teamEraH": 4.12,
-        "teamEraA": 3.95
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 5.45,
+        "teamEraA": 5.92
       },
       "markets": [
         {
           "code": "rl2",
           "label": "Run Line Visit. (+1.5)",
-          "p": 0.70074,
-          "odds": 1.36
+          "p": 0.70178,
+          "odds": 1.35
         },
         {
           "code": "alta",
           "label": "Alta +6.5 Carreras",
-          "p": 0.594543,
+          "p": 0.594326,
           "odds": 1.6
         },
         {
           "code": "2",
           "label": "Victoria Visitante",
-          "p": 0.5445386773301583,
-          "odds": 1.74
+          "p": 0.5173269813531055,
+          "odds": 1.84
         },
         {
           "code": "1",
           "label": "Victoria Local",
-          "p": 0.45546132266984174,
-          "odds": 2.09
+          "p": 0.48267301864689444,
+          "odds": 1.97
         },
         {
           "code": "baja",
           "label": "Baja -6.5 Carreras",
-          "p": 0.40545699999999996,
+          "p": 0.405674,
           "odds": 2.34
         },
         {
           "code": "rl1",
           "label": "Run Line Local (-1.5)",
-          "p": 0.29926,
+          "p": 0.29822,
+          "odds": 3.19
+        }
+      ],
+      "bestMkt": {
+        "code": "rl2",
+        "label": "Run Line Visit. (+1.5)",
+        "p": 0.70178,
+        "odds": 1.35
+      },
+      "score": 0.74678,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 5.45,
+      "teamEraA": 5.92,
+      "dataQ": 0,
+      "statz": true
+    },
+    {
+      "id": "pri3",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Senadores de San Juan",
+      "away": "Indios de Mayaguez",
+      "time": "2026-11-22T20:21:00Z",
+      "status": "Scheduled",
+      "R": {
+        "mc": {
+          "p1": 0.4268585495749555,
+          "p2": 0.5731414504250445,
+          "alta": 0.595222,
+          "baja": 0.40477799999999997,
+          "rl1": 0.29854,
+          "rl2": 0.70146
+        },
+        "lh": 4.2,
+        "la": 4.2,
+        "hH": [],
+        "hA": [],
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 6.21,
+        "teamEraA": 4.98
+      },
+      "markets": [
+        {
+          "code": "rl2",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.70146,
+          "odds": 1.35
+        },
+        {
+          "code": "alta",
+          "label": "Alta +6.5 Carreras",
+          "p": 0.595222,
+          "odds": 1.6
+        },
+        {
+          "code": "2",
+          "label": "Victoria Visitante",
+          "p": 0.5731414504250445,
+          "odds": 1.66
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.4268585495749555,
+          "odds": 2.23
+        },
+        {
+          "code": "baja",
+          "label": "Baja -6.5 Carreras",
+          "p": 0.40477799999999997,
+          "odds": 2.35
+        },
+        {
+          "code": "rl1",
+          "label": "Run Line Local (-1.5)",
+          "p": 0.29854,
+          "odds": 3.18
+        }
+      ],
+      "bestMkt": {
+        "code": "rl2",
+        "label": "Run Line Visit. (+1.5)",
+        "p": 0.70146,
+        "odds": 1.35
+      },
+      "score": 0.74646,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 6.21,
+      "teamEraA": 4.98,
+      "dataQ": 0,
+      "statz": true
+    },
+    {
+      "id": "ven1",
+      "league": "LVBP",
+      "flag": "🇻🇪",
+      "leagueId": "ven.1",
+      "home": "Tiburones de La Guaira",
+      "away": "Cardenales de Lara",
+      "time": "2026-11-22T17:00:00Z",
+      "status": "Scheduled",
+      "R": {
+        "mc": {
+          "p1": 0.45551702803104194,
+          "p2": 0.5444829719689581,
+          "alta": 0.594109,
+          "baja": 0.405891,
+          "rl1": 0.2997,
+          "rl2": 0.7003
+        },
+        "lh": 4.2,
+        "la": 4.2,
+        "hH": [],
+        "hA": [],
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 5.91,
+        "teamEraA": 5.66
+      },
+      "markets": [
+        {
+          "code": "rl2",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.7003,
+          "odds": 1.36
+        },
+        {
+          "code": "alta",
+          "label": "Alta +6.5 Carreras",
+          "p": 0.594109,
+          "odds": 1.6
+        },
+        {
+          "code": "2",
+          "label": "Victoria Visitante",
+          "p": 0.5444829719689581,
+          "odds": 1.74
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.45551702803104194,
+          "odds": 2.09
+        },
+        {
+          "code": "baja",
+          "label": "Baja -6.5 Carreras",
+          "p": 0.405891,
+          "odds": 2.34
+        },
+        {
+          "code": "rl1",
+          "label": "Run Line Local (-1.5)",
+          "p": 0.2997,
           "odds": 3.17
         }
       ],
       "bestMkt": {
         "code": "rl2",
         "label": "Run Line Visit. (+1.5)",
-        "p": 0.70074,
+        "p": 0.7003,
         "odds": 1.36
       },
-      "score": 0.7457400000000001,
-      "pitcherH": {
-        "name": "Carlos Reyes",
-        "era": 3.65
-      },
-      "pitcherA": {
-        "name": "Miguel Torres",
-        "era": 3.45
-      },
-      "teamEraH": 4.12,
-      "teamEraA": 3.95,
+      "score": 0.7453000000000001,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 5.91,
+      "teamEraA": 5.66,
       "dataQ": 0,
       "statz": true
     },
     {
-      "id": "v3",
-      "league": "LVBP",
-      "flag": "🇻🇪",
-      "leagueId": "ven.1",
-      "home": "Caribes de Anzoátegui",
-      "away": "Tiburones de La Guaira",
-      "time": "2026-11-22T21:30:00Z",
+      "id": "pri8",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Gigantes de Carolina",
+      "away": "Cangrejeros de Santurce",
+      "time": "2026-11-22T21:21:00Z",
+      "status": "Scheduled",
       "R": {
         "mc": {
-          "p1": 0.4942211752989955,
-          "p2": 0.5057788247010044,
-          "alta": 0.590518,
-          "baja": 0.409482,
-          "rl1": 0.3342,
-          "rl2": 0.6658
+          "p1": 0.4972258840237499,
+          "p2": 0.5027741159762501,
+          "alta": 0.594417,
+          "baja": 0.405583,
+          "rl1": 0.30004,
+          "rl2": 0.69996
         },
-        "lh": 4.3,
-        "la": 4,
+        "lh": 4.2,
+        "la": 4.2,
         "hH": [],
         "hA": [],
-        "pitcherH": {
-          "name": "Wilmer Pérez",
-          "era": 3.85
-        },
-        "pitcherA": {
-          "name": "Fernando López",
-          "era": 4.15
-        },
-        "teamEraH": 4.05,
-        "teamEraA": 4.22
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 4.34,
+        "teamEraA": 4.29
       },
       "markets": [
         {
           "code": "rl2",
           "label": "Run Line Visit. (+1.5)",
-          "p": 0.6658,
-          "odds": 1.43
+          "p": 0.69996,
+          "odds": 1.36
         },
         {
           "code": "alta",
           "label": "Alta +6.5 Carreras",
-          "p": 0.590518,
-          "odds": 1.61
-        },
-        {
-          "code": "2",
-          "label": "Victoria Visitante",
-          "p": 0.5057788247010044,
-          "odds": 1.88
-        },
-        {
-          "code": "1",
-          "label": "Victoria Local",
-          "p": 0.4942211752989955,
-          "odds": 1.92
-        },
-        {
-          "code": "baja",
-          "label": "Baja -6.5 Carreras",
-          "p": 0.409482,
-          "odds": 2.32
-        },
-        {
-          "code": "rl1",
-          "label": "Run Line Local (-1.5)",
-          "p": 0.3342,
-          "odds": 2.84
-        }
-      ],
-      "bestMkt": {
-        "code": "rl2",
-        "label": "Run Line Visit. (+1.5)",
-        "p": 0.6658,
-        "odds": 1.43
-      },
-      "score": 0.7108,
-      "pitcherH": {
-        "name": "Wilmer Pérez",
-        "era": 3.85
-      },
-      "pitcherA": {
-        "name": "Fernando López",
-        "era": 4.15
-      },
-      "teamEraH": 4.05,
-      "teamEraA": 4.22,
-      "dataQ": 0,
-      "statz": true
-    },
-    {
-      "id": "m2",
-      "league": "LMP",
-      "flag": "🇲🇽",
-      "leagueId": "mex.1",
-      "home": "Charros de Jalisco",
-      "away": "Mayos de Navojoa",
-      "time": "2026-11-22T22:30:00Z",
-      "R": {
-        "mc": {
-          "p1": 0.5081996891826609,
-          "p2": 0.49180031081733905,
-          "alta": 0.5944940000000001,
-          "baja": 0.4055059999999999,
-          "rl1": 0.34778,
-          "rl2": 0.65222
-        },
-        "lh": 4.4,
-        "la": 4,
-        "hH": [],
-        "hA": [],
-        "pitcherH": {
-          "name": "Luis Valencia",
-          "era": 3.15
-        },
-        "pitcherA": {
-          "name": "Alberto Meza",
-          "era": 4.05
-        },
-        "teamEraH": 3.92,
-        "teamEraA": 4.35
-      },
-      "markets": [
-        {
-          "code": "rl2",
-          "label": "Run Line Visit. (+1.5)",
-          "p": 0.65222,
-          "odds": 1.46
-        },
-        {
-          "code": "alta",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.5944940000000001,
+          "p": 0.594417,
           "odds": 1.6
         },
         {
-          "code": "1",
-          "label": "Victoria Local",
-          "p": 0.5081996891826609,
-          "odds": 1.87
-        },
-        {
           "code": "2",
           "label": "Victoria Visitante",
-          "p": 0.49180031081733905,
-          "odds": 1.93
+          "p": 0.5027741159762501,
+          "odds": 1.89
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.4972258840237499,
+          "odds": 1.91
         },
         {
           "code": "baja",
           "label": "Baja -6.5 Carreras",
-          "p": 0.4055059999999999,
+          "p": 0.405583,
           "odds": 2.34
         },
         {
           "code": "rl1",
           "label": "Run Line Local (-1.5)",
-          "p": 0.34778,
-          "odds": 2.73
+          "p": 0.30004,
+          "odds": 3.17
         }
       ],
       "bestMkt": {
         "code": "rl2",
         "label": "Run Line Visit. (+1.5)",
-        "p": 0.65222,
-        "odds": 1.46
+        "p": 0.69996,
+        "odds": 1.36
       },
-      "score": 0.6972200000000001,
-      "pitcherH": {
-        "name": "Luis Valencia",
-        "era": 3.15
+      "score": 0.7449600000000001,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 4.34,
+      "teamEraA": 4.29,
+      "dataQ": 0,
+      "statz": true
+    },
+    {
+      "id": "pri2",
+      "league": "LBPRC",
+      "flag": "🇵🇷",
+      "leagueId": "pri.1",
+      "home": "Criollos de Caguas",
+      "away": "Leones de Ponce",
+      "time": "2026-11-22T20:21:00Z",
+      "status": "Scheduled",
+      "R": {
+        "mc": {
+          "p1": 0.4690762816982003,
+          "p2": 0.5309237183017997,
+          "alta": 0.59413,
+          "baja": 0.40586999999999995,
+          "rl1": 0.30018,
+          "rl2": 0.69982
+        },
+        "lh": 4.2,
+        "la": 4.2,
+        "hH": [],
+        "hA": [],
+        "pitcherH": null,
+        "pitcherA": null,
+        "teamEraH": 3.51,
+        "teamEraA": 3.46
       },
-      "pitcherA": {
-        "name": "Alberto Meza",
-        "era": 4.05
+      "markets": [
+        {
+          "code": "rl2",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69982,
+          "odds": 1.36
+        },
+        {
+          "code": "alta",
+          "label": "Alta +6.5 Carreras",
+          "p": 0.59413,
+          "odds": 1.6
+        },
+        {
+          "code": "2",
+          "label": "Victoria Visitante",
+          "p": 0.5309237183017997,
+          "odds": 1.79
+        },
+        {
+          "code": "1",
+          "label": "Victoria Local",
+          "p": 0.4690762816982003,
+          "odds": 2.03
+        },
+        {
+          "code": "baja",
+          "label": "Baja -6.5 Carreras",
+          "p": 0.40586999999999995,
+          "odds": 2.34
+        },
+        {
+          "code": "rl1",
+          "label": "Run Line Local (-1.5)",
+          "p": 0.30018,
+          "odds": 3.16
+        }
+      ],
+      "bestMkt": {
+        "code": "rl2",
+        "label": "Run Line Visit. (+1.5)",
+        "p": 0.69982,
+        "odds": 1.36
       },
-      "teamEraH": 3.92,
-      "teamEraA": 4.35,
+      "score": 0.74482,
+      "pitcherH": null,
+      "pitcherA": null,
+      "teamEraH": 3.51,
+      "teamEraA": 3.46,
       "dataQ": 0,
       "statz": true
     }
   ],
   "combos": [
     {
-      "name": "Combinado 4",
-      "pComb": 0.3192236698804956,
-      "oddsComb": 2.68,
+      "name": "Combinado 1",
+      "pComb": 0.336668948542992,
+      "oddsComb": 2.55,
       "picks": [
         {
-          "match": "Cardenales vs Navegantes",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.698445,
-          "odds": 1.36
-        },
-        {
-          "match": "Leones del Caracas vs Magallanes",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.6983820000000001,
-          "odds": 1.36
-        },
-        {
-          "match": "Diablos Rojos del México vs Sultanes de Monterrey",
+          "match": "Estrellas Orientales vs Toros del Este",
           "label": "Run Line Visit. (+1.5)",
-          "p": 0.65444,
-          "odds": 1.45
+          "p": 0.69514,
+          "odds": 1.37
+        },
+        {
+          "match": "Aguilas Cibaenas vs Gigantes del Cibao",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69532,
+          "odds": 1.37
+        },
+        {
+          "match": "Tigres del Licey vs Leones del Escogido",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69654,
+          "odds": 1.36
         }
       ]
     },
     {
-      "name": "Combinado 1",
-      "pComb": 0.2900616579255334,
-      "oddsComb": 2.96,
+      "name": "Combinado 9",
+      "pComb": 0.28827684335480164,
+      "oddsComb": 2.98,
       "picks": [
         {
-          "match": "Tigres del Licey vs Águilas Cibaeñas",
+          "match": "Aguilas Cibaenas vs Gigantes del Cibao",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69532,
+          "odds": 1.37
+        },
+        {
+          "match": "Tigres del Licey vs Leones del Escogido",
+          "label": "Run Line Visit. (+1.5)",
+          "p": 0.69654,
+          "odds": 1.36
+        },
+        {
+          "match": "Senadores de San Juan vs Indios de Mayaguez",
           "label": "Alta +6.5 Carreras",
-          "p": 0.5946549999999999,
+          "p": 0.595222,
           "odds": 1.6
-        },
-        {
-          "match": "Cardenales vs Navegantes",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.698445,
-          "odds": 1.36
-        },
-        {
-          "match": "Leones del Caracas vs Magallanes",
-          "label": "Alta +6.5 Carreras",
-          "p": 0.6983820000000001,
-          "odds": 1.36
         }
       ]
     }
