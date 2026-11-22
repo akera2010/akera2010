@@ -1,0 +1,36 @@
+{
+  "updated": "2026-11-22",
+  "cache": {
+    "juventus|venezia": {"winH": 0.6706, "xGH": 2.12, "xGA": 0.80},
+    "burnley|blackburn": {"winH": 0.533, "xGH": 1.82, "xGA": 1.11},
+    "sk beveren|gent": {"winA": 0.5161, "xGH": 1.02, "xGA": 1.66},
+    "cordoba|oviedo": {"winH": 0.4861, "xGH": 1.97, "xGA": 1.48},
+    "barcelona|villarreal": {"winH": 0.73, "goals2p": 0.9136, "goals3p": 0.7633, "xGH": 2.89, "xGA": 1.13},
+    "racing santander|real sociedad": {"btts": 0.7306, "xGH": 1.84, "xGA": 1.97},
+    "racing|sociedad": {"btts": 0.7306, "xGH": 1.84, "xGA": 1.97},
+    "ajax|ado den haag": {"winH": 0.7751, "xGH": 2.84, "xGA": 0.86},
+    "sparta|az": {"winA": 0.517, "xGH": 1.30, "xGA": 1.95},
+    "paris saint germain|angers": {"winH": 0.6535, "xGH": 2.08, "xGA": 0.85},
+    "paris|angers": {"winH": 0.6535, "xGH": 2.08, "xGA": 0.85},
+    "sassuolo|genoa": {"xGH": 1.28, "xGA": 1.23},
+    "bologna|udinese": {"winH": 0.5356, "xGH": 1.68, "xGA": 0.95},
+    "hull city|brighton hove albion": {"winA": 0.6387, "xGH": 0.81, "xGA": 1.96},
+    "hull|brighton": {"winA": 0.6387, "xGH": 0.81, "xGA": 1.96},
+    "augsburg|mainz": {"btts": 0.7484, "goals2p": 0.911, "goals3p": 0.7558, "xGH": 1.98, "xGA": 1.98},
+    "kv kortrijk|union sg": {"winA": 0.6535, "xGH": 0.73, "xGA": 1.93},
+    "kv kortrijk|union": {"winA": 0.6535, "xGH": 0.73, "xGA": 1.93},
+    "gijon|las palmas": {"winH": 0.4623, "xGH": 1.46, "xGA": 1.03},
+    "trabzonspor|eyupspor": {"winH": 0.806, "xGH": 2.78},
+    "aalesund|rosenborg": {"btts": 0.7121, "goals2p": 0.9103, "goals3p": 0.7588},
+    "konyaspor|besiktas": {"winA": 0.5491, "xGH": 0.97, "xGA": 1.74},
+    "kasimpasa|alanyaspor": {"winH": 0.4954, "xGH": 1.51, "xGA": 0.96},
+    "chicago fire|charlotte": {"btts": 0.7092, "goals2p": 0.9128, "goals3p": 0.7568},
+    "altach|sturm graz": {"winA": 0.5004, "xGH": 1.08, "xGA": 1.64},
+    "viborg|randers": {"winH": 0.5807, "xGH": 1.99, "xGA": 1.08}
+  },
+  "fixtures": [
+    {"id": "sz1", "league": "Süper Lig", "flag": "🇹🇷", "leagueId": "tur.1", "home": "Trabzonspor", "homeId": "sz688", "away": "Eyüpspor", "awayId": "sz7399", "time": "2026-11-22T16:00:00Z"},
+    {"id": "sz2", "league": "Eliteserien", "flag": "🇳🇴", "leagueId": "nor.1", "home": "Aalesund", "homeId": "sz393", "away": "Rosenborg", "awayId": "sz1335", "time": "2026-11-22T16:00:00Z"},
+    {"id": "sz3", "league": "Major League Soccer", "flag": "🇺🇸", "leagueId": "usa.1", "home": "Chicago Fire", "homeId": "sz75", "away": "Charlotte FC", "awayId": "sz260119", "time": "2026-11-22T23:30:00Z"}
+  ]
+}
