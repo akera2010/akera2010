@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
   --paper:#ffffff; --ink:#0d2a5c; --blue:#1b4a8f; --sky:#2f63b0; --red:#C00000;
@@ -323,6 +324,32 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 .tl-leg{font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
 .tl-leg b{color:var(--ink)}
 
+/* ===== QUIZ SYSTEM ===== */
+.sq-trigger{padding:12px 16px;border-top:2px solid var(--line);text-align:center;background:var(--paper)}
+.sq-wrap{border-top:3px solid var(--red);padding:16px;background:var(--tone);margin-top:8px}
+.sq-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--disp)}
+.sq-prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.sq-progbar{height:100%;background:var(--red);transition:width .3s}
+.sq-q{font-size:15px;font-weight:700;line-height:1.5;color:var(--ink);margin-bottom:14px}
+.sq-opts{display:flex;flex-direction:column;gap:8px}
+.sq-opt{text-align:left;padding:11px 14px;border:2px solid var(--line);background:var(--paper);cursor:pointer;font-size:14px;border-radius:2px;transition:background .12s,border-color .12s;font-family:var(--body)}
+.sq-opt:hover:not(:disabled){background:var(--tone);border-color:var(--blue)}
+.sq-opt:disabled{cursor:default}
+.sq-opt.sq-correct{background:#eaffea;border-color:#1a7a3a;color:#1a4a22}
+.sq-opt.sq-wrong{background:#fff0f0;border-color:#C00000;color:#8a0000}
+.sq-explain{margin-top:12px;padding:14px;border-left:4px solid var(--blue);background:var(--paper)}
+.sq-verdict{font-weight:700;font-size:14px;margin-bottom:6px}
+.sq-ok{color:#1a7a3a}.sq-no{color:#C00000}
+.sq-exp{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:10px}
+.sq-svg{text-align:center;margin:10px 0}.sq-svg svg{max-width:100%;height:auto}
+.sq-next,.sq-retry{margin-top:10px;padding:10px 20px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:14px;font-family:var(--disp);letter-spacing:.05em;display:inline-block}
+.sq-next:hover,.sq-retry:hover{background:var(--blue)}
+.sq-result{text-align:center;padding:20px 0}
+.sq-score-num{font-family:var(--disp);font-size:52px;color:var(--red);line-height:1}
+.sq-grade{font-size:22px;font-weight:700;margin:8px 0}
+.sq-pct{font-size:14px;color:var(--muted)}
+.sq-xp-earn{font-family:var(--disp);font-size:16px;color:var(--blue);margin:8px 0}
+
 /* ===== MANGA INTERACTIVA HOME ===== */
 #mangaHome{background:var(--paper)}
 .mh-banner{background:#0d2a5c;padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:4px solid #C00000}
@@ -509,47 +536,11 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
   <div style="position:relative;overflow:hidden;border-bottom:5px solid #C00000;background:repeating-conic-gradient(from 0deg at 38% 60%,transparent 0deg,transparent 2.5deg,rgba(255,255,255,.07) 2.5deg,rgba(255,255,255,.07) 3.2deg) #040e24;min-height:260px;display:flex;align-items:stretch">
     <!-- Faja roja derecha (manga color page accent) -->
     <div style="position:absolute;top:0;right:0;width:5px;height:100%;background:#C00000"></div>
-    <!-- Mazinger Z silhouette grande -->
-    <svg style="width:160px;height:230px;flex-shrink:0;align-self:flex-end;padding:0 0 0 12px;filter:drop-shadow(0 0 12px rgba(192,0,0,.7))" viewBox="-80 -115 160 225">
-      <!-- Body glow aura -->
-      <ellipse cx="0" cy="20" rx="50" ry="80" fill="rgba(27,74,143,.25)"/>
-      <!-- Legs -->
-      <rect x="-20" y="55" width="18" height="55" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <rect x="2" y="55" width="18" height="55" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <!-- Feet -->
-      <rect x="-24" y="100" width="22" height="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <rect x="2" y="100" width="22" height="16" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <!-- Torso -->
-      <polygon points="-38,-10 38,-10 32,55 -32,55" fill="#0d2a5c" stroke="#fff" stroke-width="1.5"/>
-      <!-- Chest orb -->
-      <circle cx="0" cy="22" r="15" fill="#C00000" stroke="#fff" stroke-width="2"/>
-      <circle cx="0" cy="22" r="8" fill="rgba(255,100,80,.8)"/>
-      <!-- Arms -->
-      <rect x="-58" y="-5" width="20" height="52" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <rect x="38" y="-5" width="20" height="52" fill="#1b4a8f" stroke="#fff" stroke-width="1.2"/>
-      <!-- Fists — Rocket Punch pose (right arm slightly extended) -->
-      <rect x="-64" y="42" width="26" height="22" fill="#0d2a5c" stroke="#fff" stroke-width="1.2"/>
-      <rect x="40" y="38" width="28" height="24" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
-      <!-- Shoulders -->
-      <circle cx="-48" cy="-6" r="17" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
-      <circle cx="48" cy="-6" r="17" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
-      <!-- Head -->
-      <rect x="-24" y="-68" width="48" height="56" rx="8" fill="#0d2a5c" stroke="#fff" stroke-width="1.5"/>
-      <!-- Eyes -->
-      <rect x="-18" y="-58" width="13" height="11" fill="#C00000"/>
-      <rect x="5" y="-58" width="13" height="11" fill="#C00000"/>
-      <!-- Eye glow -->
-      <rect x="-16" y="-56" width="9" height="7" fill="rgba(255,180,160,.8)"/>
-      <rect x="7" y="-56" width="9" height="7" fill="rgba(255,180,160,.8)"/>
-      <!-- Horn -->
-      <polygon points="0,-84 -7,-68 7,-68" fill="#C00000" stroke="#fff" stroke-width="1.5"/>
-      <!-- Pilder dome -->
-      <ellipse cx="0" cy="-92" rx="12" ry="8" fill="#2f63b0" stroke="#fff" stroke-width="1.5"/>
-      <!-- Action lines from fist -->
-      <line x1="70" y1="45" x2="90" y2="38" stroke="#C00000" stroke-width="2.5"/>
-      <line x1="72" y1="52" x2="95" y2="52" stroke="#C00000" stroke-width="1.8"/>
-      <line x1="70" y1="59" x2="90" y2="66" stroke="#C00000" stroke-width="1.5"/>
-    </svg>
+    <!-- Mazinger Z HEAD 3D (Three.js) -->
+    <div style="width:180px;flex-shrink:0;align-self:center;display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0 8px 8px">
+      <canvas id="mazCanvas" width="180" height="210" style="display:block;filter:drop-shadow(0 0 18px rgba(192,0,0,.8));cursor:grab"></canvas>
+      <div style="font-family:var(--disp);font-size:9px;color:rgba(192,0,0,.7);letter-spacing:.2em;text-transform:uppercase;margin-top:2px">マジンガーZ</div>
+    </div>
     <!-- Texto de portada -->
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 20px 16px 12px">
       <div style="font-family:var(--disp);font-size:13px;color:#C00000;letter-spacing:.15em;margin-bottom:4px;text-transform:uppercase">Go Nagai · 1972</div>
@@ -2394,6 +2385,16 @@ function show(id){
       st.insertBefore(bk,st.firstChild);
     }
   }
+  // Init 3D Mazinger head on home
+  if(id==='0'){setTimeout(initMazHead,120);}
+  // Add quiz button if quiz data exists for this station
+  if(id!=='0'&&typeof QUIZZES!=='undefined'&&QUIZZES[id]){
+    if(!st.querySelector('.sq-trigger')){
+      const qt=document.createElement('div');qt.className='sq-trigger';
+      qt.innerHTML=`<button class="btn red" onclick="startStQuiz('${id}')">🎯 Test rápido — 10 preguntas · +XP</button>`;
+      st.appendChild(qt);
+    }
+  }
   // Check streak
   streakDailyCheck();
   window.scrollTo({top:0});
@@ -3822,10 +3823,274 @@ function kstExample(){
   document.getElementById('kstKetsu').value=KST_EXAMPLE.ketsu;
 }
 
+// ===== GRÁFICOS SVG DE TÉCNICAS =====
+function techSVG(k){
+  if(k==='speedLines'){
+    const ls=Array.from({length:24},(_,i)=>{const a=i*15*Math.PI/180,x1=(80+9*Math.cos(a)).toFixed(1),y1=(80+9*Math.sin(a)).toFixed(1),x2=(80+76*Math.cos(a)).toFixed(1),y2=(80+76*Math.sin(a)).toFixed(1);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${i%3===0?'#C00000':'#1b4a8f'}" stroke-width="${i%3===0?1.5:.7}"/>`;}).join('');
+    return `<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="160" fill="#fff" stroke="#0d2a5c" stroke-width="2"/>${ls}<circle cx="80" cy="80" r="9" fill="#0d2a5c"/><text x="80" y="156" font-size="9" text-anchor="middle" fill="#555">集中線 · Líneas de concentración</text></svg>`;
+  }
+  const svgs={
+    readDir:`<svg width="210" height="85" viewBox="0 0 210 85" xmlns="http://www.w3.org/2000/svg"><rect width="210" height="85" fill="#f0f4ff" rx="4"/><text x="8" y="16" font-size="10" fill="#0d2a5c" font-weight="bold">LECTURA DEL MANGA</text><rect x="10" y="24" width="52" height="42" fill="#fff" stroke="#0d2a5c" stroke-width="2"/><text x="36" y="50" font-size="20" text-anchor="middle" fill="#C00000" font-weight="bold">3</text><rect x="79" y="24" width="52" height="42" fill="#fff" stroke="#0d2a5c" stroke-width="2"/><text x="105" y="50" font-size="20" text-anchor="middle" fill="#C00000" font-weight="bold">2</text><rect x="148" y="24" width="52" height="42" fill="#fff" stroke="#0d2a5c" stroke-width="2"/><text x="174" y="50" font-size="20" text-anchor="middle" fill="#C00000" font-weight="bold">1</text><path d="M124 45 L84 45" stroke="#0d2a5c" stroke-width="2"/><polygon points="84,41 76,45 84,49" fill="#0d2a5c"/><path d="M55 45 L15 45" stroke="#0d2a5c" stroke-width="2"/><polygon points="15,41 7,45 15,49" fill="#0d2a5c"/><text x="105" y="78" font-size="9" text-anchor="middle" fill="#888">Derecha → Izquierda</text></svg>`,
+    crossHatch:`<svg width="150" height="110" viewBox="0 0 150 110" xmlns="http://www.w3.org/2000/svg"><rect width="150" height="110" fill="#f8f8f8" rx="4"/><text x="75" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">CROSSHATCHING · 交差線</text><clipPath id="ch"><rect x="10" y="20" width="130" height="72"/></clipPath><g clip-path="url(#ch)" opacity="0.7"><line x1="0" y1="20" x2="80" y2="100" stroke="#333" stroke-width="1"/><line x1="20" y1="20" x2="100" y2="100" stroke="#333" stroke-width="1"/><line x1="40" y1="20" x2="120" y2="100" stroke="#333" stroke-width="1"/><line x1="60" y1="20" x2="140" y2="100" stroke="#333" stroke-width="1"/><line x1="80" y1="20" x2="160" y2="100" stroke="#333" stroke-width="1"/><line x1="100" y1="20" x2="180" y2="100" stroke="#333" stroke-width="1"/><line x1="150" y1="20" x2="70" y2="100" stroke="#333" stroke-width="1"/><line x1="130" y1="20" x2="50" y2="100" stroke="#333" stroke-width="1"/><line x1="110" y1="20" x2="30" y2="100" stroke="#333" stroke-width="1"/><line x1="90" y1="20" x2="10" y2="100" stroke="#333" stroke-width="1"/></g><text x="75" y="104" font-size="8" text-anchor="middle" fill="#888">Sombreado por cruce de líneas</text></svg>`,
+    screentoneDots:`<svg width="150" height="110" viewBox="0 0 150 110" xmlns="http://www.w3.org/2000/svg"><rect width="150" height="110" fill="#fff" rx="4" stroke="#ddd"/><text x="75" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">SCREENTONE · トーン</text><circle cx="20" cy="30" r="2" fill="#444"/><circle cx="34" cy="30" r="2" fill="#444"/><circle cx="48" cy="30" r="2" fill="#444"/><circle cx="62" cy="30" r="2" fill="#444"/><circle cx="76" cy="30" r="2" fill="#444"/><circle cx="90" cy="30" r="2" fill="#444"/><circle cx="104" cy="30" r="2" fill="#444"/><circle cx="118" cy="30" r="2" fill="#444"/><circle cx="132" cy="30" r="2" fill="#444"/><circle cx="20" cy="43" r="2.5" fill="#444"/><circle cx="34" cy="43" r="2.5" fill="#444"/><circle cx="48" cy="43" r="2.5" fill="#444"/><circle cx="62" cy="43" r="2.5" fill="#444"/><circle cx="76" cy="43" r="2.5" fill="#444"/><circle cx="90" cy="43" r="2.5" fill="#444"/><circle cx="104" cy="43" r="2.5" fill="#444"/><circle cx="118" cy="43" r="2.5" fill="#444"/><circle cx="132" cy="43" r="2.5" fill="#444"/><circle cx="20" cy="56" r="3" fill="#444"/><circle cx="34" cy="56" r="3" fill="#444"/><circle cx="48" cy="56" r="3" fill="#444"/><circle cx="62" cy="56" r="3" fill="#444"/><circle cx="76" cy="56" r="3" fill="#444"/><circle cx="90" cy="56" r="3" fill="#444"/><circle cx="104" cy="56" r="3" fill="#444"/><circle cx="118" cy="56" r="3" fill="#444"/><circle cx="132" cy="56" r="3" fill="#444"/><circle cx="20" cy="70" r="3.5" fill="#444"/><circle cx="34" cy="70" r="3.5" fill="#444"/><circle cx="48" cy="70" r="3.5" fill="#444"/><circle cx="62" cy="70" r="3.5" fill="#444"/><circle cx="76" cy="70" r="3.5" fill="#444"/><circle cx="90" cy="70" r="3.5" fill="#444"/><circle cx="104" cy="70" r="3.5" fill="#444"/><circle cx="118" cy="70" r="3.5" fill="#444"/><circle cx="132" cy="70" r="3.5" fill="#444"/><circle cx="20" cy="84" r="4" fill="#444"/><circle cx="34" cy="84" r="4" fill="#444"/><circle cx="48" cy="84" r="4" fill="#444"/><circle cx="62" cy="84" r="4" fill="#444"/><circle cx="76" cy="84" r="4" fill="#444"/><circle cx="90" cy="84" r="4" fill="#444"/><circle cx="104" cy="84" r="4" fill="#444"/><circle cx="118" cy="84" r="4" fill="#444"/><circle cx="132" cy="84" r="4" fill="#444"/><text x="75" y="104" font-size="8" text-anchor="middle" fill="#888">Mayor tamaño = tono más oscuro</text></svg>`,
+    persp1pt:`<svg width="200" height="130" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="130" fill="#f0f4ff" rx="4"/><text x="100" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">PERSPECTIVA 1 PUNTO</text><line x1="10" y1="65" x2="190" y2="65" stroke="#aaa" stroke-width="1" stroke-dasharray="4,2"/><circle cx="100" cy="65" r="5" fill="#C00000"/><text x="100" y="78" font-size="8" text-anchor="middle" fill="#C00000">PF</text><line x1="100" y1="65" x2="20" y2="18" stroke="#0d2a5c" stroke-width="1.2"/><line x1="100" y1="65" x2="180" y2="18" stroke="#0d2a5c" stroke-width="1.2"/><line x1="100" y1="65" x2="20" y2="118" stroke="#0d2a5c" stroke-width="1.2"/><line x1="100" y1="65" x2="180" y2="118" stroke="#0d2a5c" stroke-width="1.2"/><rect x="38" y="30" width="40" height="30" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><line x1="38" y1="30" x2="52" y2="22" stroke="#0d2a5c" stroke-width="1"/><line x1="78" y1="30" x2="92" y2="22" stroke="#0d2a5c" stroke-width="1"/><line x1="78" y1="60" x2="92" y2="52" stroke="#0d2a5c" stroke-width="1"/><line x1="52" y1="22" x2="92" y2="22" stroke="#0d2a5c" stroke-width="1"/><line x1="92" y1="22" x2="92" y2="52" stroke="#0d2a5c" stroke-width="1"/><text x="100" y="124" font-size="9" text-anchor="middle" fill="#555">1 punto de fuga · visión frontal</text></svg>`,
+    faceCross:`<svg width="140" height="150" viewBox="0 0 140 150" xmlns="http://www.w3.org/2000/svg"><rect width="140" height="150" fill="#fff" rx="4" stroke="#ddd"/><text x="70" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">CRUZ DE ROSTRO</text><ellipse cx="70" cy="85" rx="45" ry="58" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><line x1="25" y1="85" x2="115" y2="85" stroke="#C00000" stroke-width="1" stroke-dasharray="3,2"/><line x1="70" y1="27" x2="70" y2="143" stroke="#C00000" stroke-width="1" stroke-dasharray="3,2"/><ellipse cx="52" cy="85" rx="8" ry="6" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><circle cx="52" cy="85" r="2.5" fill="#0d2a5c"/><ellipse cx="88" cy="85" rx="8" ry="6" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><circle cx="88" cy="85" r="2.5" fill="#0d2a5c"/><line x1="68" y1="98" x2="63" y2="108" stroke="#0d2a5c" stroke-width="1.2"/><line x1="72" y1="98" x2="77" y2="108" stroke="#0d2a5c" stroke-width="1.2"/><path d="M60 120 Q70 128 80 120" fill="none" stroke="#0d2a5c" stroke-width="1.2"/><text x="70" y="145" font-size="8" text-anchor="middle" fill="#888">Ojos a la MITAD del cráneo</text></svg>`,
+    bodyProp:`<svg width="90" height="185" viewBox="0 0 90 185" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="185" fill="#f8f8f8" rx="4"/><ellipse cx="45" cy="22" rx="13" ry="16" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><line x1="45" y1="38" x2="45" y2="96" stroke="#0d2a5c" stroke-width="1.5"/><line x1="22" y1="48" x2="68" y2="48" stroke="#0d2a5c" stroke-width="1.5"/><line x1="22" y1="48" x2="16" y2="84" stroke="#0d2a5c" stroke-width="1.5"/><line x1="68" y1="48" x2="74" y2="84" stroke="#0d2a5c" stroke-width="1.5"/><line x1="30" y1="96" x2="58" y2="96" stroke="#0d2a5c" stroke-width="1.5"/><line x1="35" y1="96" x2="30" y2="158" stroke="#0d2a5c" stroke-width="1.5"/><line x1="55" y1="96" x2="60" y2="158" stroke="#0d2a5c" stroke-width="1.5"/><line x1="2" y1="38" x2="10" y2="38" stroke="#C00000" stroke-width="1"/><text x="12" y="42" font-size="7" fill="#C00000">1</text><line x1="2" y1="58" x2="10" y2="58" stroke="#C00000" stroke-width="1"/><text x="12" y="62" font-size="7" fill="#C00000">2</text><line x1="2" y1="78" x2="10" y2="78" stroke="#C00000" stroke-width="1"/><text x="12" y="82" font-size="7" fill="#C00000">3</text><line x1="2" y1="98" x2="10" y2="98" stroke="#C00000" stroke-width="1"/><text x="12" y="102" font-size="7" fill="#C00000">4</text><line x1="2" y1="118" x2="10" y2="118" stroke="#C00000" stroke-width="1"/><text x="12" y="122" font-size="7" fill="#C00000">5</text><line x1="2" y1="138" x2="10" y2="138" stroke="#C00000" stroke-width="1"/><text x="12" y="142" font-size="7" fill="#C00000">6</text><line x1="2" y1="158" x2="10" y2="158" stroke="#C00000" stroke-width="1"/><text x="12" y="162" font-size="7" fill="#C00000">7</text><text x="45" y="180" font-size="8" text-anchor="middle" fill="#888">7 tōshin estándar</text></svg>`,
+    panelLayout:`<svg width="170" height="140" viewBox="0 0 170 140" xmlns="http://www.w3.org/2000/svg"><rect width="170" height="140" fill="#f8f8f8" rx="4"/><text x="85" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">COMPOSICIÓN DE PÁGINA</text><rect x="8" y="20" width="154" height="110" fill="#fff" stroke="#0d2a5c" stroke-width="2.5"/><line x1="8" y1="72" x2="162" y2="72" stroke="#0d2a5c" stroke-width="2"/><line x1="88" y1="20" x2="88" y2="72" stroke="#0d2a5c" stroke-width="1.5"/><line x1="62" y1="72" x2="62" y2="130" stroke="#0d2a5c" stroke-width="1.5"/><line x1="118" y1="72" x2="118" y2="130" stroke="#0d2a5c" stroke-width="1.5"/><text x="48" y="50" font-size="13" text-anchor="middle" fill="#C00000" font-weight="bold">1</text><text x="125" y="50" font-size="13" text-anchor="middle" fill="#C00000" font-weight="bold">2</text><text x="35" y="104" font-size="13" text-anchor="middle" fill="#C00000" font-weight="bold">3</text><text x="90" y="104" font-size="13" text-anchor="middle" fill="#C00000" font-weight="bold">4</text><text x="140" y="104" font-size="13" text-anchor="middle" fill="#C00000" font-weight="bold">5</text></svg>`,
+    lineWeight:`<svg width="200" height="90" viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="90" fill="#fff" rx="4" stroke="#ddd"/><text x="100" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">VARIACIÓN DE GROSOR · 線の強弱</text><path d="M15,55 C50,25 150,30 185,50" fill="none" stroke="#000" stroke-width="8" stroke-linecap="round" opacity="0.12"/><path d="M15,55 C50,25 150,30 185,50" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" opacity="0.18"/><path d="M15,55 C50,25 150,30 185,50" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"/><text x="15" y="74" font-size="8" fill="#888">Grueso</text><text x="100" y="70" font-size="8" fill="#888" text-anchor="middle">Medio</text><text x="185" y="66" font-size="8" fill="#888" text-anchor="end">Fino</text><text x="100" y="86" font-size="8" text-anchor="middle" fill="#C00000">Presión con la plumilla G</text></svg>`,
+    toolsNibs:`<svg width="200" height="110" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="110" fill="#fff" rx="4" stroke="#ddd"/><text x="100" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">PLUMILLAS · ペン先</text><path d="M20,38 L62,52 L20,66 Z" fill="#aaa" stroke="#0d2a5c" stroke-width="1.2"/><rect x="6" y="49" width="16" height="6" rx="2" fill="#888"/><text x="42" y="82" font-size="9" text-anchor="middle" fill="#0d2a5c" font-weight="bold">G ペン</text><text x="42" y="92" font-size="8" text-anchor="middle" fill="#888">Variable · contorno</text><circle cx="148" cy="52" r="14" fill="none" stroke="#0d2a5c" stroke-width="1.5"/><circle cx="148" cy="52" r="3" fill="#0d2a5c"/><rect x="134" y="48" width="14" height="8" rx="2" fill="#aaa"/><text x="148" y="82" font-size="9" text-anchor="middle" fill="#0d2a5c" font-weight="bold">丸 ペン</text><text x="148" y="92" font-size="8" text-anchor="middle" fill="#888">Fina · detalles</text><text x="100" y="106" font-size="8" text-anchor="middle" fill="#888">G = contorno · Maru = detalles</text></svg>`,
+    mazRocket:`<svg width="190" height="150" viewBox="0 0 190 150" xmlns="http://www.w3.org/2000/svg"><rect width="190" height="150" fill="#040e24" rx="4"/><line x1="90" y1="20" x2="185" y2="18" stroke="#1b4a8f" stroke-width=".7"/><line x1="90" y1="32" x2="185" y2="30" stroke="#C00000" stroke-width="1.5"/><line x1="90" y1="44" x2="185" y2="42" stroke="#1b4a8f" stroke-width=".7"/><line x1="90" y1="56" x2="185" y2="54" stroke="#1b4a8f" stroke-width=".7"/><line x1="90" y1="68" x2="185" y2="66" stroke="#C00000" stroke-width="1.5"/><line x1="90" y1="80" x2="185" y2="78" stroke="#1b4a8f" stroke-width=".7"/><line x1="90" y1="92" x2="185" y2="90" stroke="#1b4a8f" stroke-width=".7"/><line x1="90" y1="104" x2="185" y2="102" stroke="#C00000" stroke-width="1.5"/><line x1="90" y1="116" x2="185" y2="114" stroke="#1b4a8f" stroke-width=".7"/><rect x="20" y="52" width="62" height="50" rx="6" fill="#C00000" stroke="#fff" stroke-width="2"/><rect x="20" y="52" width="62" height="14" rx="4" fill="#888" stroke="#fff" stroke-width="1"/><text x="51" y="82" font-size="14" text-anchor="middle" fill="#fff" font-weight="bold">Z</text><line x1="82" y1="68" x2="155" y2="58" stroke="#ff6600" stroke-width="2.5" opacity=".9"/><line x1="82" y1="77" x2="168" y2="77" stroke="#ff6600" stroke-width="3" opacity=".9"/><line x1="82" y1="86" x2="155" y2="96" stroke="#ff6600" stroke-width="2.5" opacity=".9"/><text x="95" y="140" font-size="9" text-anchor="middle" fill="#cfe0ff">ROCKET PUNCH · ロケットパンチ</text></svg>`,
+    mangaGenres:`<svg width="200" height="130" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="130" fill="#fff" rx="4" stroke="#ddd"/><text x="100" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">DEMOGRAFÍAS DEL MANGA</text><rect x="10" y="22" width="140" height="13" rx="2" fill="#1b4a8f"/><text x="14" y="33" font-size="9" fill="#fff">Shōnen</text><text x="156" y="33" font-size="8" fill="#888">Chicos 12-18</text><rect x="10" y="40" width="118" height="13" rx="2" fill="#d4336e"/><text x="14" y="51" font-size="9" fill="#fff">Shōjo</text><text x="134" y="51" font-size="8" fill="#888">Chicas 12-18</text><rect x="10" y="58" width="98" height="13" rx="2" fill="#0d2a5c"/><text x="14" y="69" font-size="9" fill="#fff">Seinen</text><text x="114" y="69" font-size="8" fill="#888">Adultos H</text><rect x="10" y="76" width="80" height="13" rx="2" fill="#9c27b0"/><text x="14" y="87" font-size="9" fill="#fff">Josei</text><text x="96" y="87" font-size="8" fill="#888">Adultas M</text><rect x="10" y="94" width="58" height="13" rx="2" fill="#2e7d32"/><text x="14" y="105" font-size="9" fill="#fff">Kodomo</text><text x="74" y="105" font-size="8" fill="#888">Niños &lt;12</text><text x="100" y="124" font-size="8" text-anchor="middle" fill="#888">Demografías principales del manga</text></svg>`,
+    persp2pt:`<svg width="210" height="130" viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg"><rect width="210" height="130" fill="#f0f4ff" rx="4"/><text x="105" y="14" font-size="10" text-anchor="middle" fill="#0d2a5c" font-weight="bold">PERSPECTIVA 2 PUNTOS</text><line x1="10" y1="65" x2="200" y2="65" stroke="#aaa" stroke-width="1" stroke-dasharray="4,2"/><circle cx="28" cy="65" r="5" fill="#C00000"/><text x="28" y="78" font-size="7" text-anchor="middle" fill="#C00000">PF1</text><circle cx="182" cy="65" r="5" fill="#C00000"/><text x="182" y="78" font-size="7" text-anchor="middle" fill="#C00000">PF2</text><line x1="105" y1="28" x2="105" y2="104" stroke="#0d2a5c" stroke-width="2"/><line x1="105" y1="28" x2="28" y2="65" stroke="#0d2a5c" stroke-width="1.2"/><line x1="105" y1="104" x2="28" y2="65" stroke="#0d2a5c" stroke-width="1.2"/><line x1="105" y1="28" x2="182" y2="65" stroke="#0d2a5c" stroke-width="1.2"/><line x1="105" y1="104" x2="182" y2="65" stroke="#0d2a5c" stroke-width="1.2"/><line x1="62" y1="40" x2="62" y2="92" stroke="#0d2a5c" stroke-width="1"/><line x1="148" y1="40" x2="148" y2="92" stroke="#0d2a5c" stroke-width="1"/><text x="105" y="122" font-size="9" text-anchor="middle" fill="#555">2 puntos de fuga · visión angular</text></svg>`
+  };
+  return svgs[k]||'';
+}
+
+// ===== BANCO DE PREGUNTAS =====
+const QUIZZES={
+'1':[
+  {q:'¿En qué dirección se lee el manga?',o:['Izquierda→derecha','Arriba→abajo','Derecha→izquierda','Diagonal'],a:2,exp:'El manga se lee de DERECHA a IZQUIERDA, el orden tradicional japonés. Las viñetas y los textos siguen esa dirección. ¡Al revés que el cómic occidental!',svg:'readDir'},
+  {q:'¿Qué es un "tankōbon" (単行本)?',o:['Una técnica de dibujo','Un tomo recopilatorio de capítulos','Un tipo de plumilla','Una revista semanal'],a:1,exp:'El tankōbon es el tomo recopilatorio. Los capítulos se publican en revistas semanales y luego se agrupan en estos volúmenes para venta duradera en librerías.',svg:'panelLayout'},
+  {q:'¿Qué significa "shōnen" (少年)?',o:['Chica joven','Hombre adulto','Chico joven','Anciano'],a:2,exp:'少年 significa "chico joven". El manga shōnen se dirige a varones de 12-18 años: acción, amistad, superación. Ejemplos: Dragon Ball, Naruto, One Piece.',svg:'mangaGenres'},
+  {q:'¿Quién es el "padre del manga moderno"?',o:['Go Nagai','Akira Toriyama','Rumiko Takahashi','Osamu Tezuka'],a:3,exp:'Osamu Tezuka (1928-1989) revolucionó el manga con Astro Boy y Kimba. Introdujo la narrativa cinematográfica: encuadres dinámicos, paneles variables y expresión emocional profunda.',svg:'faceCross'},
+  {q:'¿Qué es un "one-shot" en manga?',o:['Un disparo de arma','Una historia completa en un solo capítulo/tomo','Una técnica de tinta','Un tipo de plumilla'],a:1,exp:'Un one-shot es una historia manga completa en un solo capítulo o volumen, sin continuación. Muchos mangakas empiezan publicando one-shots antes de conseguir una serie semanal.',svg:'panelLayout'},
+  {q:'¿En qué material se publica el manga originalmente?',o:['Pantalla digital','Papel de revista (similar al periódico)','Plástico','Tela'],a:1,exp:'El manga se publica en revistas impresas en papel económico. Luego los capítulos se recopilan en tankōbon con mejor papel. Esta cadena define el ritmo de producción del mangaka.',svg:'toolsNibs'},
+  {q:'¿Qué es el "nēmu" (ネーム)?',o:['El nombre del mangaka','El boceto/storyboard de páginas','La firma final','El título de la serie'],a:1,exp:'El nēmu es el storyboard: bocetos rápidos de composición, diálogos y ritmo de páginas. Es el primer paso creativo del mangaka antes de pasar al arte final.',svg:'panelLayout'},
+  {q:'¿Cuántas páginas tiene un capítulo semanal típico?',o:['5-7','10-12','15-20','30-40'],a:2,exp:'Un capítulo semanal en revistas como Jump tiene ~15-20 páginas. Este ritmo obliga al mangaka a ser muy eficiente en narración y composición visual.',svg:'panelLayout'},
+  {q:'¿Qué son los "furigana" en el manga?',o:['Tipos de viñetas','Pronunciaciones en kana sobre kanjis difíciles','Efectos de sonido','Globos de diálogo'],a:1,exp:'Los furigana son pequeñas lecturas en hiragana/katakana sobre los kanjis difíciles. En el manga shōnen ayudan a lectores jóvenes a pronunciar correctamente los caracteres.',svg:'readDir'},
+  {q:'¿Qué es el "gekiga" (劇画)?',o:['Manga infantil','Manga cómico','Manga dramático/adulto de los 60','Manga deportivo'],a:2,exp:'El gekiga ("imagen dramática") surgió en los 60 como reacción al manga infantil de Tezuka. Yoshihiro Tatsumi lo fundó: historias de adultos, estilo más realista y oscuro.',svg:'mangaGenres'}
+],
+'2':[
+  {q:'¿Qué publicó Hokusai en 1814?',o:['El primer anime','Hokusai Manga: colección de bocetos','La primera revista Jump','Astro Boy'],a:1,exp:'Los 15 tomos del "Hokusai Manga" (北斎漫画) son colecciones de dibujos del maestro del ukiyo-e. Aunque no son cómic moderno, popularizaron el término "manga" (imágenes caprichosas).',svg:'readDir'},
+  {q:'¿Qué evento impulso la modernización del manga?',o:['La 1ª Guerra Mundial','El Festival de Cannes','La II GM y la ocupación americana','La Revolución Industrial'],a:2,exp:'Tras la IIGM, la ocupación americana introdujo el cómic estadounidense en Japón. Tezuka sintetizó ambas tradiciones: narrativa dinámica + expresividad japonesa = manga moderno.',svg:'mangaGenres'},
+  {q:'¿En qué año publicó Tezuka "Shin Takarajima"?',o:['1935','1947','1952','1960'],a:1,exp:'Shin Takarajima (Nueva Isla del Tesoro, 1947) revolucionó el manga con montaje cinematográfico, panorámicas y dinamismo visual. Vendió 400.000 copias en la posguerra japonesa.',svg:'panelLayout'},
+  {q:'¿Cuándo se fundó Weekly Shōnen Jump?',o:['1952','1959','1968','1972'],a:2,exp:'Weekly Shōnen Jump (週刊少年ジャンプ) se fundó en 1968. Es la revista manga más vendida del mundo, con un pico de 6,5 millones de copias/semana en los años 90.',svg:'mangaGenres'},
+  {q:'¿Qué creó Gō Nagai en 1972?',o:['Dragon Ball','Astro Boy','Mazinger Z','Naruto'],a:2,exp:'Gō Nagai publicó el manga de Mazinger Z en 1972 en la revista Shōnen Jump. Fue el primer robot gigante pilotado desde dentro, creando el género "mecha" que dominó los 70-80.',svg:'mazRocket'},
+  {q:'¿Qué es el "gekiga"?',o:['Manga infantil','Manga adulto/dramático surgido en los 60','Manga romántico shōjo','Manga histórico'],a:1,exp:'El gekiga (劇画, "imagen dramática") surgió como alternativa adulta. Yoshihiro Tatsumi lo definió en los 60: historias de trabajadores, crimen, vida urbana con estilo rugoso y realista.',svg:'mangaGenres'},
+  {q:'¿Cuándo llegó el manga masivamente a Europa?',o:['Años 50','Años 60','Años 80-90','Años 2010'],a:2,exp:'El manga llegó a Europa en los 80-90 con Dragon Ball, Sailor Moon y Saint Seiya. Francia tiene el mercado manga más grande fuera de Asia. España lo recibió vía TVE en los 80.',svg:'readDir'},
+  {q:'¿Qué aportó Tezuka al lenguaje visual del manga?',o:['Usó más texto','Introdujo ojos grandes y dinamismo cinematográfico','Trabajó siempre en color','Usó menos páginas'],a:1,exp:'Tezuka tomó de Disney los ojos expresivos y de Hollywood el montaje dinámico: primeros planos dramáticos, páginas dobles de impacto, narrativa visual fluida. Transformó el cómic en cinematografía estática.',svg:'faceCross'},
+  {q:'¿Qué es el movimiento "Año 24" (24年組) del manga shōjo?',o:['Manga publicado en 1924','Grupo de mangakas femeninas nacidas ~1949 que redefinieron el shōjo','Un concurso anual de manga','El año en que nació Jump'],a:1,exp:'El "Año 24" (nacidas ~año 24 de la era Showa, ~1949) agrupa a Moto Hagio, Riyoko Ikeda y otras mangakas que en los 70 crearon obras complejas y literarias: La Rosa de Versalles, La Princesa y el Caballero.',svg:'mangaGenres'},
+  {q:'¿Cuándo comenzó la "era dorada" del manga mecha?',o:['1952-1960','1972-1985','1990-2000','2010-presente'],a:1,exp:'Los años 72-85 son la era dorada del mecha: Mazinger Z (1972), Getter Robo, Gundam (1979), Macross. Gō Nagai y Yoshiyuki Tomino definieron un género entero con influencia global hasta hoy.',svg:'mazRocket'}
+],
+'3':[
+  {q:'¿A qué público se dirige el manga "shōnen"?',o:['Niños menores de 12','Chicas adolescentes','Chicos de 12-18 años','Mujeres adultas'],a:2,exp:'Shōnen (少年) = chico joven. Apunta a varones de 12-18 años con temas de acción, amistad y superación. Weekly Jump y Shōnen Magazine son sus publicaciones insignia.',svg:'mangaGenres'},
+  {q:'¿Qué significa "shōjo" como demografía?',o:['Chico joven','Chica joven','Hombre adulto','Mujer adulta'],a:1,exp:'Shōjo (少女) = chica joven. El manga shōjo se dirige a chicas de 12-18 años: romance, emociones, relaciones. Publicaciones como Ribon o Nakayoshi. Ej: Sailor Moon, Fruits Basket.',svg:'mangaGenres'},
+  {q:'¿Qué es el manga "seinen" (青年)?',o:['Manga infantil','Manga para chicas adolescentes','Manga para hombres adultos','Manga histórico únicamente'],a:2,exp:'Seinen (青年) = joven adulto/hombre. Se dirige a hombres mayores de 18 años y toca temas más complejos: psicología, filosofía, violencia. Ej: Berserk, Vagabond, Akira, Vinland Saga.',svg:'mangaGenres'},
+  {q:'¿Qué es el manga "josei"?',o:['Manga para hombres adultos','Manga para mujeres adultas','Manga infantil de aventuras','Manga deportivo para todos'],a:1,exp:'Josei (女性) = mujer. El manga josei se dirige a mujeres adultas (+18). Los romances son más maduros y realistas que en el shōjo. Ej: Nana, Chihayafuru, Honey and Clover.',svg:'mangaGenres'},
+  {q:'¿Qué significa "kodomo" como demografía?',o:['Adultos mayores','Adolescentes de 15-18','Niños menores de 12','Ancianos'],a:2,exp:'Kodomo (子ども) = niño. El manga kodomo se dirige a niños menores de 12 años: aventura inocente, humor, animales, magia. Ej: Doraemon, Pokémon Adventures, Conan el Detective joven.',svg:'mangaGenres'},
+  {q:'¿En qué demografía se publicó el manga de Mazinger Z?',o:['Shōjo','Kodomo','Seinen','Shōnen'],a:3,exp:'Mazinger Z de Gō Nagai se publicó en Weekly Shōnen Jump (1972): manga shōnen para chicos de 12-18 años. Los temas de acción, tecnología y superación del héroe encajan con esta demografía.',svg:'mazRocket'},
+  {q:'¿Qué publicación es el emblema del manga shōnen?',o:['Ribon','Big Comic','Weekly Shōnen Jump','Corocoro Comic'],a:2,exp:'Weekly Shōnen Jump (週刊少年ジャンプ) es la revista más vendida en la historia del manga. Con Dragon Ball, Naruto y One Piece, ha definido el estilo shōnen durante décadas.',svg:'mangaGenres'},
+  {q:'¿Qué es el "BL" (Boys Love) como subgénero?',o:['Manga de artes marciales masculinas','Romance entre hombres dirigido principalmente a mujeres','Manga violento seinen','Manga de amigos sin romance'],a:1,exp:'El Boys Love (BL) o yaoi son historias de romance entre personajes masculinos. Se dirige principalmente a público femenino (shōjo/josei). Surgió en los 70 con mangakas del movimiento "Año 24".',svg:'mangaGenres'},
+  {q:'¿Cuál es la demografía más vendida globalmente?',o:['Josei','Kodomo','Shōnen','Seinen'],a:2,exp:'El shōnen domina las ventas globales: One Piece, Dragon Ball y Naruto son los manga más vendidos de todos los tiempos. La fórmula de acción + amistad + superación trasciende barreras culturales.',svg:'mangaGenres'},
+  {q:'¿Qué es el "mahō shōjo" (魔法少女)?',o:['Manga de samurais femeninos','Manga de chicas con poderes mágicos','Manga erótico josei','Manga de robots femeninos'],a:1,exp:'Mahō shōjo (chica mágica): protagonistas femeninas que se transforman para luchar con poderes mágicos. Sailor Moon lo universalizó. Madoka Magica lo reinventó con un giro filosófico oscuro.',svg:'mangaGenres'}
+],
+'4':[
+  {q:'¿Qué es el manga "mecha"?',o:['Manga de cocina','Manga de robots gigantes pilotados','Manga histórico medieval','Manga de ciencia ficción solo espacial'],a:1,exp:'El mecha es el género de robots/armaduras gigantes pilotados por personajes. Mazinger Z (1972) lo fundó. Gundam, Evangelion y Macross son sus pilares. Viene de "mechanical".',svg:'mazRocket'},
+  {q:'¿Qué es el "isekai"?',o:['Manga de samurais del Japón feudal','Manga de protagonista en otro mundo','Manga deportivo de aventuras','Manga de magia en escuela normal'],a:1,exp:'Isekai (異世界, "mundo diferente"): protagonista transportado/reencarnado en un mundo de fantasía. Hugamente popular desde los 2010: Sword Art Online, Re:Zero, Overlord.',svg:'panelLayout'},
+  {q:'¿Qué es el "slice of life" en manga?',o:['Manga de aventuras épicas con dragones','Manga de vida cotidiana sin grandes conflictos','Manga de acción intensa','Manga histórico del Japón feudal'],a:1,exp:'Slice of life son historias de vida cotidiana, sin grandes antagonistas ni arcos épicos. Yotsuba&!, Chi\'s Sweet Home, Barakamon. Se centra en las emociones pequeñas de la vida diaria.',svg:'panelLayout'},
+  {q:'¿Qué es el "shōnen" de acción como fórmula narrativa?',o:['Protagonista que nunca mejora','Solo romance sin acción','Poder creciente + nakama + rival elevador','Solo combates sin historia'],a:2,exp:'La fórmula shōnen: protagonista que mejora (sube de poder), nakama (equipo de amigos), rival que eleva el nivel, gran antagonista. Dragon Ball, Naruto y One Piece siguen este patrón maestro.',svg:'mangaGenres'},
+  {q:'¿Qué es el manga "horror"?',o:['Manga de aventura infantil segura','Manga de terror psicológico o sobrenatural','Manga de ciencia ficción espacial','Manga de deportes extremos'],a:1,exp:'El manga de horror usa el medio visual para crear tensión y miedo: desde el horror sobrenatural (Uzumaki, Junji Ito) hasta el psicológico (Monster). El blanco y negro amplifica la atmósfera oscura.',svg:'screentoneDots'},
+  {q:'¿Qué caracteriza el manga "deportes" (スポーツ)?',o:['Solo muestra partidos sin personajes','Combina deporte con drama de superación y rivales','Solo tiene romance y nada de deporte','Siempre termina en derrota del protagonista'],a:1,exp:'El manga deportivo combina el drama de superación shōnen con un deporte real. Haikyu!! (voleibol), Slam Dunk (baloncesto), Captain Tsubasa (fútbol). El desafío técnico añade emoción táctica.',svg:'mangaGenres'},
+  {q:'¿Qué es el manga "histórico" (歴史)?',o:['Ficción ambientada en el pasado de Japón u otros paises','Solo mangas del periodo Edo','Solo mangas de samuráis','Solo mangas de la II Guerra Mundial'],a:0,exp:'El manga histórico se ambienta en el pasado real: desde el Japón feudal (Vagabond, Rurouni Kenshin) hasta Roma (Thermae Romae) o la Revolución Francesa (La Rosa de Versalles). Mezcla historia y ficción con documentación rigurosa.',svg:'readDir'},
+  {q:'¿Qué es el subgénero "yuri"?',o:['Manga de batallas solo femeninas','Romance entre personajes femeninos','Manga erótico masculino','Manga deportivo con mujeres'],a:1,exp:'El yuri (百合, "lirio") son historias de romance y relaciones entre personajes femeninos. Desde el romántico puro hasta la historia de vida adulta. Es la contraparte femenina del BL.',svg:'mangaGenres'},
+  {q:'¿Qué es el "josei literario" como tendencia reciente?',o:['Adaptaciones de clásicos de la literatura japonesa solo','Manga adulto femenino con narrativa compleja y psicológica','Manga de josei para niñas','Solo romance sin profundidad'],a:1,exp:'El josei literario explora la psicología femenina adulta con complejidad: trabajo, relaciones maduras, identidad. Chihayafuru, Nana, March comes in like a lion. Va más allá del romance puro del shōjo.',svg:'mangaGenres'},
+  {q:'¿Qué es el "gekiga" como género?',o:['Manga infantil de animales','Manga adulto dramático y realista surgido en los 60','Manga romántico para mujeres mayores','Manga de ciencia ficción dura'],a:1,exp:'El gekiga (劇画) surgió como reacción al manga infantil. Estilo más rugoso, temas de vida urbana, trabajadores, crimen, adultos. Yoshihiro Tatsumi es su fundador. Influyó en el seinen moderno.',svg:'mangaGenres'}
+],
+'5':[
+  {q:'¿Qué herramienta produce líneas con variación de grosor por presión?',o:['Rotulador Copic de punta ancha','Lápiz HB estándar','Plumilla G (Gペン)','Bolígrafo de gel uniforme'],a:2,exp:'La plumilla G (Gペン) es la herramienta más versátil del mangaka. Responde a la presión: más presión = línea más gruesa. Perfecta para contornos de personaje con expresividad y dinamismo.',svg:'toolsNibs'},
+  {q:'¿Para qué sirve la plumilla "maru" (丸ペン)?',o:['Líneas muy gruesas de contorno exterior','Detalles finos: ojos, cabello, tramas pequeñas','Líneas decorativas anchas','Correcciones con tinta'],a:1,exp:'La plumilla maru (丸ペン = pluma redonda) produce líneas muy finas y consistentes. Ideal para: cabello con detalle, tramas de ropa, ojos detallados, texto fino. Requiere menos presión que la G.',svg:'toolsNibs'},
+  {q:'¿Qué es el "howaito" (ホワイト)?',o:['Un tipo de trama de puntos','Tinta blanca opaca para corregir y crear brillos','Un tipo de plumilla gruesa','El relleno negro sólido del manga'],a:1,exp:'El howaito es tinta blanca de corrección (白 = blanco). Los mangakas lo usan para cubrir errores de tinta, añadir brillos en ojos o reflejos, y crear efectos de luz sobre áreas oscuras.',svg:'toolsNibs'},
+  {q:'¿Cuál es el software profesional estándar para manga digital?',o:['Adobe Photoshop con plugins','CLIP Studio Paint (CSP)','Word con patrones de trama','Canva con texturas de manga'],a:1,exp:'CLIP Studio Paint (CSP) es el software profesional estándar para manga digital en Japón y el mundo. Tiene miles de tramas digitales, pinceles calibrados para plumilla, y funciones de panel automáticas.',svg:'screentoneDots'},
+  {q:'¿Qué es el "beta" (ベタ) como técnica?',o:['Sombreado degradado suave','Relleno de áreas con tinta negra sólida','Una trama de puntos uniformes','Un tipo de plumilla ancha'],a:1,exp:'El beta (ベタ) es el relleno de áreas enteras con tinta negra sólida: fondos oscuros, ropa negra, cabello negro, sombras densas. Se aplica con pincel cargado de tinta sumi. Crea contraste dramático.',svg:'lineWeight'},
+  {q:'¿Qué herramienta usa el mangaka para curvas perfectas?',o:['Regla metálica recta','Escuadra de 45°','Plantillas de curvas francesas (French curves)','Compás de puntas secas'],a:2,exp:'Las French curves (plantillas de curvas) permiten trazar curvas complejas y orgánicas (caderas, hombros, brazos) de forma limpia y precisa. Son esenciales para el arte final de figuras anatómicas.',svg:'bodyProp'},
+  {q:'¿Cuál es el orden correcto en el proceso manga tradicional?',o:['Nēmu → arte final → boceto → tinta','Boceto → nēmu → tinta → arte final','Nēmu → boceto → entintado → screentone','Tinta → boceto → nēmu → screentone'],a:2,exp:'Proceso profesional: (1) Nēmu/storyboard, (2) Boceto a lápiz azul no-repro, (3) Arte final a lápiz, (4) Entintado con plumillas, (5) Screentone y efectos, (6) Escaneado y texto.',svg:'panelLayout'},
+  {q:'¿Qué es el lápiz "azul no-repro"?',o:['Un lápiz de colores decorativo','Lápiz azul invisible al escáner, para bocetos bajo la tinta','Un marcador para portadas en color','Un lápiz oscuro para bocetos finales'],a:1,exp:'El lápiz "no-repro" (non-reproducing blue) tiene un azul que los escáneres no captan. Permite bocetar libremente bajo el entintado final sin necesidad de borrarlo antes del escaneado.',svg:'toolsNibs'},
+  {q:'¿Para qué sirve la regla paralela en el proceso manga?',o:['Marcar márgenes de página','Trazar líneas de perspectiva paralelas y fondos arquitectónicos','Medir el grosor de líneas','Cortar screentone en ángulos'],a:1,exp:'La regla paralela permite trazar líneas perfectamente paralelas en cualquier ángulo. Es esencial para fondos con perspectiva: edificios, calles, interiores con líneas horizontales precisas.',svg:'persp1pt'},
+  {q:'¿Qué es el "koma" (コマ) en terminología manga?',o:['El nombre del personaje principal','La viñeta o panel individual','El volumen recopilatorio','El storyboard completo'],a:1,exp:'El koma es cada viñeta o panel individual del manga. Las koma se disponen en la página según una composición que guía la vista del lector. El tamaño y forma del koma afecta el ritmo narrativo.',svg:'panelLayout'}
+],
+'6':[
+  {q:'¿Qué son las "líneas de concentración" (集中線, shūchūsen)?',o:['Líneas de cuadrícula para fondos','Líneas radiantes desde un punto focal para enfatizar impacto','Líneas de sombreado diagonal','Líneas de contorno de personaje'],a:1,exp:'Las líneas de concentración (集中線) son líneas radiantes que convergen en un punto focal. Crean el efecto de impacto, tensión extrema o momento climático. Uno de los recursos visuales más icónicos del manga.',svg:'speedLines'},
+  {q:'¿Qué son las "speed lines" o ryūsen (流線)?',o:['Líneas de perspectiva de fondo','Líneas paralelas que indican movimiento o velocidad','Líneas de sombreado de piel','Líneas decorativas de fondo floral'],a:1,exp:'Los ryūsen (流線) son líneas paralelas que se estiran en la dirección del movimiento: indican velocidad en carrera, el vuelo de un golpe. Son distintos de las shūchūsen radiantes de impacto.',svg:'speedLines'},
+  {q:'¿Qué técnica usa líneas que se cruzan para crear sombra?',o:['Speed lines','Screentone','Crosshatching (sombreado cruzado)','Beta sólido'],a:2,exp:'El crosshatching usa líneas paralelas en diagonal que se cruzan para crear sombras y volumen. A más cruces, más oscuro. Permite gradientes sin screentone y da un estilo expresivo más rugoso.',svg:'crossHatch'},
+  {q:'¿Cuál es el propósito del "screentone"?',o:['Dar color al manga en blanco y negro','Crear efectos de gris y textura en BN','Corregir errores de tinta','Marcar contornos externos del personaje'],a:1,exp:'El screentone (トーン) son láminas de puntos, rayas u otros patrones que el mangaka aplica para simular tonos de gris en el manga BN. Existen para ropa, piel, cielo, efectos de brillo y muchas texturas.',svg:'screentoneDots'},
+  {q:'¿Qué herramienta usa el mangaka para corregir errores de tinta?',o:['Goma de borrar estándar de lápiz','Tinta blanca opaca (howaito)','Blanco de China al agua','Papel nuevo por encima'],a:1,exp:'El howaito (ホワイト) es tinta blanca opaca, el corrector del mangaka. Cubre líneas erróneas y se usa creativamente: brillos en ojos, reflejos en superficies, estrellas o nieve sobre fondos negros.',svg:'toolsNibs'},
+  {q:'¿Qué son las "action lines" (アクションライン)?',o:['Las líneas de diálogo en bocadillos','Curvas que marcan la trayectoria de un movimiento','Las líneas de grid de la página','Los bordes de viñeta gruesos'],a:1,exp:'Las action lines son curvas o trazos que marcan la trayectoria de un movimiento: el arco de un puñetazo, el vuelo de un proyectil. Dan dinámica y físicas al momento, haciendo al lector "sentir" el golpe.',svg:'speedLines'},
+  {q:'¿Qué son las "emanata" en el vocabulario técnico?',o:['Los bocadillos de pensamiento nublados','Símbolos que flotan sobre personajes indicando estado (sudor, ?, etc.)','Las líneas de perspectiva del fondo','Los bordes irregulares de viñeta de impacto'],a:1,exp:'Las emanata son los símbolos que "emanan" de personajes: el bulbo de sudor para nerviosismo, el signo ?, las estrellas de golpe, el ♪ para música, el zzz para sueño. Son un lenguaje visual universal del manga.',svg:'faceCross'},
+  {q:'¿Cómo se crea volumen en un rostro sin screentone?',o:['Solo el contorno exterior grueso basta','Crosshatching y variación de grosor de línea','Solo el color (imposible en BN)','Solo puntos aleatorios esparcidos'],a:1,exp:'Sin screentone, el volumen se crea con: (1) variación de grosor de línea (más gruesa en sombras), (2) crosshatching para sombras densas, (3) líneas paralelas para sombra suave, y (4) beta para sombra total.',svg:'lineWeight'},
+  {q:'¿Para qué sirve el "beta" (ベタ) en el manga?',o:['Solo para fondos de ciudad','Relleno negro sólido para sombras y áreas oscuras','Siempre en el cabello negro únicamente','Para los bordes de las viñetas'],a:1,exp:'El beta crea contraste dramático con negro sólido: fondos nocturnos, ropa negra, cabello oscuro, sombras densas. Un mangaka experto usa el beta de forma compositiva, no solo descriptiva.',svg:'lineWeight'},
+  {q:'¿Qué es el "nēmu" en el flujo de trabajo?',o:['La página final entintada','El boceto/storyboard de páginas antes del arte final','La firma del mangaka en la portada','El texto de los bocadillos'],a:1,exp:'El nēmu es el storyboard del mangaka: bocetos rápidos de composición, diálogos y ritmo de páginas. Es la fase creativa donde se decide el flujo narrativo antes de invertir tiempo en el arte final.',svg:'panelLayout'}
+],
+'8':[
+  {q:'¿Qué son los "tōshin" (頭身)?',o:['Tipos de expresiones faciales del manga','La proporción del cuerpo medida en unidades de cabeza','Los tipos de ojos del manga shōjo','Las poses estándar de acción'],a:1,exp:'Los tōshin (頭身) miden la proporción del cuerpo en "cabezas". Realista = 7-8. Manga shōnen = 7. Shōjo estilizado = 8-9. Chibi/SD = 2-3 tōshin.',svg:'bodyProp'},
+  {q:'¿Dónde se ubican los ojos en el rostro manga?',o:['En el tercio superior de la cara','A la MITAD de la cabeza completa (incluyendo cráneo)','En el tercio inferior','Justo sobre la nariz siempre'],a:1,exp:'Error común: los ojos no están en la mitad de la CARA sino en la mitad de la CABEZA completa (incluyendo cráneo). En manga los ojos pueden estar aún más abajo para cráneo más grande = look kawaii.',svg:'faceCross'},
+  {q:'¿Qué es el "super deformed" o "chibi"?',o:['Una proporción realista muy detallada','Versión con cuerpo de 2-3 cabezas, exageradamente adorable','Un estilo de ojos sin pupilas','Una técnica de sombreado extremo'],a:1,exp:'El chibi/SD es la versión "mini" de un personaje: cabeza enorme, cuerpo de 2-3 cabezas, extremidades cortas. Se usa para momentos cómicos o de ternura. Mazinger Z tiene versiones chibi muy famosas.',svg:'bodyProp'},
+  {q:'¿Qué es la "cruz de rostro"?',o:['Una decoración del personaje','Guías de líneas para posicionar rasgos en perspectiva','La firma del mangaka en el personaje','Un tipo de expresión de enojo'],a:1,exp:'La "cruz de rostro" son dos líneas guía: horizontal para los ojos y vertical para la simetría. Con perspectiva, la cruz se curva sobre el volumen oval del cráneo, posicionando rasgos correctamente en cualquier ángulo.',svg:'faceCross'},
+  {q:'¿Qué expresa el efecto "kirakira" (キラキラ) en los ojos?',o:['Lágrimas de tristeza','Brillo de alegría, emoción o amor','Mirada de enojo frío','Ojos muertos de desesperación'],a:1,exp:'El kirakira (キラキラ = centelleante) son los reflejos brillantes en los ojos manga. Expresan alegría, emoción, enamoramiento o vida. Los "ojos muertos" (sin kirakira) indican shock o maldad.',svg:'faceCross'},
+  {q:'¿Cuántos tōshin tiene un personaje mecha-action shōnen típico?',o:['2-3','5','7','10'],a:2,exp:'Los personajes de acción shōnen usan ~7 tōshin: más estilizado que lo realista (8+) pero menos exagerado que el chibi (2-3). Esto les da un aspecto heroico y dinámico sin perder proporciones humanas.',svg:'bodyProp'},
+  {q:'¿Qué herramienta ayuda a trazar curvas orgánicas del cuerpo?',o:['Escuadra de 90°','Regla de perspectiva recta','Plantillas de curvas (French curves)','Compás de puntas secas'],a:2,exp:'Las French curves y cloud rulers permiten trazar arcos orgánicos limpios: curvas de cadera, contornos de hombros, espalda, abdomen. Las líneas del cuerpo raramente son rectas puras.',svg:'bodyProp'},
+  {q:'¿Qué son los "bishōnen" (美少年)?',o:['Protagonistas masculinos de acción pura','Personajes masculinos de rasgos finos y andróginos','Personajes femeninos con cabello corto','Robots humanoides de estética fina'],a:1,exp:'Bishōnen (美少年 = chico hermoso) son personajes masculinos con rasgos andróginos y refinados: ojos grandes, facciones finas, cabello expresivo. Populares en shōjo y BL, aunque también en shōnen (BLEACH, Full Metal Alchemist).',svg:'faceCross'},
+  {q:'¿Qué indican los "vapores" en las mejillas manga?',o:['Frío extremo del personaje','Vergüenza, emoción o situación embarazosa','Enfermedad grave','Enojo violento extremo'],a:1,exp:'Las líneas de rubor en las mejillas son una emanata manga icónica. En shōjo especialmente indican timidez, enamoramiento o situación embarazosa. El triángulo de sombra en nariz = vergüenza extrema.',svg:'faceCross'},
+  {q:'¿Qué caracteriza anatómicamente a los personajes shōjo clásicos?',o:['Ojos pequeños y realistas, cuerpo musculoso','Ojos enormes detallados, cuerpo estilizado y alargado','Ojos sin pupila, cuerpo robusto cuadrado','Idénticos al shōnen pero con otra ropa'],a:1,exp:'El shōjo clásico tiene: ojos muy grandes con muchos reflejos, pupila expresiva, cuerpo esbelto y alargado (8-9 tōshin), rasgos delicados. Los fondos de flores, estrellas o burbujitas son sellos visuales del género.',svg:'faceCross'}
+],
+'9':[
+  {q:'¿Qué es el "koma" (コマ) en manga?',o:['El personaje principal del manga','La viñeta o panel individual','El bocadillo de diálogo','El volumen recopilatorio completo'],a:1,exp:'El koma es cada viñeta o panel individual del manga. Las koma se disponen en la página formando una composición que el lector recorre de derecha a izquierda, de arriba a abajo.',svg:'panelLayout'},
+  {q:'¿Cómo se llama el espacio entre viñetas?',o:['Bocadillo','Margen exterior','Canalón o calle','Marco de viñeta'],a:2,exp:'El canalón (間白) es el espacio blanco entre viñetas. En el manga suele ser estrecho (2-4mm) para un ritmo rápido. Un canalón más ancho = pausa más larga entre momentos. El mangaka lo usa para controlar el tiempo.',svg:'panelLayout'},
+  {q:'¿Qué son las "speed lines" horizontales (流線)?',o:['Líneas radiantes de impacto circulares','Líneas paralelas que indican movimiento horizontal','Líneas de perspectiva de fondo arquitectónico','Líneas de sombreado de piel'],a:1,exp:'Los ryūsen (流線) horizontales son líneas paralelas en la dirección del movimiento: indican velocidad en carrera, el vuelo de un golpe. Se distinguen de las líneas de concentración radiantes (impacto puntual).',svg:'speedLines'},
+  {q:'¿Qué indica una viñeta SIN borde en manga?',o:['Un error del mangaka','Momento fuera del tiempo, onírico o de máxima emoción','Una viñeta de diálogo tranquilo normal','Una viñeta de fondo de ciudad siempre'],a:1,exp:'La viñeta sin borde indica que el momento "desborda" el tiempo narrativo: un clímax emocional, un recuerdo, un momento épico. El personaje o la escena "escapa" de la narración ordinaria.',svg:'panelLayout'},
+  {q:'¿Cómo se "ralentiza" la acción en manga visualmente?',o:['Usando viñetas más pequeñas siempre','Dividiendo el mismo movimiento en múltiples koma pequeñas','Eliminando los bocadillos de diálogo','Usando solo texto narrador sin imagen'],a:1,exp:'La secuenciación de viñetas: dividir un mismo movimiento en múltiples koma ralentiza la acción visualmente. 5 koma para un mismo puñetazo lo convierte en épico. Es el "slow-motion" del manga.',svg:'panelLayout'},
+  {q:'¿Cómo se indica una explosión o impacto muy grande?',o:['Una viñeta muy pequeña discreta','Viñeta a doble página con líneas de concentración','Solo texto de onomatopeya sin imagen','Una viñeta con borde rojo'],a:1,exp:'Los momentos de máximo impacto usan: (1) viñeta doble página, (2) líneas de concentración radiantes, (3) onomatopeya gigante, (4) fondos de beta con estallido blanco central.',svg:'speedLines'},
+  {q:'¿Qué es el "encuadre" en la viñeta manga?',o:['El grosor del borde de la viñeta','Qué se muestra y desde dónde: plano, ángulo y composición','El tipo de bocadillo de diálogo usado','El color de fondo de la viñeta'],a:1,exp:'El encuadre es la decisión de composición de cada koma: plano general, primer plano, contrapicado, cenital. Tezuka introdujo el vocabulario cinematográfico en el manga: zoom, panorámica, corte, travelling.',svg:'panelLayout'},
+  {q:'¿Qué son los "FX" o efectos de sonido en manga?',o:['Las músicas del anime adaptado','Onomatopeyas caligráficas en japonés integradas en el dibujo','Los efectos de luz en los ojos del personaje','Las líneas de movimiento del cuerpo'],a:1,exp:'Los FX del manga son onomatopeyas caligráficas (a menudo en katakana) dibujadas como parte del arte. Ej: ドン (impacto sordo), バン (explosión), ズーン (tensión creciente). Son únicos del manga.',svg:'panelLayout'},
+  {q:'¿Qué indica un globo de diálogo con cola puntiaguda normal?',o:['Pensamiento del personaje','Narración del autor en caption','Diálogo hablado en voz alta','Susurro o sonido lejano'],a:2,exp:'Bocadillo de cola puntiaguda → diálogo hablado. Globo con cola de burbujitas → pensamiento. Bocadillo en zigzag → grito/voz mecánica. Bocadillo sin cola → narración o "caption box".',svg:'panelLayout'},
+  {q:'¿Cómo se indica el "silencio" dramático en manga sin texto?',o:['Viñeta completamente negra de relleno','Koma casi vacía con personaje inmóvil sin onomatopeya','Muchas líneas de acción superpuestas','Bocadillo blanco sin texto visible'],a:1,exp:'El silencio dramático: una koma casi vacía, el personaje inmóvil (o solo su expresión), sin onomatopeya, con un canalón amplio. Es una "pausa de beat" cinematográfica que da peso al momento anterior o siguiente.',svg:'panelLayout'}
+],
+'25':[
+  {q:'¿Quién creó Mazinger Z?',o:['Osamu Tezuka','Akira Toriyama','Gō Nagai','Rumiko Takahashi'],a:2,exp:'Gō Nagai (永井豪) creó Mazinger Z en 1972. Nació en 1945 en Ishikawa, Japón. También creó Devilman, Getter Robo y UFO Robot Grandizer. Es uno de los mangakas más influyentes en el género mecha.',svg:'mazRocket'},
+  {q:'¿En qué revista debutó el manga de Mazinger Z?',o:['Big Comic Spirits','Weekly Shōnen Magazine','Weekly Shōnen Jump','Corocoro Comic'],a:2,exp:'Mazinger Z debutó en Weekly Shōnen Jump (週刊少年ジャンプ) en octubre de 1972. Fue una revolución: el primer robot gigante que un humano podía pilotar desde dentro.',svg:'mazRocket'},
+  {q:'¿Cómo se llama el cockpit de Mazinger Z?',o:['El Mazinger Core','El Z-Drive Superior','El Hover Pilder','El Control Kabuto'],a:2,exp:'El Hover Pilder (ホバーパイルダー) es el hovercraft que aterriza en la cabeza de Mazinger Z activándolo. Esta idea —piloto dentro del robot— fue la innovación de Gō Nagai que fundó el género mecha moderno.',svg:'mazRocket'},
+  {q:'¿Cuál es el ataque más famoso de Mazinger Z?',o:['Breast Fire','Rust Hurricane','Iron Cutter','Rocket Punch'],a:3,exp:'El Rocket Punch (ロケットパンチ) es el ataque icónico: Mazinger lanza literalmente sus puños como misiles. Con esto Gō Nagai creó el template de los "ataques especiales" que todo mecha posterior adoptaría.',svg:'mazRocket'},
+  {q:'¿Qué significa el nombre "Mazinger" (マジンガー)?',o:['Robot de acero máximo','Dios demonio (魔神 majin)','Máquina de guerra imparable','Puños de fuego eterno'],a:1,exp:'マジンガー deriva de 魔神 (majin = dios demonio). Gō Nagai quería evocar "puede ser un dios o un demonio según quien lo pilote". Esta dualidad filosófica es central en la serie.',svg:'mazRocket'},
+  {q:'¿De qué material está hecho Mazinger Z?',o:['Titanio reforzado con carbono','Super Alloy Z (超合金Z)','Adamantio japonés','Hierro fundido antiguo de Micenas'],a:1,exp:'Mazinger Z está en Super Alloy Z (超合金Z, Chogokin Z), el metal más duro inventado por el Dr. Juzo Kabuto. Este metal ficticio dio nombre a la famosa línea de juguetes Chogokin de Bandai, coleccionables desde 1974.',svg:'mazRocket'},
+  {q:'¿Quién es el principal antagonista?',o:['El Barón Ashura','El Conde Blocken','El Doctor Infierno','El Almirante Micenas'],a:2,exp:'El Dr. Infierno (Dr. Hell, Dr.ヘル) es el supervillano principal: científico loco que descubrió la civilización de Micenas y construyó un ejército de Mecabeasts para dominar el mundo.',svg:'mazRocket'},
+  {q:'¿Qué es un "Mecabeast" (機械獣)?',o:['El nombre del robot protagonista','Los robots enemigos del Dr. Infierno','Los vehículos del Photon Lab','Los aliados robóticos del protagonista'],a:1,exp:'Los Mecabeasts (機械獣 Kikai Jū = "bestias mecánicas") son los monstruos-robot del ejército del Dr. Infierno. Mazinger Z lucha contra uno diferente en casi cada episodio. Esta fórmula "monstruo de la semana" se convirtió en estándar del género.',svg:'mazRocket'},
+  {q:'¿Cuándo comenzó el anime de Mazinger Z?',o:['Diciembre de 1968','Diciembre de 1972','Enero de 1975','Octubre de 1980'],a:1,exp:'El anime de Mazinger Z comenzó el 3 de diciembre de 1972 en Fuji TV. Produjo 92 episodios hasta 1974. La canción "Mazinger Z" de Ichiro Mizuki es uno de los temas de anime más reconocibles de la historia.',svg:'mazRocket'},
+  {q:'¿Qué impacto tuvo Mazinger Z en la cultura global?',o:['Solo fue popular en Japón sin influencia exterior','Fundó el género mecha moderno con influencia global','Solo vendió juguetes en Asia Oriental','Influyó solo en el manga, no en el anime'],a:1,exp:'Mazinger Z fundó el género mecha: Gundam, Evangelion, Transformers y Power Rangers descienden directamente de su innovación. Los juguetes Chogokin vendieron millones globalmente. En España fue muy popular en TVE en los años 80, formando generaciones enteras.',svg:'mazRocket'}
+]
+};
+
+// ===== MOTOR DE QUIZ =====
+let _qz=null;
+function startStQuiz(stId){
+  const qs=QUIZZES[stId];if(!qs)return;
+  const st=STS.find(s=>s.dataset.id===stId);if(!st)return;
+  let wrap=st.querySelector('.sq-wrap');
+  if(!wrap){wrap=document.createElement('div');wrap.className='sq-wrap';st.appendChild(wrap);}
+  _qz={stId,qs,idx:0,score:0,container:wrap};
+  sqRender();
+  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+function sqRender(){
+  if(!_qz)return;
+  const{qs,idx,container}=_qz;const q=qs[idx];
+  container.innerHTML=`<div class="sq-header"><span>Test rápido · ${idx+1}/${qs.length}</span><div class="sq-prog"><div class="sq-progbar" style="width:${idx/qs.length*100}%"></div></div></div><div class="sq-q">${q.q}</div><div class="sq-opts">${q.o.map((opt,i)=>`<button class="sq-opt" onclick="sqAnswer(${i})">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}</div>`;
+}
+function sqAnswer(chosen){
+  if(!_qz)return;
+  const{qs,idx,container}=_qz;const q=qs[idx];
+  container.querySelectorAll('.sq-opt').forEach((b,i)=>{b.disabled=true;b.style.pointerEvents='none';if(i===q.a)b.classList.add('sq-correct');else if(i===chosen)b.classList.add('sq-wrong');});
+  const ok=chosen===q.a;_qz.score+=(ok?1:0);
+  const ex=document.createElement('div');ex.className='sq-explain';
+  ex.innerHTML=`<div class="sq-verdict ${ok?'sq-ok':'sq-no'}">${ok?'✅ ¡Correcto!':'❌ Incorrecto'}</div><div class="sq-exp">${q.exp}</div>${q.svg?`<div class="sq-svg">${techSVG(q.svg)}</div>`:''}<button class="sq-next" onclick="sqNext()">→ ${idx<qs.length-1?'Siguiente pregunta':'Ver resultado'}</button>`;
+  container.appendChild(ex);
+}
+function sqNext(){
+  if(!_qz)return;_qz.idx++;
+  if(_qz.idx>=_qz.qs.length)sqEnd();
+  else{sqRender();_qz.container.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function sqEnd(){
+  if(!_qz)return;
+  const{score,qs,stId,container}=_qz;const pct=Math.round(score/qs.length*100);
+  const xp=score*5+(pct===100?20:0);addXP(xp);
+  const grade=pct>=90?'🏆 ¡Maestro!':pct>=70?'⭐ Muy bien':pct>=50?'👍 Aprobado':'📚 Sigue practicando';
+  container.innerHTML=`<div class="sq-result"><div class="sq-score-num">${score}/${qs.length}</div><div class="sq-grade">${grade}</div><div class="sq-pct">${pct}% de respuestas correctas</div><div class="sq-xp-earn">+${xp} XP</div><button class="sq-retry" onclick="startStQuiz('${stId}')">🔄 Repetir test</button></div>`;
+  _qz=null;
+  if(pct>=70)unlockSello&&unlockSello('aprendiz');
+}
+
 // Pulso CSS para la cta del home
 const pulseStyle=document.createElement('style');
 pulseStyle.textContent='@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}';
 document.head.appendChild(pulseStyle);
+
+// ===== MAZINGER Z HEAD 3D =====
+function initMazHead(){
+  const canvas=document.getElementById('mazCanvas');
+  if(!canvas||canvas._maz||typeof THREE==='undefined')return;
+  canvas._maz=true;
+  const W=180,H=210;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setClearColor(0x000000,0);renderer.shadowMap.enabled=true;
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(42,W/H,.1,100);
+  cam.position.set(0,.2,5.5);cam.lookAt(0,0,0);
+  // Lights
+  scene.add(new THREE.AmbientLight(0x334488,.6));
+  const sun=new THREE.DirectionalLight(0xffffff,1.4);sun.position.set(3,4,5);scene.add(sun);
+  const red=new THREE.PointLight(0xC00000,2,8);red.position.set(-2,-1,3);scene.add(red);
+  const blue2=new THREE.PointLight(0x2255ff,.8,8);blue2.position.set(2,2,2);scene.add(blue2);
+  // Materials
+  const mBlue=new THREE.MeshPhongMaterial({color:0x0d2a5c,shininess:120,specular:0x445588});
+  const mDark=new THREE.MeshPhongMaterial({color:0x040e24,shininess:60});
+  const mRed=new THREE.MeshPhongMaterial({color:0xC00000,emissive:0x550000,shininess:200,specular:0xff4444});
+  const mYellow=new THREE.MeshPhongMaterial({color:0xffcc00,emissive:0x443300,shininess:220,specular:0xffffaa});
+  const mSky=new THREE.MeshPhongMaterial({color:0x2f63b0,shininess:160,specular:0x88aaff});
+  const mGlow=new THREE.MeshPhongMaterial({color:0xff6633,emissive:0xC00000,shininess:300,transparent:true,opacity:.95});
+  const g=new THREE.Group();
+  // — MAIN HEAD block (wider than tall, flattened front-to-back)
+  const hd=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.6,1.3),mBlue);g.add(hd);
+  // — FOREHEAD plate (darker top 30%)
+  const fp=new THREE.Mesh(new THREE.BoxGeometry(1.75,0.55,1.32),mDark);fp.position.set(0,.55,0);g.add(fp);
+  // — EAR SIDE BLOCKS
+  const earL=new THREE.Mesh(new THREE.BoxGeometry(0.28,1.0,.9),mSky);earL.position.set(-1.04,.05,0);g.add(earL);
+  const earR=earL.clone();earR.position.x=1.04;g.add(earR);
+  // — EAR VENTS (small dark slits)
+  const ventG=new THREE.BoxGeometry(.05,.55,.4);
+  [-1.19,1.19].forEach(x=>{const v=new THREE.Mesh(ventG,mDark);v.position.set(x,.05,0);g.add(v);});
+  // — CHIN / JAW area
+  const jaw=new THREE.Mesh(new THREE.BoxGeometry(1.5,.4,1.2),mDark);jaw.position.set(0,-.9,.05);g.add(jaw);
+  const jawFront=new THREE.Mesh(new THREE.BoxGeometry(1.4,.35,.15),mBlue);jawFront.position.set(0,-.88,.7);g.add(jawFront);
+  // — VISOR BAR (yellow, full width, iconic)
+  const vis=new THREE.Mesh(new THREE.BoxGeometry(1.72,.36,.12),mYellow);vis.position.set(0,.08,.72);g.add(vis);
+  // — VISOR side trims
+  [-0.88,0.88].forEach(x=>{const t=new THREE.Mesh(new THREE.BoxGeometry(.08,.44,.12),mYellow);t.position.set(x,.08,.72);g.add(t);});
+  // — EYES (red, recessed behind visor)
+  const eyeG=new THREE.BoxGeometry(.55,.22,.06);
+  const eyeL=new THREE.Mesh(eyeG,mGlow);eyeL.position.set(-.45,.08,.74);g.add(eyeL);
+  const eyeR=new THREE.Mesh(eyeG,mGlow);eyeR.position.set(.45,.08,.74);g.add(eyeR);
+  // — EYE inner glow dots
+  [[-.45],[.45]].forEach(([x])=>{const dot=new THREE.Mesh(new THREE.SphereGeometry(.06,8,8),new THREE.MeshPhongMaterial({color:0xffccaa,emissive:0xff6633,shininess:400}));dot.position.set(x,.08,.78);g.add(dot);});
+  // — NOSE BRIDGE (subtle ridge)
+  const nose=new THREE.Mesh(new THREE.BoxGeometry(.18,.5,.14),mDark);nose.position.set(0,-.18,.7);g.add(nose);
+  // — MOUTH GRILLE
+  const grille=new THREE.Mesh(new THREE.BoxGeometry(1.1,.18,.12),mDark);grille.position.set(0,-.6,.7);g.add(grille);
+  // grille slits
+  for(let i=-2;i<=2;i++){const sl=new THREE.Mesh(new THREE.BoxGeometry(.06,.12,.14),mBlue);sl.position.set(i*.22,-.6,.7);g.add(sl);}
+  // — TOP CROWN plate
+  const crown=new THREE.Mesh(new THREE.BoxGeometry(1.6,.22,1.1),mDark);crown.position.set(0,.92,-.05);g.add(crown);
+  // — HORN (the iconic Mazinger spike)
+  const hornGeo=new THREE.CylinderGeometry(.04,.14,.7,8);
+  const horn=new THREE.Mesh(hornGeo,mRed);horn.position.set(0,1.4,.12);g.add(horn);
+  // horn base ring
+  const hRing=new THREE.Mesh(new THREE.TorusGeometry(.16,.04,8,16),mYellow);hRing.rotation.x=Math.PI/2;hRing.position.set(0,1.07,.12);g.add(hRing);
+  // — HOVER PILDER dome (cockpit on top)
+  const pGeo=new THREE.SphereGeometry(.38,24,12,0,Math.PI*2,0,Math.PI*.6);
+  const piler=new THREE.Mesh(pGeo,new THREE.MeshPhongMaterial({color:0x2f63b0,emissive:0x112244,shininess:300,transparent:true,opacity:.88,specular:0x88ccff}));
+  piler.position.set(0,.95,-.18);g.add(piler);
+  // pilder rim
+  const pRim=new THREE.Mesh(new THREE.TorusGeometry(.36,.06,8,24),mSky);pRim.rotation.x=Math.PI/2;pRim.position.set(0,.95,-.18);g.add(pRim);
+  // — FOREHEAD V-CREST (Scrander logo-ish)
+  const vL=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.1),mRed);vL.rotation.z=.5;vL.position.set(-.22,.48,.72);g.add(vL);
+  const vR=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.1),mRed);vR.rotation.z=-.5;vR.position.set(.22,.48,.72);g.add(vR);
+  scene.add(g);
+  // Interaction — drag to rotate
+  let dragging=false,lastX=0,lastY=0,velX=0,velY=0,autoT=0;
+  canvas.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;});
+  canvas.addEventListener('touchstart',e=>{dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;velX=(e.clientX-lastX)*.012;velY=(e.clientY-lastY)*.008;g.rotation.y+=velX;g.rotation.x+=velY;lastX=e.clientX;lastY=e.clientY;});
+  window.addEventListener('touchmove',e=>{if(!dragging)return;velX=(e.touches[0].clientX-lastX)*.012;velY=(e.touches[0].clientY-lastY)*.008;g.rotation.y+=velX;g.rotation.x=Math.max(-.6,Math.min(.6,g.rotation.x+velY));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
+  ['mouseup','touchend'].forEach(ev=>window.addEventListener(ev,()=>{dragging=false;}));
+  // Animate
+  let _raf;function loop(){
+    _raf=requestAnimationFrame(loop);
+    if(!dragging){autoT+=.008;g.rotation.y=Math.sin(autoT)*.7;g.rotation.x=Math.sin(autoT*.4)*.08-.05;}
+    velX*=.9;velY*=.9;
+    renderer.render(scene,cam);
+  }
+  loop();
+  canvas._stopMaz=()=>{cancelAnimationFrame(_raf);renderer.dispose();};
+}
 
 </script>
 </body>
