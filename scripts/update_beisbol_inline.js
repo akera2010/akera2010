@@ -18,11 +18,14 @@ const picks = (d.picks || []).map(p => ({
       alta: +p.R.mc.alta.toFixed(5), baja: +p.R.mc.baja.toFixed(5),
       rl1: +p.R.mc.rl1.toFixed(5), rl2: +p.R.mc.rl2.toFixed(5),
     },
-    lh: p.R.lh, la: p.R.la, hH: [], hA: [], pitcherH: null, pitcherA: null,
+    lh: p.R.lh, la: p.R.la, hH: [], hA:[],
+    pitcherH: p.R.pitcherH || null, pitcherA: p.R.pitcherA || null,
+    teamEraH: p.R.teamEraH||null, teamEraA: p.R.teamEraA||null,
   },
   markets: p.markets.map(m => ({ code: m.code, label: m.label, p: +m.p.toFixed(5), odds: m.odds })),
   bestMkt: { code: p.bestMkt.code, label: p.bestMkt.label, p: +p.bestMkt.p.toFixed(5), odds: p.bestMkt.odds },
-  score: +p.score.toFixed(5), pitcherH: null, pitcherA: null, dataQ: 0, statz: true,
+  score: +p.score.toFixed(5), pitcherH: p.pitcherH||p.R.pitcherH||null, pitcherA: p.pitcherA||p.R.pitcherA||null,
+  teamEraH: p.teamEraH||p.R.teamEraH||null, teamEraA: p.teamEraA||p.R.teamEraA||null, dataQ: 0, statz: true,
 }));
 
 const combos = (d.combos || []).map(c => ({

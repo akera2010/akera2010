@@ -166,13 +166,13 @@ function main() {
     }
     const totML = mc.p1 + mc.p2; if (totML > 0) { mc.p1 /= totML; mc.p2 /= totML; }
 
-    const R = { mc, lh, la, hH: [], hA: [], pitcherH: sd.pitcherH || null, pitcherA: sd.pitcherA || null };
+    const R = { mc, lh, la, hH: [], hA: [], pitcherH: sd.pitcherH || null, pitcherA: sd.pitcherA || null, teamEraH: sd.teamEraH||null, teamEraA: sd.teamEraA||null };
     const mkts = allMkts(R); mkts.sort((a, b) => pscore(b, R) - pscore(a, R));
     if (!mkts.length) continue;
     const best = mkts[0];
     const sc = pscore(best, R);
     if (sc < PRM.UMBRAL) continue;
-    results.push({ ...fix, R, markets: mkts, bestMkt: best, score: sc, pitcherH: sd.pitcherH || null, pitcherA: sd.pitcherA || null, dataQ: 0, statz: true });
+    results.push({ ...fix, R, markets: mkts, bestMkt: best, score: sc, pitcherH: sd.pitcherH || null, pitcherA: sd.pitcherA || null, teamEraH: sd.teamEraH||null, teamEraA: sd.teamEraA||null, dataQ: 0, statz: true });
   }
 
   results.sort((a, b) => b.score - a.score);
