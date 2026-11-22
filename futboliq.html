@@ -544,7 +544,8 @@ async function boot(){
   }
   STATE.combos=buildCombos(STATE.picks);
   saveRecord();
-  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · Actualizado ${new Date().toLocaleTimeString('es-ES')} · v${PRM.VERSION}`;
+  STATE.lastFetch=Date.now();
+  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · Actualizado ${new Date().toLocaleTimeString('es-ES',{timeZone:'Europe/Madrid'})} · v${PRM.VERSION}`;
   STATE.loading=false;
   ov.classList.add('hidden');
   renderAll();
@@ -883,14 +884,29 @@ function exportPDF(){
 
 /* ===== AUTO-REFRESH ===== */
 function scheduleRefresh(){
+  // Auto-boot a las 05:00 Madrid del día siguiente
   const now=new Date();
   const mad=new Date(now.toLocaleString('en-US',{timeZone:'Europe/Madrid'}));
   const next=new Date(mad);next.setDate(next.getDate()+1);next.setHours(5,0,0,0);
-  setTimeout(boot,next-mad);
+  setTimeout(()=>{boot();scheduleRefresh();},next-mad);
 }
 
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded',()=>{boot();});
+
+// Al abrir desde caché del navegador (back/forward cache) — DOMContentLoaded NO se dispara
+window.addEventListener('pageshow',(e)=>{if(e.persisted&&!STATE.loading)boot();});
+
+// Al volver a la pestaña después de >10 min inactivo
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&!STATE.loading){
+    const age=Date.now()-(STATE.lastFetch||0);
+    if(age>10*60*1000)boot();
+  }
+});
+
+// Re-render cada 60 s para actualizar horarios/estado sin refetch completo
+setInterval(()=>{if(STATE.picks.length&&!STATE.loading)renderAll();},60000);
 </script>
 </body>
 </html>
