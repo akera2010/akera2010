@@ -100,11 +100,11 @@ function buildCombos(picks) {
     for (let j=i+1;j<Math.min(picks.length,6);j++) {
       for (let k=j+1;k<Math.min(picks.length,6);k++) {
         const pa=picks[i],pb=picks[j],pc=picks[k];
-        const getAlt = p => p.markets.filter(m=>m.code!==p.bestMkt.code&&m.p>=0.62&&!BANNED.has(m.code))[0]||(p.bestMkt.p>=0.70?p.bestMkt:null);
+        const getAlt = p => p.markets.filter(m=>m.code!==p.bestMkt.code&&m.p>=0.55&&!BANNED.has(m.code))[0]||(p.bestMkt.p>=0.60?p.bestMkt:null);
         const ma=getAlt(pa),mb=getAlt(pb),mc2=getAlt(pc);
         if(!ma||!mb||!mc2) continue;
         const pComb=ma.p*mb.p*mc2.p;
-        if(pComb<0.35) continue;
+        if(pComb<0.25) continue;
         combos.push({
           name:`Combinado ${combos.length+1}`,
           pComb,oddsComb:parseFloat((ma.odds*mb.odds*mc2.odds).toFixed(2)),
