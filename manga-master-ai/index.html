@@ -538,7 +538,7 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <div style="position:absolute;top:0;right:0;width:5px;height:100%;background:#C00000"></div>
     <!-- Mazinger Z HEAD 3D (Three.js) -->
     <div style="width:180px;flex-shrink:0;align-self:center;display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0 8px 8px">
-      <canvas id="mazCanvas" width="180" height="210" style="display:block;filter:drop-shadow(0 0 18px rgba(192,0,0,.8));cursor:grab"></canvas>
+      <canvas id="mazCanvas" width="200" height="230" style="display:block;filter:drop-shadow(0 0 22px rgba(192,0,0,.9)) drop-shadow(0 0 6px rgba(27,74,143,.6));cursor:grab"></canvas>
       <div style="font-family:var(--disp);font-size:9px;color:rgba(192,0,0,.7);letter-spacing:.2em;text-transform:uppercase;margin-top:2px">マジンガーZ</div>
     </div>
     <!-- Texto de portada -->
@@ -4003,7 +4003,7 @@ const pulseStyle=document.createElement('style');
 pulseStyle.textContent='@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}';
 document.head.appendChild(pulseStyle);
 
-// ===== MAZINGER Z HEAD 3D =====
+// ===== MAZINGER Z HEAD 3D — CEL-SHADED =====
 function initMazHead(){
   const canvas=document.getElementById('mazCanvas');
   if(!canvas||canvas._maz||typeof THREE==='undefined')return;
@@ -4011,81 +4011,164 @@ function initMazHead(){
   const W=180,H=210;
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
   renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setClearColor(0x000000,0);renderer.shadowMap.enabled=true;
+  renderer.setClearColor(0x000000,0);
   const scene=new THREE.Scene();
-  const cam=new THREE.PerspectiveCamera(42,W/H,.1,100);
-  cam.position.set(0,.2,5.5);cam.lookAt(0,0,0);
-  // Lights
-  scene.add(new THREE.AmbientLight(0x334488,.6));
-  const sun=new THREE.DirectionalLight(0xffffff,1.4);sun.position.set(3,4,5);scene.add(sun);
-  const red=new THREE.PointLight(0xC00000,2,8);red.position.set(-2,-1,3);scene.add(red);
-  const blue2=new THREE.PointLight(0x2255ff,.8,8);blue2.position.set(2,2,2);scene.add(blue2);
-  // Materials
-  const mBlue=new THREE.MeshPhongMaterial({color:0x0d2a5c,shininess:120,specular:0x445588});
-  const mDark=new THREE.MeshPhongMaterial({color:0x040e24,shininess:60});
-  const mRed=new THREE.MeshPhongMaterial({color:0xC00000,emissive:0x550000,shininess:200,specular:0xff4444});
-  const mYellow=new THREE.MeshPhongMaterial({color:0xffcc00,emissive:0x443300,shininess:220,specular:0xffffaa});
-  const mSky=new THREE.MeshPhongMaterial({color:0x2f63b0,shininess:160,specular:0x88aaff});
-  const mGlow=new THREE.MeshPhongMaterial({color:0xff6633,emissive:0xC00000,shininess:300,transparent:true,opacity:.95});
+  const cam=new THREE.PerspectiveCamera(38,W/H,.1,100);
+  cam.position.set(0,.15,6);cam.lookAt(0,0,0);
+
+  // — CEL TOON LIGHTS —
+  scene.add(new THREE.AmbientLight(0xaabbdd,.5));
+  const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(2,3,4);scene.add(key);
+  const fill=new THREE.DirectionalLight(0x2244aa,.5);fill.position.set(-3,0,2);scene.add(fill);
+  const rim=new THREE.DirectionalLight(0xC00000,.8);rim.position.set(0,-2,-3);scene.add(rim);
+
+  // — TOON MATERIALS (MeshToonMaterial = manga shading) —
+  const gradTex=()=>{
+    const c=document.createElement('canvas');c.width=4;c.height=256;
+    const ctx=c.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,0,256);
+    g.addColorStop(0,'#ffffff');g.addColorStop(.3,'#ddddee');
+    g.addColorStop(.6,'#aaaacc');g.addColorStop(1,'#334466');
+    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
+    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
+  };
+  const gradRed=()=>{
+    const c=document.createElement('canvas');c.width=4;c.height=256;
+    const ctx=c.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,0,256);
+    g.addColorStop(0,'#ff8888');g.addColorStop(.4,'#cc0000');g.addColorStop(1,'#550000');
+    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
+    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
+  };
+  const gradGold=()=>{
+    const c=document.createElement('canvas');c.width=4;c.height=256;
+    const ctx=c.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,0,256);
+    g.addColorStop(0,'#ffffaa');g.addColorStop(.3,'#ffcc00');g.addColorStop(.7,'#cc9900');g.addColorStop(1,'#885500');
+    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
+    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
+  };
+  const tBlue=new THREE.MeshToonMaterial({color:0x1a3a70,gradientMap:gradTex()});
+  const tDark=new THREE.MeshToonMaterial({color:0x06111f,gradientMap:gradTex()});
+  const tRed=new THREE.MeshToonMaterial({color:0xC00000,gradientMap:gradRed(),emissive:0x440000});
+  const tGold=new THREE.MeshToonMaterial({color:0xffcc00,gradientMap:gradGold(),emissive:0x443300});
+  const tSky=new THREE.MeshToonMaterial({color:0x2255aa,gradientMap:gradTex()});
+  const tGlow=new THREE.MeshToonMaterial({color:0xff4422,gradientMap:gradRed(),emissive:0xaa2200});
+  const tPiler=new THREE.MeshToonMaterial({color:0x2255bb,gradientMap:gradTex(),transparent:true,opacity:.85});
+
+  // — OUTLINE HELPER (backface inflate technique) —
+  function addOutline(mesh,thickness=.045){
+    const outMat=new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide});
+    const outMesh=new THREE.Mesh(mesh.geometry,outMat);
+    outMesh.scale.setScalar(1+thickness);
+    mesh.add(outMesh);
+    return mesh;
+  }
+  function part(geo,mat,x=0,y=0,z=0,rx=0,ry=0,rz=0,th=.045){
+    const m=new THREE.Mesh(geo,mat);
+    m.position.set(x,y,z);m.rotation.set(rx,ry,rz);
+    addOutline(m,th);return m;
+  }
+
   const g=new THREE.Group();
-  // — MAIN HEAD block (wider than tall, flattened front-to-back)
-  const hd=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.6,1.3),mBlue);g.add(hd);
-  // — FOREHEAD plate (darker top 30%)
-  const fp=new THREE.Mesh(new THREE.BoxGeometry(1.75,0.55,1.32),mDark);fp.position.set(0,.55,0);g.add(fp);
-  // — EAR SIDE BLOCKS
-  const earL=new THREE.Mesh(new THREE.BoxGeometry(0.28,1.0,.9),mSky);earL.position.set(-1.04,.05,0);g.add(earL);
-  const earR=earL.clone();earR.position.x=1.04;g.add(earR);
-  // — EAR VENTS (small dark slits)
-  const ventG=new THREE.BoxGeometry(.05,.55,.4);
-  [-1.19,1.19].forEach(x=>{const v=new THREE.Mesh(ventG,mDark);v.position.set(x,.05,0);g.add(v);});
-  // — CHIN / JAW area
-  const jaw=new THREE.Mesh(new THREE.BoxGeometry(1.5,.4,1.2),mDark);jaw.position.set(0,-.9,.05);g.add(jaw);
-  const jawFront=new THREE.Mesh(new THREE.BoxGeometry(1.4,.35,.15),mBlue);jawFront.position.set(0,-.88,.7);g.add(jawFront);
-  // — VISOR BAR (yellow, full width, iconic)
-  const vis=new THREE.Mesh(new THREE.BoxGeometry(1.72,.36,.12),mYellow);vis.position.set(0,.08,.72);g.add(vis);
-  // — VISOR side trims
-  [-0.88,0.88].forEach(x=>{const t=new THREE.Mesh(new THREE.BoxGeometry(.08,.44,.12),mYellow);t.position.set(x,.08,.72);g.add(t);});
-  // — EYES (red, recessed behind visor)
-  const eyeG=new THREE.BoxGeometry(.55,.22,.06);
-  const eyeL=new THREE.Mesh(eyeG,mGlow);eyeL.position.set(-.45,.08,.74);g.add(eyeL);
-  const eyeR=new THREE.Mesh(eyeG,mGlow);eyeR.position.set(.45,.08,.74);g.add(eyeR);
-  // — EYE inner glow dots
-  [[-.45],[.45]].forEach(([x])=>{const dot=new THREE.Mesh(new THREE.SphereGeometry(.06,8,8),new THREE.MeshPhongMaterial({color:0xffccaa,emissive:0xff6633,shininess:400}));dot.position.set(x,.08,.78);g.add(dot);});
-  // — NOSE BRIDGE (subtle ridge)
-  const nose=new THREE.Mesh(new THREE.BoxGeometry(.18,.5,.14),mDark);nose.position.set(0,-.18,.7);g.add(nose);
-  // — MOUTH GRILLE
-  const grille=new THREE.Mesh(new THREE.BoxGeometry(1.1,.18,.12),mDark);grille.position.set(0,-.6,.7);g.add(grille);
-  // grille slits
-  for(let i=-2;i<=2;i++){const sl=new THREE.Mesh(new THREE.BoxGeometry(.06,.12,.14),mBlue);sl.position.set(i*.22,-.6,.7);g.add(sl);}
+
+  // — MAIN HEAD (tall box, slightly trapezoidal via scale)
+  const headMesh=part(new THREE.BoxGeometry(2.0,1.8,1.4),tBlue,0,0,0);
+  g.add(headMesh);
+
+  // — FOREHEAD PLATE (darker slab, top 40%)
+  g.add(part(new THREE.BoxGeometry(1.98,.72,1.42),tDark,0,.59,0));
+
+  // — EAR BLOCKS (iconic square ears, slightly protruding)
+  const earG=new THREE.BoxGeometry(.32,1.1,1.0);
+  g.add(part(earG,tSky,-1.16,.04,0));
+  g.add(part(earG,tSky, 1.16,.04,0));
+
+  // — EAR DETAIL circles (classic Mazinger ear bolt)
+  const boltG=new THREE.CylinderGeometry(.12,.12,.05,16);
+  g.add(part(boltG,tDark,-1.16,.04,.5,Math.PI/2,0,0,.03));
+  g.add(part(boltG,tDark, 1.16,.04,.5,Math.PI/2,0,0,.03));
+
+  // — JAW / CHIN
+  g.add(part(new THREE.BoxGeometry(1.7,.42,1.35),tDark,0,-.99,0));
+
+  // — CHIN FRONT PLATE
+  g.add(part(new THREE.BoxGeometry(1.5,.35,.14),tBlue,0,-.97,.74));
+
+  // — GOLD VISOR BAR (the most iconic element — full width)
+  g.add(part(new THREE.BoxGeometry(1.88,.44,.14),tGold,0,.1,.73,.0,0,0,.06));
+
+  // — VISOR END CAPS (thicker gold at sides, adds depth)
+  g.add(part(new THREE.BoxGeometry(.14,.54,.14),tGold,-1.0,.1,.73,0,0,0,.03));
+  g.add(part(new THREE.BoxGeometry(.14,.54,.14),tGold, 1.0,.1,.73,0,0,0,.03));
+
+  // — EYES inside visor (red rectangles, faint glow)
+  const eyeG=new THREE.BoxGeometry(.6,.26,.08);
+  g.add(part(eyeG,tGlow,-.5,.1,.75,0,0,0,.02));
+  g.add(part(eyeG,tGlow, .5,.1,.75,0,0,0,.02));
+
+  // — NOSE BRIDGE (vertical dark bar between eyes)
+  g.add(part(new THREE.BoxGeometry(.15,.7,.13),tDark,0,-.22,.74));
+
+  // — GRILLE PLATE at mouth
+  g.add(part(new THREE.BoxGeometry(1.4,.2,.13),tDark,0,-.62,.73));
+  for(let i=-3;i<=3;i++){
+    g.add(part(new THREE.BoxGeometry(.07,.14,.14),tBlue,i*.2,-.62,.73,0,0,0,.01));
+  }
+
   // — TOP CROWN plate
-  const crown=new THREE.Mesh(new THREE.BoxGeometry(1.6,.22,1.1),mDark);crown.position.set(0,.92,-.05);g.add(crown);
-  // — HORN (the iconic Mazinger spike)
-  const hornGeo=new THREE.CylinderGeometry(.04,.14,.7,8);
-  const horn=new THREE.Mesh(hornGeo,mRed);horn.position.set(0,1.4,.12);g.add(horn);
-  // horn base ring
-  const hRing=new THREE.Mesh(new THREE.TorusGeometry(.16,.04,8,16),mYellow);hRing.rotation.x=Math.PI/2;hRing.position.set(0,1.07,.12);g.add(hRing);
-  // — HOVER PILDER dome (cockpit on top)
-  const pGeo=new THREE.SphereGeometry(.38,24,12,0,Math.PI*2,0,Math.PI*.6);
-  const piler=new THREE.Mesh(pGeo,new THREE.MeshPhongMaterial({color:0x2f63b0,emissive:0x112244,shininess:300,transparent:true,opacity:.88,specular:0x88ccff}));
-  piler.position.set(0,.95,-.18);g.add(piler);
-  // pilder rim
-  const pRim=new THREE.Mesh(new THREE.TorusGeometry(.36,.06,8,24),mSky);pRim.rotation.x=Math.PI/2;pRim.position.set(0,.95,-.18);g.add(pRim);
-  // — FOREHEAD V-CREST (Scrander logo-ish)
-  const vL=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.1),mRed);vL.rotation.z=.5;vL.position.set(-.22,.48,.72);g.add(vL);
-  const vR=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.1),mRed);vR.rotation.z=-.5;vR.position.set(.22,.48,.72);g.add(vR);
+  g.add(part(new THREE.BoxGeometry(1.78,.24,1.2),tDark,0,1.0,-.04));
+
+  // — SCRANDER HORN (central spike — the Z icon element)
+  const hornGeo=new THREE.CylinderGeometry(.03,.16,.85,6);
+  g.add(part(hornGeo,tRed,0,1.6,.15,0,0,0,.06));
+
+  // — HORN BASE COLLAR
+  g.add(part(new THREE.CylinderGeometry(.2,.2,.12,16),tGold,0,1.17,.15,0,0,0,.03));
+
+  // — HOVER PILDER cockpit dome (top center)
+  const pGeo=new THREE.SphereGeometry(.42,24,14,0,Math.PI*2,0,Math.PI*.58);
+  g.add(part(pGeo,tPiler,0,1.03,-.22,0,0,0,.035));
+
+  // — PILDER RIM
+  const rimMesh=part(new THREE.TorusGeometry(.4,.055,10,32),tSky,0,1.03,-.22,Math.PI/2,0,0,.025);
+  g.add(rimMesh);
+
+  // — V-CREST on forehead (the Go Nagai signature mark)
+  const vG=new THREE.BoxGeometry(.6,.07,.1);
+  g.add(part(vG,tRed,-.24,.5,.73, 0,0, .48,.02));
+  g.add(part(vG,tRed, .24,.5,.73, 0,0,-.48,.02));
+
   scene.add(g);
-  // Interaction — drag to rotate
-  let dragging=false,lastX=0,lastY=0,velX=0,velY=0,autoT=0;
-  canvas.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;});
+
+  // — DRAG / TOUCH INTERACTION —
+  let dragging=false,lastX=0,lastY=0,autoT=0,rotY=0,rotX=-.05;
+  canvas.style.cursor='grab';
+  canvas.addEventListener('mousedown',e=>{dragging=true;canvas.style.cursor='grabbing';lastX=e.clientX;lastY=e.clientY;});
   canvas.addEventListener('touchstart',e=>{dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
-  window.addEventListener('mousemove',e=>{if(!dragging)return;velX=(e.clientX-lastX)*.012;velY=(e.clientY-lastY)*.008;g.rotation.y+=velX;g.rotation.x+=velY;lastX=e.clientX;lastY=e.clientY;});
-  window.addEventListener('touchmove',e=>{if(!dragging)return;velX=(e.touches[0].clientX-lastX)*.012;velY=(e.touches[0].clientY-lastY)*.008;g.rotation.y+=velX;g.rotation.x=Math.max(-.6,Math.min(.6,g.rotation.x+velY));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
-  ['mouseup','touchend'].forEach(ev=>window.addEventListener(ev,()=>{dragging=false;}));
-  // Animate
-  let _raf;function loop(){
+  window.addEventListener('mousemove',e=>{
+    if(!dragging)return;
+    rotY+=(e.clientX-lastX)*.014;rotX+=(e.clientY-lastY)*.009;
+    rotX=Math.max(-.6,Math.min(.5,rotX));lastX=e.clientX;lastY=e.clientY;
+  });
+  window.addEventListener('touchmove',e=>{
+    if(!dragging)return;
+    rotY+=(e.touches[0].clientX-lastX)*.014;rotX+=(e.touches[0].clientY-lastY)*.009;
+    rotX=Math.max(-.6,Math.min(.5,rotX));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+  },{passive:true});
+  ['mouseup','touchend'].forEach(ev=>window.addEventListener(ev,()=>{dragging=false;canvas.style.cursor='grab';}));
+
+  // — ANIMATE —
+  let _raf;
+  function loop(){
     _raf=requestAnimationFrame(loop);
-    if(!dragging){autoT+=.008;g.rotation.y=Math.sin(autoT)*.7;g.rotation.x=Math.sin(autoT*.4)*.08-.05;}
-    velX*=.9;velY*=.9;
+    if(!dragging){
+      autoT+=.007;
+      rotY=Math.sin(autoT)*.72;
+      rotX=Math.sin(autoT*.38)*.07-.05;
+    }
+    g.rotation.y+=(rotY-g.rotation.y)*.08;
+    g.rotation.x+=(rotX-g.rotation.x)*.08;
     renderer.render(scene,cam);
   }
   loop();
