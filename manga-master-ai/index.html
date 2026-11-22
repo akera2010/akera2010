@@ -1,9 +1,10 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MANGA MASTER AI</title>
+<title>MANGA MASTER · Noa Bello</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -164,39 +165,23 @@ canvas{max-width:100%;display:block;touch-action:none}
 .hl{animation:flash .6s ease 2}
 @keyframes flash{50%{filter:drop-shadow(0 0 0 var(--red)) brightness(1.15)}}
 
-/* intro */
-#intro{position:fixed;inset:0;z-index:100;background:#071733;display:flex;align-items:center;justify-content:center;overflow:hidden}
-#intro svg.scene{position:absolute;inset:0;width:100%;height:100%}
-#intro .ui{position:relative;z-index:3;text-align:center;color:#fff;pointer-events:none;width:100%}
-#intro .ui button{pointer-events:auto}
-#introTitle{font-family:var(--disp);font-size:clamp(70px,18vw,200px);line-height:.9;color:#fff;-webkit-text-stroke:4px var(--red);text-shadow:8px 8px 0 var(--red),0 0 40px rgba(255,255,255,.35);opacity:0;transform:scale(4);letter-spacing:.03em}
-#introKana{font-family:var(--disp);font-size:clamp(22px,5vw,42px);color:#cfe0ff;opacity:0;letter-spacing:.3em}
-#introSub{font-size:clamp(16px,3.4vw,24px);font-weight:900;opacity:0;margin-top:6px}
-#introStart,#introEnter{margin-top:22px}
-#introEnter{opacity:0}
-#introSkip{position:absolute;top:14px;right:14px;z-index:4}
-#introNote{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#8fa6cf;font-size:12px;z-index:4}
-#intro.go #robot{animation:rise 2.8s cubic-bezier(.2,.8,.2,1) .5s both}
-#intro.go #sun{animation:sunup 3s ease-out both}
-#intro.go #rays{animation:rays 6s linear .8s both}
-#intro.go #visor{animation:visor .5s ease 3.3s both}
-#intro.go #core{animation:core 1.2s ease 3.1s both}
-#intro.go #burst{animation:burst .9s ease 3.4s both}
-#intro.go #introTitle{animation:slam .55s cubic-bezier(.2,1.6,.4,1) 3.6s both, shake .35s 4.15s}
-#intro.go #introKana{animation:fadeup .6s ease 4.2s both}
-#intro.go #introSub{animation:fadeup .6s ease 4.5s both}
-#intro.go #introEnter{animation:fadeup .6s ease 5.1s both}
-#intro.go #introStart{display:none}
-@keyframes rise{from{transform:translateY(520px)}to{transform:translateY(0)}}
-@keyframes sunup{from{transform:translateY(160px);opacity:.3}to{transform:none;opacity:1}}
-@keyframes rays{from{opacity:0;transform:rotate(0)}20%{opacity:.2}to{opacity:.2;transform:rotate(25deg)}}
-@keyframes visor{0%{opacity:.3}40%{opacity:1;filter:brightness(2.2)}100%{opacity:1}}
-@keyframes core{from{opacity:.2}to{opacity:1}}
-@keyframes burst{0%{opacity:0;transform:scale(.4)}30%{opacity:1}100%{opacity:.0;transform:scale(1.4)}}
-@keyframes slam{to{opacity:1;transform:scale(1)}}
-@keyframes shake{25%{transform:translate(-6px,3px)}50%{transform:translate(5px,-4px)}75%{transform:translate(-3px,2px)}}
+/* ===== INTRO VÍDEO HIPERREALISTA ===== */
+#intro{position:fixed;inset:0;z-index:100;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#introVids{position:absolute;inset:0;width:100%;height:100%}
+#introVids video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#introOverlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(4,14,36,.55) 0%,rgba(4,14,36,.2) 50%,rgba(4,14,36,.8) 100%);z-index:1}
+#introUI{position:relative;z-index:2;text-align:center;color:#fff;padding:0 24px;width:100%;max-width:900px}
+#introTitle{font-family:var(--disp);font-size:clamp(56px,14vw,160px);line-height:.9;color:#fff;-webkit-text-stroke:3px var(--red);text-shadow:6px 6px 0 var(--red),0 0 60px rgba(255,80,0,.5);opacity:0;transform:scale(1.6) translateY(20px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,1.2,.4,1);letter-spacing:.04em}
+#introKana{font-family:var(--disp);font-size:clamp(18px,4vw,38px);color:#cfe0ff;opacity:0;letter-spacing:.35em;margin-top:8px;transition:opacity .7s ease .3s}
+#introSub{font-size:clamp(14px,2.8vw,20px);font-weight:900;opacity:0;margin-top:6px;color:#ffd7a8;text-shadow:0 2px 8px rgba(0,0,0,.8);transition:opacity .6s ease .5s}
+#introBtns{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:opacity .6s ease .8s,transform .6s ease .8s}
+#intro.go #introTitle{opacity:1;transform:scale(1) translateY(0)}
+#intro.go #introKana{opacity:1}
+#intro.go #introSub{opacity:1}
+#intro.go #introBtns{opacity:1;transform:none}
+#introNote{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#8fa6cf;font-size:12px;z-index:3;pointer-events:none}
+#introSkip{z-index:10}
 @keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-#rays,#burst{transform-origin:600px 330px;transform-box:view-box}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}
@@ -227,133 +212,28 @@ canvas{max-width:100%;display:block;touch-action:none}
 </head>
 <body>
 <!-- ============ INTRO ============ -->
-<div id="intro" role="dialog" aria-label="Introducción animada">
-<svg class="scene" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-  <defs>
-    <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#040e24"/><stop offset=".55" stop-color="#0d2a5c"/><stop offset=".82" stop-color="#2f63b0"/><stop offset="1" stop-color="#f3c9a8"/>
-    </linearGradient>
-    <radialGradient id="gSun" cx=".5" cy=".5" r=".5">
-      <stop offset="0" stop-color="#fff6e6"/><stop offset=".45" stop-color="#ffd7a8"/><stop offset=".75" stop-color="#ff8a5c" stop-opacity=".7"/><stop offset="1" stop-color="#C00000" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffffff"/><stop offset=".25" stop-color="#dfe7f2"/><stop offset=".5" stop-color="#8ea0bd"/><stop offset=".62" stop-color="#f4f8fd"/><stop offset=".85" stop-color="#a8b6cc"/><stop offset="1" stop-color="#5d6f8f"/>
-    </linearGradient>
-    <linearGradient id="gSteelV" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f6f9fd"/><stop offset=".45" stop-color="#c6d2e3"/><stop offset=".55" stop-color="#7f92b1"/><stop offset=".7" stop-color="#e4ebf5"/><stop offset="1" stop-color="#6a7c9b"/>
-    </linearGradient>
-    <linearGradient id="gBluePlate" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5d8fd6"/><stop offset=".4" stop-color="#2f63b0"/><stop offset=".55" stop-color="#9fc0ee"/><stop offset=".7" stop-color="#1b4a8f"/><stop offset="1" stop-color="#0d2a5c"/>
-    </linearGradient>
-    <radialGradient id="gCore" cx=".5" cy=".45" r=".6">
-      <stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#bfe0ff"/><stop offset=".7" stop-color="#2f63b0"/><stop offset="1" stop-color="#0d2a5c"/>
-    </radialGradient>
-    <linearGradient id="gVisor" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#5a0000"/><stop offset=".5" stop-color="#ff4a3a"/><stop offset="1" stop-color="#5a0000"/>
-    </linearGradient>
-    <linearGradient id="gMount" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0b2148"/><stop offset="1" stop-color="#040d20"/>
-    </linearGradient>
-    <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <filter id="fGrain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-  </defs>
-  <rect width="1200" height="800" fill="url(#gSky)"/>
-  <g id="stars" fill="#fff" opacity=".7"></g>
-  <g id="rays" opacity="0" fill="#ffe9cf"></g>
-  <circle id="sun" cx="600" cy="560" r="230" fill="url(#gSun)"/>
-  <!-- MAZINGER Z — Go Nagai 1972 · homenaje -->
-  <g id="robot" transform="translate(0,520)">
-    <g transform="translate(400,110)">
-      <!-- PIERNAS -->
-      <path d="M105 400 L158 400 L165 570 L98 570 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M220 400 L273 400 L280 570 L213 570 Z" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- Aleta tobillo izq -->
-      <path d="M70 535 L98 535 L98 570 L70 570 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- Aleta tobillo der -->
-      <path d="M280 535 L308 535 L308 570 L280 570 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- Pies -->
-      <rect x="84" y="562" width="94" height="28" rx="4" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="4"/>
-      <rect x="200" y="562" width="94" height="28" rx="4" fill="url(#gSteelV)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- CINTURA -->
-      <rect x="133" y="378" width="112" height="30" rx="7" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- BRAZO IZQUIERDO -->
-      <rect x="20" y="192" width="64" height="138" rx="24" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- Puño de cohete izq -->
-      <rect x="12" y="323" width="80" height="76" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M18 340 h66 M18 357 h66 M18 374 h66" stroke="#0d2a5c" stroke-width="2.5" opacity=".55"/>
-      <!-- Hombro izq -->
-      <path d="M5 190 Q9 140 92 146 L108 220 Q46 232 5 210 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M24 156 Q52 148 86 152" stroke="#e8f1ff" stroke-width="3.5" fill="none" opacity=".8"/>
-      <!-- BRAZO DERECHO -->
-      <rect x="294" y="192" width="64" height="138" rx="24" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- Puño de cohete der -->
-      <rect x="286" y="323" width="80" height="76" rx="16" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M292 340 h66 M292 357 h66 M292 374 h66" stroke="#0d2a5c" stroke-width="2.5" opacity=".55"/>
-      <!-- Hombro der -->
-      <path d="M373 190 Q369 140 286 146 L270 220 Q332 232 373 210 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="5"/>
-      <path d="M354 156 Q326 148 292 152" stroke="#e8f1ff" stroke-width="3.5" fill="none" opacity=".8"/>
-      <!-- TORSO -->
-      <path d="M92 148 L286 148 L308 332 L189 412 L70 332 Z" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
-      <path d="M112 168 L266 168 L282 316 L189 376 L96 316 Z" fill="none" stroke="#0d2a5c" stroke-width="2.5" opacity=".5"/>
-      <!-- Reflejo pecho -->
-      <path d="M96 155 L134 155 L122 328 L86 307 Z" fill="#fff" opacity=".3"/>
-      <!-- ALETAS DE PECHO (icónicas Mazinger Z) -->
-      <path d="M92 148 L130 148 L120 192 L92 182 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <path d="M286 148 L248 148 L258 192 L286 182 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- NÚCLEO DE ENERGÍA FOTÓNICA -->
-      <g id="core" opacity=".25" filter="url(#fGlow)">
-        <polygon points="189,210 221,228 221,268 189,286 157,268 157,228" fill="url(#gCore)" stroke="#0d2a5c" stroke-width="5"/>
-      </g>
-      <!-- Cruz fotónica en pecho -->
-      <path d="M159 248 L219 248 M189 210 L189 286" stroke="var(--red)" stroke-width="5" opacity=".85"/>
-      <!-- CUELLO -->
-      <rect x="161" y="118" width="56" height="36" fill="#6a7c9b" stroke="#0d2a5c" stroke-width="5"/>
-      <!-- CABEZA — rectangular, característica de Mazinger Z -->
-      <rect x="114" y="18" width="150" height="106" rx="8" fill="url(#gSteel)" stroke="#0d2a5c" stroke-width="6"/>
-      <!-- Placa azul frente -->
-      <rect x="122" y="18" width="134" height="40" rx="5" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- Armadura mentón -->
-      <path d="M122 98 L256 98 L251 124 L127 124 Z" fill="url(#gBluePlate)" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- Alojamiento visor -->
-      <rect x="118" y="62" width="142" height="33" rx="4" fill="#150000" stroke="#0d2a5c" stroke-width="4"/>
-      <!-- Visor · ojos rayo fotónico -->
-      <rect id="visor" x="122" y="66" width="134" height="25" rx="3" fill="url(#gVisor)" opacity=".4" filter="url(#fGlow)"/>
-      <!-- Reflejo cabeza -->
-      <path d="M122 24 Q142 18 178 20" stroke="#fff" stroke-width="5" fill="none" opacity=".85" stroke-linecap="round"/>
-      <!-- TRIPLE CUERNO / SCRANDER — lo más icónico de Mazinger Z -->
-      <!-- Cuerno izquierdo -->
-      <path d="M142 18 L126 -48 L156 -50 L160 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
-      <!-- Cuerno derecho -->
-      <path d="M236 18 L252 -48 L222 -50 L218 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
-      <!-- Pico central — lanzador de haz fotónico -->
-      <path d="M189 18 L180 -66 L189 -82 L198 -66 L198 18 Z" fill="#C00000" stroke="#0d2a5c" stroke-width="4" stroke-linejoin="round"/>
-      <!-- Detalles cuernos -->
-      <path d="M130 -30 L152 -32" stroke="#fff" stroke-width="2" opacity=".6"/>
-      <path d="M248 -30 L226 -32" stroke="#fff" stroke-width="2" opacity=".6"/>
-    </g>
-  </g>
-  <g id="burst" opacity="0" stroke="#fff" stroke-width="3"></g>
-  <!-- mountains / city in front -->
-  <path d="M0 640 L120 560 L210 610 L330 520 L450 600 L520 570 L600 640 L700 560 L820 620 L930 530 L1050 600 L1200 560 L1200 800 L0 800Z" fill="url(#gMount)"/>
-  <g id="city" fill="#020814"></g>
-  <rect width="1200" height="800" filter="url(#fGrain)" opacity=".9"/>
-</svg>
-<button class="btn sm" id="soundToggle" style="position:absolute;top:14px;left:14px;z-index:4">🔊 Sonido: NO</button>
-<button class="btn sm" id="introSkip">Saltar intro</button>
-<div class="ui">
-  <div id="introTitle">MANGA MASTER AI</div>
-  <div id="introKana">マンガ・マスター</div>
-  <div id="introSub">Para Noa Bello de Sarah Hernández</div>
-  <button class="btn red" id="introStart">Encender el robot</button><br>
-  <button class="btn" id="introEnter">Entrar al dojo</button>
-</div>
-<div id="introNote">Intro original en homenaje a los robots gigantes de los años setenta. Pulsa «Encender» para oírla con sonido.</div>
+<div id="intro" role="dialog" aria-label="Intro Mazinger Z">
+  <div id="introVids">
+    <video id="vid3" src="maz3.mp4" playsinline preload="auto"></video>
+  </div>
+  <div id="introOverlay"></div>
+  <div id="introUI">
+    <div id="introTitle">MANGA<br>MASTER</div>
+    <div id="introKana">para NOA BELLO</div>
+    <div id="introSub">de Sarah Hernández · マンガ・マスター</div>
+    <div id="introBtns">
+      <button class="btn red" id="introEnter">Entrar al dojo →</button>
+      <button class="btn sm" id="introMute">🔇 Activar sonido</button>
+    </div>
+  </div>
+  <button class="btn sm" id="introSkip" style="position:absolute;top:14px;right:14px;z-index:10">Saltar intro ×</button>
+  <div id="introNote">Homenaje a Mazinger Z de Go Nagai (1972). Fragmento original de la serie animada.</div>
 </div>
 
 <!-- ============ TOP BAR ============ -->
 <header id="top">
-  <div class="badge" aria-hidden="true">AI</div>
-  <div class="brand"><h1>MANGA MASTER AI</h1><small>マンガ・マスター</small></div>
+  <div class="badge" aria-hidden="true">マ</div>
+  <div class="brand"><h1>MANGA MASTER</h1><small>para Noa Bello · マンガ・マスター</small></div>
   <div class="clocks">
     <div class="clk"><span>España</span><b id="cES">--:--</b></div>
     <div class="clk"><span>Colombia</span><b id="cCO">--:--</b></div>
@@ -396,6 +276,12 @@ canvas{max-width:100%;display:block;touch-action:none}
     <p class="small">Aquí hay movimiento, sonido y una duración fija: 24 fotogramas por segundo.</p>
   </div>
 </div>
+</div>
+
+<div class="panel" style="margin-top:16px">
+  <h4>Ejemplo real: manga convertido en anime</h4>
+  <video src="maz1.mp4" controls style="max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink)"></video>
+  <p class="small">Fragmento original de la serie animada de Mazinger Z. Observa cómo las viñetas del manga de Go Nagai se transforman en movimiento, música y efectos de sonido.</p>
 </div>
 
 <div class="tablewrap"><table class="t">
@@ -1116,21 +1002,26 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
   el("rect",{x:158,y:268,width:36,height:100,rx:8,fill,stroke:ink,"stroke-width":sw},g);
 }
 
-// ================= INTRO =================
-(function intro(){
-  const stars=$("#stars");for(let i=0;i<90;i++)el("circle",{cx:Math.random()*1200,cy:Math.random()*420,r:Math.random()*1.6+.3,opacity:Math.random()*.8+.2},stars);
-  const rays=$("#rays");for(let i=0;i<18;i++){const a=i/18*Math.PI*2,b=a+0.09;el("path",{d:`M600 330 L${600+Math.cos(a)*1300} ${330+Math.sin(a)*1300} L${600+Math.cos(b)*1300} ${330+Math.sin(b)*1300}Z`},rays)}
-  const burst=$("#burst");for(let i=0;i<70;i++){const a=Math.random()*Math.PI*2,r1=160+Math.random()*80,r2=700;el("line",{x1:600+Math.cos(a)*r1,y1:330+Math.sin(a)*r1,x2:600+Math.cos(a)*r2,y2:330+Math.sin(a)*r2,"stroke-width":1+Math.random()*4},burst)}
-  const city=$("#city");let x=0;while(x<1200){const w=20+Math.random()*50,h=30+Math.random()*120;el("rect",{x,y:800-h-40,width:w,height:h+40},city);
-    for(let k=0;k<4;k++)if(Math.random()<.5)el("rect",{x:x+4+Math.random()*(w-10),y:800-h-30+Math.random()*h,width:3,height:4,fill:"#ffd7a8",opacity:.8},city);x+=w+2}
-  const ov=$("#intro");
-  const close=()=>{ov.style.display="none";try{actx&&actx.suspend()}catch(e){}};
-  let soundOn=false;
-  const stBtn=$("#soundToggle");
-  if(stBtn){stBtn.onclick=()=>{soundOn=!soundOn;stBtn.textContent=(soundOn?"🔊 Sonido: SÍ":"🔊 Sonido: NO")}}
-  $("#introSkip").onclick=close;$("#introEnter").onclick=close;
-  $("#introStart").onclick=()=>{ov.classList.add("go");playFanfare();};
-  $("#replay").onclick=()=>{ov.style.display="flex";ov.classList.remove("go");void ov.offsetWidth;};
+// ================= INTRO VÍDEO MAZINGER Z =================
+(function introVideo(){
+  const ov=document.getElementById("intro");
+  if(!ov)return;
+  const vid=document.getElementById("vid3");
+  if(!vid)return;
+  let muted=true;
+  function showUI(){ov.classList.add("go");}
+  vid.muted=true;
+  vid.loop=true;
+  const tryPlay=()=>{vid.play().catch(()=>{});setTimeout(showUI,1200);};
+  vid.addEventListener("canplay",tryPlay,{once:true});
+  setTimeout(tryPlay,600);
+  const muteBtn=document.getElementById("introMute");
+  if(muteBtn){muteBtn.onclick=()=>{muted=!muted;vid.muted=muted;muteBtn.textContent=muted?"🔇 Activar sonido":"🔊 Silenciar";if(!muted)vid.play().catch(()=>{});};}
+  const close=()=>{ov.style.display="none";vid.pause();vid.muted=true;};
+  const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
+  if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
+  const replay=document.getElementById("replay");
+  if(replay){replay.onclick=()=>{ov.style.display="flex";ov.classList.remove("go");vid.currentTime=0;setTimeout(()=>{vid.play().catch(()=>{});setTimeout(showUI,1200);},100);};}
 })();
 let actx=null;
 function getCtx(){if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C()}if(actx.state==="suspended")actx.resume();return actx}
@@ -2031,3 +1922,5 @@ renderXP();renderProgress();route();
 </script>
 </body>
 </html>
+
+</body></html>
