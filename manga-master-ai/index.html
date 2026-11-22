@@ -1716,7 +1716,7 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
   const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
   if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
   const muteBtn=document.getElementById("introMute");
-  if(muteBtn)muteBtn.onclick=()=>{muteBtn.textContent="🔊 Sonido activo"};
+  if(muteBtn)muteBtn.onclick=()=>{const v=document.getElementById('vid3');if(v){v.muted=false;v.play().catch(()=>{})}muteBtn.textContent='🔊 Sonido activo';muteBtn.classList.add('on');};
   const replay=document.getElementById("replay");
   if(replay){replay.onclick=()=>{ov.style.display="flex";ov.classList.remove("go");startAnim();};}
 })();
