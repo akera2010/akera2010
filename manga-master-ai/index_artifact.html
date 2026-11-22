@@ -529,7 +529,7 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <div id="longdate"></div>
   </div>
   <div class="topbtns">
-<a class="btn blue" href="https://raw.githubusercontent.com/akera2010/akera2010/ccr-302eb251-8ontw0/manga-master-ai/index.html" target="_blank" style="text-decoration:none" title="Descarga el HTML completo con los 3 videos integrados (21MB)">⬇ Descargar HTML</a>
+<button class="btn sm" onclick="exportarHTML()" title="Exportar aplicación como HTML">⬇ Exportar</button>
     <div id="xpbox" title="Ver todos los niveles" onclick="toggleLvlPanel()">
       <span class="lvl" id="lvlName">見習い Aprendiz</span>
       <div id="xpbar"><i></i></div>
@@ -4309,28 +4309,31 @@ function initMazHead(){
   function inject(){document.querySelectorAll('video[data-mv]').forEach(v=>{if(V[v.dataset.mv])v.src=V[v.dataset.mv];});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',inject);else inject();
 })();
-// ===== BOTÓN DESCARGA FLOTANTE =====
-(function(){
-  function mkDl(){
-    var b=document.createElement('a');
-    b.href='https://raw.githubusercontent.com/akera2010/akera2010/ccr-302eb251-8ontw0/manga-master-ai/index.html';
-    b.target='_blank';
-    b.innerHTML='&#11015;&#65039; DESCARGAR HTML COMPLETO';
-    b.title='HTML completo 21MB — 3 videos integrados. Funciona offline en cualquier navegador.';
-    b.style.cssText='position:fixed;bottom:22px;right:22px;z-index:9999;background:linear-gradient(135deg,#e63946,#c1121f);color:#fff;padding:14px 22px;border-radius:14px;font-weight:900;font-size:14px;text-decoration:none;box-shadow:0 4px 24px rgba(230,57,70,.55);letter-spacing:.4px;cursor:pointer;transition:transform .15s,box-shadow .15s;';
-    b.onmouseenter=function(){this.style.transform='scale(1.07)';this.style.boxShadow='0 6px 32px rgba(230,57,70,.7)';};
-    b.onmouseleave=function(){this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(230,57,70,.55)';};
-    b.onclick=function(){
-      var t=document.createElement('div');
-      t.innerHTML='<b>&#10003; Abriendo archivo&#8230;</b><br>En la nueva pestaña presiona <span style="background:#333;padding:2px 6px;border-radius:4px;font-family:monospace;">Ctrl+S</span> (o <span style="background:#333;padding:2px 6px;border-radius:4px;font-family:monospace;">Cmd+S</span> en Mac) para guardar el HTML completo.';
-      t.style.cssText='position:fixed;bottom:85px;right:22px;z-index:9999;background:#1a1a2e;color:#eee;padding:14px 18px;border-radius:12px;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.55);max-width:300px;line-height:1.6;border:1px solid #e63946;';
-      document.body.appendChild(t);
-      setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},6000);
-    };
-    document.body.appendChild(b);
+
+// ===== EXPORTAR HTML =====
+async function exportarHTML(){
+  const dl=await claude.use("downloads").catch(()=>null);
+  const pageHtml='<!DOCTYPE html>'+document.documentElement.outerHTML;
+  const blob=new Blob([pageHtml],{type:'text/html'});
+  if(dl){
+    try{
+      await dl.save({filename:'manga-master.html',data:blob});
+      _toast('✓ Descarga completada.');
+    }catch(e){
+      if(e&&e.code==='declined')return;
+      _toast('No se pudo guardar: '+(e&&e.message||'error'));
+    }
+  }else{
+    _toast('Descarga no disponible en esta vista. Usa el menú ··· del artefacto.');
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mkDl);else mkDl();
-})();
+}
+function _toast(msg){
+  const t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#eee;padding:12px 20px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.5);pointer-events:none;';
+  document.body.appendChild(t);
+  setTimeout(()=>{if(t.parentNode)t.parentNode.removeChild(t);},4000);
+}
 
 </script>
 </body>
