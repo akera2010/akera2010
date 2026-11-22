@@ -338,12 +338,20 @@ async function fetchT(url,ms=8000){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});clearTimeout(t);return r;}catch(e){clearTimeout(t);throw e;}
 }
+function todayMadrid(){
+  // Fecha en hora Madrid para evitar salto de día UTC en zonas -UTC
+  return new Date().toLocaleString('en-CA',{timeZone:'Europe/Madrid'}).slice(0,10);
+}
 async function fetchGames(){
-  const ds=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const today=todayMadrid();
+  const ds=today.replace(/-/g,'');
   const fetches=LEAGUES.map(lg=>
     fetchT(`${BASE}/${lg.id}/scoreboard?dates=${ds}&limit=50`)
       .then(r=>r.ok?r.json():{events:[]})
-      .then(d=>(d.events||[]).filter(e=>e.status?.type?.state==='pre').map(e=>{
+      .then(d=>(d.events||[]).filter(e=>{
+        const st=e.status?.type?.state;
+        return st==='pre'||st==='in'; // incluye partidos en curso
+      }).map(e=>{
         const comp=e.competitions?.[0];
         const hm=comp?.competitors?.find(c=>c.homeAway==='home');
         const aw=comp?.competitors?.find(c=>c.homeAway==='away');
@@ -357,10 +365,12 @@ async function fetchGames(){
   );
   const settled=await Promise.allSettled(fetches);
   const all=settled.flatMap(r=>r.status==='fulfilled'?r.value:[]);
-  const today=new Date().toISOString().slice(0,10);
   const espnKeys=new Set(all.map(g=>statzKey(g.home,g.away)));
   STATZ_FIXTURES.forEach(sf=>{
-    if(!sf.time||sf.time.slice(0,10)!==today)return;
+    // Comparar fecha del fixture con hoy en Madrid
+    if(!sf.time)return;
+    const sfDay=new Date(sf.time).toLocaleString('en-CA',{timeZone:'Europe/Madrid'}).slice(0,10);
+    if(sfDay!==today)return;
     if(!espnKeys.has(statzKey(sf.home,sf.away)))all.push(sf);
   });
   return all;
@@ -508,8 +518,8 @@ async function boot(){
   lm.textContent='Descargando partidos…';
   document.getElementById('statusBar').textContent='Cargando…';
   try{
-    STATE.date=new Date().toISOString().slice(0,10);
-    document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    STATE.date=todayMadrid();
+    document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Madrid'});
     lm.textContent='Actualizando estadísticas del día…';
     await fetchStatzData();
     lm.textContent='Descargando partidos…';
