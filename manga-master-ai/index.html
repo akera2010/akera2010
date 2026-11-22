@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Three.js ELIMINADO — motor 3D propio incrustado en Canvas 2D -->
 <style>
 :root{
   --paper:#ffffff; --ink:#0d2a5c; --blue:#1b4a8f; --sky:#2f63b0; --red:#C00000;
@@ -2429,19 +2429,8 @@ function show(id){
       st.insertBefore(bk,st.firstChild);
     }
   }
-  // Init 3D Mazinger head on home — retry until THREE.js CDN is loaded
-  if(id==='0'){
-    let _mret=0;
-    const _mwait=()=>{
-      if(typeof THREE!=='undefined'){initMazHead();}
-      else if(_mret++<40){setTimeout(_mwait,80);}
-      else{/* fallback: draw static 2D silhouette */
-        const cv=document.getElementById('mazCanvas');
-        if(cv){const c=cv.getContext('2d');if(c){c.fillStyle='#1a3a70';c.fillRect(50,30,100,120);c.fillStyle='#C00000';c.fillRect(78,20,44,16);c.fillStyle='#ffcc00';c.fillRect(40,65,120,24);}}
-      }
-    };
-    setTimeout(_mwait,100);
-  }
+  // Init 3D Mazinger head on home — Canvas 2D engine propio, sin dependencias
+  if(id==='0'){setTimeout(initMazHead,60);}
   // Add quiz button if quiz data exists for this station
   if(id!=='0'&&typeof QUIZZES!=='undefined'&&QUIZZES[id]){
     if(!st.querySelector('.sq-trigger')){
@@ -4058,200 +4047,181 @@ const pulseStyle=document.createElement('style');
 pulseStyle.textContent='@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}';
 document.head.appendChild(pulseStyle);
 
-// ===== MAZINGER Z HEAD 3D — CEL-SHADED =====
+// ===== MAZINGER Z HEAD 3D — MOTOR CANVAS 2D PROPIO (SIN DEPENDENCIAS EXTERNAS) =====
 function initMazHead(){
-  const canvas=document.getElementById('mazCanvas');
-  if(!canvas||canvas._maz||typeof THREE==='undefined')return;
-  canvas._maz=true;
+  const cv=document.getElementById('mazCanvas');
+  if(!cv||cv._maz)return;
+  cv._maz=true;
   const ld=document.getElementById('mazLoading');if(ld)ld.remove();
-  const W=180,H=210;
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-  renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setClearColor(0x000000,0);
-  const scene=new THREE.Scene();
-  const cam=new THREE.PerspectiveCamera(38,W/H,.1,100);
-  cam.position.set(0,.15,6);cam.lookAt(0,0,0);
+  const W=200,H=230;cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
 
-  // — CEL TOON LIGHTS —
-  scene.add(new THREE.AmbientLight(0xaabbdd,.5));
-  const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(2,3,4);scene.add(key);
-  const fill=new THREE.DirectionalLight(0x2244aa,.5);fill.position.set(-3,0,2);scene.add(fill);
-  const rim=new THREE.DirectionalLight(0xC00000,.8);rim.position.set(0,-2,-3);scene.add(rim);
+  // ── GEOMETRÍA: cada caja = [cx,cy,cz, hw,hh,hd, '#hexColor']
+  // Sistema: Y=arriba, Z=frente; unidades ≈ 1 = ancho de la cara
+  const BOXES=[
+    // Cabeza principal
+    [0,    0,    0,     1.00,.90,.70, '#1a3a70'],
+    // Frente (placa oscura)
+    [0,    .59,  0,     .99, .36,.71, '#060f1f'],
+    // Orejas cuadradas icónicas
+    [-1.16,.04,  0,     .16, .55,.50, '#1e4a9a'],
+    [ 1.16,.04,  0,     .16, .55,.50, '#1e4a9a'],
+    // Pernos de orejas
+    [-1.16,.04,  .50,   .11, .11,.03, '#030810'],
+    [ 1.16,.04,  .50,   .11, .11,.03, '#030810'],
+    // Mandíbula
+    [0,  -.99,   0,     .85, .21,.67, '#060f1f'],
+    // Placa frontal del mentón
+    [0,  -.97,   .74,   .75, .18,.07, '#1a3a70'],
+    // ═══ VISOR DORADO — el elemento más icónico ═══
+    [0,   .10,   .73,   .94, .22,.07, '#ffcc00'],
+    [-1.0,.10,   .73,   .07, .27,.07, '#ddaa00'],
+    [ 1.0,.10,   .73,   .07, .27,.07, '#ddaa00'],
+    // Ojos (rojo brillante)
+    [-.50,.10,   .76,   .30, .13,.04, '#cc1100'],
+    [ .50,.10,   .76,   .30, .13,.04, '#cc1100'],
+    // Puente nasal
+    [0,  -.22,   .74,   .07, .35,.06, '#060f1f'],
+    // Rejilla/grille
+    [0,  -.62,   .73,   .70, .10,.06, '#060f1f'],
+    [-.40,-.62,  .74,   .07, .07,.03, '#1a3a70'],
+    [-.20,-.62,  .74,   .07, .07,.03, '#1a3a70'],
+    [0,  -.62,   .74,   .07, .07,.03, '#1a3a70'],
+    [ .20,-.62,  .74,   .07, .07,.03, '#1a3a70'],
+    [ .40,-.62,  .74,   .07, .07,.03, '#1a3a70'],
+    // Corona superior
+    [0,  1.00,  -.04,   .89, .12,.60, '#060f1f'],
+    // Cuerno Scrander (elemento Z)
+    [0,  1.60,   .15,   .07,.425,.07, '#bb0000'],
+    // Collar del cuerno
+    [0,  1.17,   .15,   .17, .06,.17, '#ccaa00'],
+    // Cúpula Hover Pilder
+    [0,  1.03,  -.22,   .38, .14,.38, '#1e44bb'],
+    // V-crest (marca Go Nagai) — ángulo aproximado con cajas
+    [-.24,.50,   .73,   .22,.035,.05, '#bb0000'],
+    [ .24,.50,   .73,   .22,.035,.05, '#bb0000'],
+  ];
 
-  // — TOON MATERIALS (MeshToonMaterial = manga shading) —
-  const gradTex=()=>{
-    const c=document.createElement('canvas');c.width=4;c.height=256;
-    const ctx=c.getContext('2d');
-    const g=ctx.createLinearGradient(0,0,0,256);
-    g.addColorStop(0,'#ffffff');g.addColorStop(.3,'#ddddee');
-    g.addColorStop(.6,'#aaaacc');g.addColorStop(1,'#334466');
-    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
-    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
-  };
-  const gradRed=()=>{
-    const c=document.createElement('canvas');c.width=4;c.height=256;
-    const ctx=c.getContext('2d');
-    const g=ctx.createLinearGradient(0,0,0,256);
-    g.addColorStop(0,'#ff8888');g.addColorStop(.4,'#cc0000');g.addColorStop(1,'#550000');
-    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
-    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
-  };
-  const gradGold=()=>{
-    const c=document.createElement('canvas');c.width=4;c.height=256;
-    const ctx=c.getContext('2d');
-    const g=ctx.createLinearGradient(0,0,0,256);
-    g.addColorStop(0,'#ffffaa');g.addColorStop(.3,'#ffcc00');g.addColorStop(.7,'#cc9900');g.addColorStop(1,'#885500');
-    ctx.fillStyle=g;ctx.fillRect(0,0,4,256);
-    const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;
-  };
-  const tBlue=new THREE.MeshToonMaterial({color:0x1a3a70,gradientMap:gradTex()});
-  const tDark=new THREE.MeshToonMaterial({color:0x06111f,gradientMap:gradTex()});
-  const tRed=new THREE.MeshToonMaterial({color:0xC00000,gradientMap:gradRed(),emissive:0x440000});
-  const tGold=new THREE.MeshToonMaterial({color:0xffcc00,gradientMap:gradGold(),emissive:0x443300});
-  const tSky=new THREE.MeshToonMaterial({color:0x2255aa,gradientMap:gradTex()});
-  const tGlow=new THREE.MeshToonMaterial({color:0xff4422,gradientMap:gradRed(),emissive:0xaa2200});
-  const tPiler=new THREE.MeshToonMaterial({color:0x2255bb,gradientMap:gradTex(),transparent:true,opacity:.85});
-
-  // — OUTLINE HELPER (backface inflate technique) —
-  function addOutline(mesh,thickness=.045){
-    const outMat=new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide});
-    const outMesh=new THREE.Mesh(mesh.geometry,outMat);
-    outMesh.scale.setScalar(1+thickness);
-    mesh.add(outMesh);
-    return mesh;
+  // Construye caras desde cajas
+  function mkFaces(cx,cy,cz,hw,hh,hd,col){
+    const v=[
+      [cx-hw,cy+hh,cz-hd],[cx+hw,cy+hh,cz-hd],[cx+hw,cy-hh,cz-hd],[cx-hw,cy-hh,cz-hd],
+      [cx-hw,cy+hh,cz+hd],[cx+hw,cy+hh,cz+hd],[cx+hw,cy-hh,cz+hd],[cx-hw,cy-hh,cz+hd]
+    ];
+    return[
+      {vi:[4,5,6,7],n:[0,0,1],v,col},   // frente
+      {vi:[1,0,3,2],n:[0,0,-1],v,col},  // atrás
+      {vi:[0,1,5,4],n:[0,1,0],v,col},   // arriba
+      {vi:[3,7,6,2],n:[0,-1,0],v,col},  // abajo
+      {vi:[0,4,7,3],n:[-1,0,0],v,col},  // izquierda
+      {vi:[5,1,2,6],n:[1,0,0],v,col},   // derecha
+    ];
   }
-  function part(geo,mat,x=0,y=0,z=0,rx=0,ry=0,rz=0,th=.045){
-    const m=new THREE.Mesh(geo,mat);
-    m.position.set(x,y,z);m.rotation.set(rx,ry,rz);
-    addOutline(m,th);return m;
-  }
+  const FACES=BOXES.flatMap(b=>mkFaces(...b));
 
-  const g=new THREE.Group();
-
-  // — MAIN HEAD (tall box, slightly trapezoidal via scale)
-  const headMesh=part(new THREE.BoxGeometry(2.0,1.8,1.4),tBlue,0,0,0);
-  g.add(headMesh);
-
-  // — FOREHEAD PLATE (darker slab, top 40%)
-  g.add(part(new THREE.BoxGeometry(1.98,.72,1.42),tDark,0,.59,0));
-
-  // — EAR BLOCKS (iconic square ears, slightly protruding)
-  const earG=new THREE.BoxGeometry(.32,1.1,1.0);
-  g.add(part(earG,tSky,-1.16,.04,0));
-  g.add(part(earG,tSky, 1.16,.04,0));
-
-  // — EAR DETAIL circles (classic Mazinger ear bolt)
-  const boltG=new THREE.CylinderGeometry(.12,.12,.05,16);
-  g.add(part(boltG,tDark,-1.16,.04,.5,Math.PI/2,0,0,.03));
-  g.add(part(boltG,tDark, 1.16,.04,.5,Math.PI/2,0,0,.03));
-
-  // — JAW / CHIN
-  g.add(part(new THREE.BoxGeometry(1.7,.42,1.35),tDark,0,-.99,0));
-
-  // — CHIN FRONT PLATE
-  g.add(part(new THREE.BoxGeometry(1.5,.35,.14),tBlue,0,-.97,.74));
-
-  // — GOLD VISOR BAR (the most iconic element — full width)
-  g.add(part(new THREE.BoxGeometry(1.88,.44,.14),tGold,0,.1,.73,.0,0,0,.06));
-
-  // — VISOR END CAPS (thicker gold at sides, adds depth)
-  g.add(part(new THREE.BoxGeometry(.14,.54,.14),tGold,-1.0,.1,.73,0,0,0,.03));
-  g.add(part(new THREE.BoxGeometry(.14,.54,.14),tGold, 1.0,.1,.73,0,0,0,.03));
-
-  // — EYES inside visor (red rectangles, faint glow)
-  const eyeG=new THREE.BoxGeometry(.6,.26,.08);
-  g.add(part(eyeG,tGlow,-.5,.1,.75,0,0,0,.02));
-  g.add(part(eyeG,tGlow, .5,.1,.75,0,0,0,.02));
-
-  // — NOSE BRIDGE (vertical dark bar between eyes)
-  g.add(part(new THREE.BoxGeometry(.15,.7,.13),tDark,0,-.22,.74));
-
-  // — GRILLE PLATE at mouth
-  g.add(part(new THREE.BoxGeometry(1.4,.2,.13),tDark,0,-.62,.73));
-  for(let i=-3;i<=3;i++){
-    g.add(part(new THREE.BoxGeometry(.07,.14,.14),tBlue,i*.2,-.62,.73,0,0,0,.01));
+  // ── UTILIDADES COLOR ──────────────────────────────────────────────────────
+  function h2rgb(h){const n=parseInt(h.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}
+  function applyBright(col,b){
+    const[r,g,bl]=h2rgb(col);
+    return`rgb(${Math.min(255,r*b|0)},${Math.min(255,g*b|0)},${Math.min(255,bl*b|0)})`;
   }
 
-  // — TOP CROWN plate
-  g.add(part(new THREE.BoxGeometry(1.78,.24,1.2),tDark,0,1.0,-.04));
-
-  // — SCRANDER HORN (central spike — the Z icon element)
-  const hornGeo=new THREE.CylinderGeometry(.03,.16,.85,6);
-  g.add(part(hornGeo,tRed,0,1.6,.15,0,0,0,.06));
-
-  // — HORN BASE COLLAR
-  g.add(part(new THREE.CylinderGeometry(.2,.2,.12,16),tGold,0,1.17,.15,0,0,0,.03));
-
-  // — HOVER PILDER cockpit dome (top center)
-  const pGeo=new THREE.SphereGeometry(.42,24,14,0,Math.PI*2,0,Math.PI*.58);
-  g.add(part(pGeo,tPiler,0,1.03,-.22,0,0,0,.035));
-
-  // — PILDER RIM
-  const rimMesh=part(new THREE.TorusGeometry(.4,.055,10,32),tSky,0,1.03,-.22,Math.PI/2,0,0,.025);
-  g.add(rimMesh);
-
-  // — V-CREST on forehead (the Go Nagai signature mark)
-  const vG=new THREE.BoxGeometry(.6,.07,.1);
-  g.add(part(vG,tRed,-.24,.5,.73, 0,0, .48,.02));
-  g.add(part(vG,tRed, .24,.5,.73, 0,0,-.48,.02));
-
-  scene.add(g);
-
-  // — ENERGY PARTICLES (orbiting glowing spheres — mecha effect) —
-  const particles=[];
-  const tGlowP=new THREE.MeshBasicMaterial({color:0xffaa00,transparent:true,opacity:.85});
-  const tBlueP=new THREE.MeshBasicMaterial({color:0x4499ff,transparent:true,opacity:.7});
-  for(let i=0;i<6;i++){
-    const isGold=(i%2===0);
-    const pm=new THREE.Mesh(new THREE.SphereGeometry(.06,8,8),isGold?tGlowP:tBlueP);
-    const ang=(i/6)*Math.PI*2;
-    pm._ang=ang;pm._rad=1.4+(i%3)*.18;pm._spd=.5+i*.15;pm._y=(.5-i*.12)*.8;
-    scene.add(pm);
-    particles.push(pm);
+  // ── MATEMÁTICAS 3D ────────────────────────────────────────────────────────
+  function rotPt(x,y,z,rx,ry){
+    const cy=Math.cos(ry),sy=Math.sin(ry);
+    const x1=x*cy-z*sy,z1=x*sy+z*cy;
+    const cx=Math.cos(rx),sx=Math.sin(rx);
+    return[x1, y*cx-z1*sx, y*sx+z1*cx];
   }
-  // — SCAN LINE (red laser sweep across visor) —
-  const scanMat=new THREE.MeshBasicMaterial({color:0xff2200,transparent:true,opacity:.6,side:THREE.DoubleSide});
-  const scan=new THREE.Mesh(new THREE.PlaneGeometry(1.9,.04),scanMat);
-  scan.position.set(0,.1,.72);
-  g.add(scan);
+  function projPt(x,y,z){
+    const d=5.5+z;if(d<.05)return null;
+    const s=312/d;
+    return[W/2+x*s, H/2-y*s+14];
+  }
 
-  // — DRAG / TOUCH INTERACTION —
-  let dragging=false,lastX=0,lastY=0,autoT=0,rotY=0,rotX=-.05;
-  canvas.style.cursor='grab';
-  canvas.addEventListener('mousedown',e=>{dragging=true;canvas.style.cursor='grabbing';lastX=e.clientX;lastY=e.clientY;});
-  canvas.addEventListener('touchstart',e=>{dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
-  window.addEventListener('mousemove',e=>{
-    if(!dragging)return;
-    rotY+=(e.clientX-lastX)*.014;rotX+=(e.clientY-lastY)*.009;
-    rotX=Math.max(-.6,Math.min(.5,rotX));lastX=e.clientX;lastY=e.clientY;
-  });
-  window.addEventListener('touchmove',e=>{
-    if(!dragging)return;
-    rotY+=(e.touches[0].clientX-lastX)*.014;rotX+=(e.touches[0].clientY-lastY)*.009;
-    rotX=Math.max(-.6,Math.min(.5,rotX));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
-  },{passive:true});
-  ['mouseup','touchend'].forEach(ev=>window.addEventListener(ev,()=>{dragging=false;canvas.style.cursor='grab';}));
+  // ── INTERACCIÓN RATÓN / TÁCTIL ───────────────────────────────────────────
+  let rotY=0,rotX=-.05,tY=0,tX=-.05,autoT=0,dragging=false,lX=0,lY=0;
+  cv.style.cursor='grab';
+  cv.addEventListener('mousedown',e=>{dragging=true;cv.style.cursor='grabbing';lX=e.clientX;lY=e.clientY;});
+  cv.addEventListener('touchstart',e=>{dragging=true;lX=e.touches[0].clientX;lY=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;tY+=(e.clientX-lX)*.015;tX+=(e.clientY-lY)*.01;tX=Math.max(-.6,Math.min(.5,tX));lX=e.clientX;lY=e.clientY;});
+  window.addEventListener('touchmove',e=>{if(!dragging)return;tY+=(e.touches[0].clientX-lX)*.015;tX+=(e.touches[0].clientY-lY)*.01;tX=Math.max(-.6,Math.min(.5,tX));lX=e.touches[0].clientX;lY=e.touches[0].clientY;},{passive:true});
+  ['mouseup','touchend'].forEach(ev=>window.addEventListener(ev,()=>{dragging=false;cv.style.cursor='grab';}));
 
-  // — ANIMATE —
-  let _raf;
-  function loop(){
-    _raf=requestAnimationFrame(loop);
-    if(!dragging){
-      autoT+=.007;
-      rotY=Math.sin(autoT)*.72;
-      rotX=Math.sin(autoT*.38)*.07-.05;
+  // ── BUCLE DE RENDER ───────────────────────────────────────────────────────
+  let _raf,scanPh=0;
+  function draw(){
+    _raf=requestAnimationFrame(draw);
+    if(!dragging){autoT+=.007;tY=Math.sin(autoT)*.72;tX=Math.sin(autoT*.38)*.07-.05;}
+    rotY+=(tY-rotY)*.08;rotX+=(tX-rotX)*.08;scanPh+=.09;
+    ctx.clearRect(0,0,W,H);
+
+    // Proyectar y descartar caras
+    const pf=[];
+    for(const f of FACES){
+      const pvs=f.vi.map(i=>{
+        const[rx,ry,rz]=rotPt(...f.v[i],rotX,rotY);
+        const p=projPt(rx,ry,rz);
+        return p?{px:p[0],py:p[1],pz:rz}:null;
+      });
+      if(pvs.some(v=>!v))continue;
+      // Backface culling
+      const ax=pvs[1].px-pvs[0].px,ay=pvs[1].py-pvs[0].py;
+      const bx=pvs[2].px-pvs[0].px,by=pvs[2].py-pvs[0].py;
+      if(ax*by-ay*bx>0)continue;
+      // Profundidad media
+      const avgZ=pvs.reduce((s,v)=>s+v.pz,0)/4;
+      // Iluminación
+      const[nx,ny,nz]=rotPt(...f.n,rotX,rotY);
+      const dot=nx*.3+ny*.5+nz*.8;
+      const bright=Math.max(.18,Math.min(1.25,dot+.42));
+      pf.push({pvs,col:f.col,avgZ,bright});
     }
-    g.rotation.y+=(rotY-g.rotation.y)*.08;
-    g.rotation.x+=(rotX-g.rotation.x)*.08;
-    // Animate particles
-    particles.forEach(p=>{p._ang+=p._spd*.007;p.position.set(Math.cos(p._ang)*p._rad,p._y,Math.sin(p._ang)*p._rad);p.material.opacity=.4+Math.sin(p._ang*3)*.35;});
-    // Scan line pulse
-    scan.material.opacity=.3+Math.sin(autoT*4)*.4;
-    scan.position.y=.1+Math.sin(autoT*2)*.12;
-    renderer.render(scene,cam);
+    // Painter's algorithm — de atrás a frente
+    pf.sort((a,b)=>a.avgZ-b.avgZ);
+
+    // Dibujar caras con sombreado flat y contorno manga
+    for(const f of pf){
+      ctx.beginPath();
+      ctx.moveTo(f.pvs[0].px,f.pvs[0].py);
+      f.pvs.slice(1).forEach(v=>ctx.lineTo(v.px,v.py));
+      ctx.closePath();
+      ctx.fillStyle=applyBright(f.col,f.bright);
+      ctx.fill();
+      ctx.strokeStyle='rgba(0,0,0,.88)';
+      ctx.lineWidth=1.4;
+      ctx.stroke();
+    }
+
+    // ── Efecto glow ojos ─────────────────────────────────────────────────
+    const eyeY=H/2-(rotX*52)+14-(.10)*312/5.5;
+    const eg=ctx.createRadialGradient(W/2,eyeY,0,W/2,eyeY,52);
+    eg.addColorStop(0,`rgba(255,20,0,${.18+Math.sin(scanPh)*.11})`);
+    eg.addColorStop(1,'transparent');
+    ctx.fillStyle=eg;ctx.fillRect(0,0,W,H);
+
+    // ── Línea scan roja (láser sobre visor) ──────────────────────────────
+    const sv=eyeY+Math.sin(scanPh*2.1)*9;
+    const sg=ctx.createLinearGradient(25,sv,W-25,sv);
+    const sa=.28+Math.sin(scanPh*4)*.2;
+    sg.addColorStop(0,'transparent');sg.addColorStop(.2,`rgba(255,30,0,${sa})`);
+    sg.addColorStop(.8,`rgba(255,30,0,${sa})`);sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.fillRect(25,sv-1.2,W-50,2.4);
+
+    // ── Partículas orbitales (efecto mecha) ──────────────────────────────
+    for(let i=0;i<6;i++){
+      const a=autoT*(.6+i*.18)+i*Math.PI/3;
+      const pr=64+i%3*14;
+      const ppx=W/2+Math.cos(a)*pr;
+      const ppy=H/2+14+Math.sin(a)*pr*.38;
+      const alf=Math.max(0,.3+Math.sin(a*2.5)*.42);
+      ctx.beginPath();ctx.arc(ppx,ppy,2.8,0,Math.PI*2);
+      ctx.fillStyle=i%2?`rgba(255,180,0,${alf})`:`rgba(80,165,255,${alf})`;
+      ctx.fill();
+    }
   }
-  loop();
-  canvas._stopMaz=()=>{cancelAnimationFrame(_raf);renderer.dispose();};
+  draw();
+  cv._stopMaz=()=>cancelAnimationFrame(_raf);
 }
 
 </script>
