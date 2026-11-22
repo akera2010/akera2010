@@ -248,6 +248,25 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 #xpbar i{transition:width .5s cubic-bezier(.2,1.4,.4,1)!important}
 #mazMusicBtn.playing{background:var(--red)!important;color:#fff!important;animation:mazPulse .9s ease-in-out infinite alternate}
 @keyframes mazPulse{from{box-shadow:3px 3px 0 var(--ink)}to{box-shadow:3px 3px 0 var(--red),0 0 16px rgba(192,0,0,.55)}}
+/* ===== PANEL DE NIVELES XP ===== */
+#xpbox{position:relative;cursor:pointer}
+#xpbox:hover .lvl{text-decoration:underline dotted}
+#lvlPanel{position:absolute;top:calc(100% + 8px);left:0;min-width:260px;background:var(--paper);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);z-index:200;padding:0;display:none}
+#lvlPanel.open{display:block}
+#lvlPanel h4{margin:0;padding:8px 12px;background:var(--ink);color:#fff;font-family:var(--disp);font-size:13px;letter-spacing:.05em}
+.lvl-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--line);transition:background .15s}
+.lvl-row:last-child{border-bottom:none}
+.lvl-row.cur{background:var(--tone)}
+.lvl-row.lock{opacity:.45}
+.lvl-kj{font-family:var(--disp);font-size:18px;min-width:28px;text-align:center;color:var(--blue)}
+.lvl-row.cur .lvl-kj{color:var(--red)}
+.lvl-info{flex:1}
+.lvl-info b{display:block;font-size:13px}
+.lvl-info span{font-size:11px;color:var(--muted)}
+.lvl-badge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:2px}
+.lvl-badge.done{background:var(--blue);color:#fff}
+.lvl-badge.here{background:var(--red);color:#fff}
+.lvl-badge.next{background:var(--tone);color:var(--ink);border:1px solid var(--line)}
 /* ===== LÍNEA DE TIEMPO AMPLIADA ===== */
 .tl-entry{border:2px solid var(--line);border-left:4px solid var(--dec,var(--blue));border-radius:4px;overflow:hidden;margin-bottom:4px}
 .tl-entry>summary{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;background:var(--paper);flex-wrap:wrap;list-style:none;user-select:none}
@@ -299,7 +318,19 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <div id="longdate"></div>
   </div>
   <div class="topbtns">
-    <div id="xpbox" title="Puntos de experiencia"><span class="lvl" id="lvlName">見習い Aprendiz</span><div id="xpbar"><i></i></div><b id="xpNum">0</b></div>
+    <div id="xpbox" title="Ver todos los niveles" onclick="toggleLvlPanel()">
+      <span class="lvl" id="lvlName">見習い Aprendiz</span>
+      <div id="xpbar"><i></i></div>
+      <b id="xpNum">0</b>
+      <div id="lvlPanel">
+        <h4>Progresión de niveles</h4>
+        <div class="lvl-row" data-lvli="0"><span class="lvl-kj">見</span><div class="lvl-info"><b>見習い Aprendiz</b><span>Desde 0 XP</span></div><span class="lvl-badge">―</span></div>
+        <div class="lvl-row" data-lvli="1"><span class="lvl-kj">ア</span><div class="lvl-info"><b>アシスタント Asistente</b><span>Desde 150 XP</span></div><span class="lvl-badge">―</span></div>
+        <div class="lvl-row" data-lvli="2"><span class="lvl-kj">漫</span><div class="lvl-info"><b>漫画家 Mangaka</b><span>Desde 400 XP</span></div><span class="lvl-badge">―</span></div>
+        <div class="lvl-row" data-lvli="3"><span class="lvl-kj">先</span><div class="lvl-info"><b>先生 Sensei</b><span>Desde 800 XP</span></div><span class="lvl-badge">―</span></div>
+        <div class="lvl-row" data-lvli="4"><span class="lvl-kj">巨</span><div class="lvl-info"><b>巨匠 Maestro</b><span>Desde 1500 XP</span></div><span class="lvl-badge">―</span></div>
+      </div>
+    </div>
     <a class="btn sm" href="https://hidrive.ionos.com/lnk/PZLQelmGv" target="_blank" rel="noopener" style="text-decoration:none">📥 Biblioteca de Técnicas</a>
     <button class="btn sm" id="mazMusicBtn" onclick="toggleMazMusic()" title="Tema de Mazinger Z en síntesis Web Audio">🎵 Mazinger Z</button>
     <button class="btn sm" id="replay">Ver intro</button>
@@ -1620,8 +1651,31 @@ let S={visited:{},passed:{},xp:0,stats:{ok:0,tries:0,streak:0,best:0},known:[],c
 try{const r=localStorage.getItem(KEY); if(r) S=Object.assign(S,JSON.parse(r));}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
-const LEVELS=[[0,"見習い Aprendiz"],[150,"アシスタント Asistente"],[400,"漫画家 Mangaka"],[800,"先生 Sensei"]];
+const LEVELS=[[0,"見習い Aprendiz"],[150,"アシスタント Asistente"],[400,"漫画家 Mangaka"],[800,"先生 Sensei"],[1500,"巨匠 Maestro"]];
 function addXP(n){S.xp+=n;save();renderXP();xpFlash();}
+function toggleLvlPanel(){
+  const p=document.getElementById('lvlPanel');if(!p)return;
+  const open=p.classList.toggle('open');
+  if(open)updateLvlPanel();
+}
+function updateLvlPanel(){
+  const rows=document.querySelectorAll('#lvlPanel .lvl-row');
+  let cur=0;for(let k=0;k<LEVELS.length;k++) if(S.xp>=LEVELS[k][0]) cur=k;
+  rows.forEach((r,i)=>{
+    r.classList.toggle('cur',i===cur);
+    r.classList.toggle('lock',i>cur+1);
+    const b=r.querySelector('.lvl-badge');
+    if(i<cur){b.textContent='✓ Superado';b.className='lvl-badge done';}
+    else if(i===cur){b.textContent='← Aquí';b.className='lvl-badge here';}
+    else{const xpNeed=LEVELS[i][0]-S.xp;b.textContent='+'+xpNeed+' XP';b.className='lvl-badge next';}
+  });
+}
+document.addEventListener('click',e=>{
+  const box=document.getElementById('xpbox');
+  if(box&&!box.contains(e.target)){
+    const p=document.getElementById('lvlPanel');if(p)p.classList.remove('open');
+  }
+});
 function xpFlash(){const el=document.getElementById('xpFlash');if(!el)return;el.style.transition='none';el.style.opacity='1';setTimeout(()=>{el.style.transition='opacity .65s';el.style.opacity='0'},60);}
 
 // ===== MAZINGER Z — WEB AUDIO SYNTHESIZER =====
@@ -1669,9 +1723,10 @@ function toggleMazMusicAll(){
 function renderXP(){
   let i=0;for(let k=0;k<LEVELS.length;k++) if(S.xp>=LEVELS[k][0]) i=k;
   $("#lvlName").textContent=LEVELS[i][1];
-  const next=LEVELS[i+1]?LEVELS[i+1][0]:LEVELS[i][0]+400, base=LEVELS[i][0];
+  const next=LEVELS[i+1]?LEVELS[i+1][0]:LEVELS[i][0]+500, base=LEVELS[i][0];
   $("#xpbar i").style.width=clamp((S.xp-base)/(next-base)*100,0,100)+"%";
   $("#xpNum").textContent=S.xp;
+  const p=document.getElementById('lvlPanel');if(p&&p.classList.contains('open'))updateLvlPanel();
 }
 function stat(ok){S.stats.tries++; if(ok){S.stats.ok++;S.stats.streak++;S.stats.best=Math.max(S.stats.best,S.stats.streak);addXP(10)} else {S.stats.streak=0;save()}}
 
