@@ -4313,18 +4313,26 @@ function initMazHead(){
 // ===== EXPORTAR HTML =====
 async function exportarHTML(){
   const dl=await claude.use("downloads").catch(()=>null);
+  if(!dl){_toast('Descarga no disponible en esta vista.');return;}
+  // Quitar src de videos para evitar base64 duplicada en el snapshot
+  const vids=document.querySelectorAll('video[data-mv]');
+  const savedSrc=[];
+  vids.forEach(v=>{savedSrc.push(v.getAttribute('src')||'');v.removeAttribute('src');});
+  // Quitar frame preamble de claude.ai del head
+  const preamble=document.querySelector('head script:first-child');
+  const preambleParent=preamble&&preamble.parentNode;
+  if(preamble&&preamble.textContent.includes('__FRAME_PREAMBLE'))preamble.remove();
   const pageHtml='<!DOCTYPE html>'+document.documentElement.outerHTML;
+  // Restaurar
+  vids.forEach((v,i)=>{if(savedSrc[i])v.setAttribute('src',savedSrc[i]);});
+  if(preamble&&preambleParent)preambleParent.insertBefore(preamble,preambleParent.firstChild);
   const blob=new Blob([pageHtml],{type:'text/html'});
-  if(dl){
-    try{
-      await dl.save({filename:'manga-master.html',data:blob});
-      _toast('✓ Descarga completada.');
-    }catch(e){
-      if(e&&e.code==='declined')return;
-      _toast('No se pudo guardar: '+(e&&e.message||'error'));
-    }
-  }else{
-    _toast('Descarga no disponible en esta vista. Usa el menú ··· del artefacto.');
+  try{
+    await dl.save({filename:'manga-master.html',data:blob});
+    _toast('✓ Descarga completada. Abre el .html en cualquier navegador.');
+  }catch(e){
+    if(e&&e.code==='declined')return;
+    _toast('Error al guardar: '+(e&&e.message||e&&e.code||'error'));
   }
 }
 function _toast(msg){
