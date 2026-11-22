@@ -85,6 +85,15 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .ppg{display:inline-block;font-size:.75rem;font-weight:700}
 .ppg-g{color:#15803d}.ppg-y{color:#a16207}
 .ppg-o{color:#ea580c}.ppg-r{color:#dc2626}
+.comm-section{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:9px}
+.comm-title{font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.comm-title span{background:var(--acc);color:#fff;border-radius:9px;padding:1px 5px;margin-left:4px;font-size:.62rem;font-weight:600;text-transform:none;letter-spacing:0}
+.comm-row{display:grid;grid-template-columns:76px 48px 1fr auto;gap:3px 7px;align-items:center;font-size:.71rem;padding:3px 0;border-bottom:1px solid var(--s3)}
+.comm-row:last-child{border-bottom:none}
+.comm-src{font-weight:700;color:var(--text);white-space:nowrap}
+.comm-type{color:var(--muted);font-size:.67rem;white-space:nowrap}
+.comm-val{font-weight:600;color:var(--acc)}
+.comm-prob{color:var(--green);font-weight:600;text-align:right;white-space:nowrap}
 #loadingOverlay{position:fixed;inset:0;background:rgba(244,247,251,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
 #loadingOverlay .spin{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -289,6 +298,10 @@ const STATZ_FIXTURES=[
 ];
 function normTeam(n){return(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\b(fc|cf|sc|afc|bfc|ac|ss|as|ud|rc|sd|cd|rb|vfb|vfl|bvb)\b/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
 function statzKey(h,a){return normTeam(h)+'|'+normTeam(a);}
+
+/* ===== COMMENTARY (fuentes secundarias — actualizado: auto) ===== */
+const COMMENTARY_UPDATED='';
+const COMMENTARY_CACHE={};
 
 /* ===== ESPN API ===== */
 const BASE='https://site.api.espn.com/apis/site/v2/sports/soccer';
@@ -555,6 +568,17 @@ function renderPicks(){
     const localT=p.time&&lgTZ?new Date(p.time).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:lgTZ}):'';
     const cityStr=[p.city,p.venue].filter(Boolean)[0]||'';
     const matchMeta=(localT||cityStr)?`<span class="match-meta">${[localT?'🕐 '+localT:'',cityStr?'📍 '+cityStr:''].filter(Boolean).join(' · ')}</span>`:'';
+    const ck=statzKey(p.home,p.away);
+    const comms=COMMENTARY_CACHE[ck]||[];
+    const commHTML=comms.length?`<div class="comm-section">
+      <div class="comm-title">Consenso Fuentes<span>${comms.length}</span></div>
+      <div>${comms.map(c=>`<div class="comm-row">
+        <span class="comm-src">${c.src}</span>
+        <span class="comm-type">${c.type}</span>
+        <span class="comm-val">${c.val}</span>
+        <span class="comm-prob">${c.prob||''}</span>
+      </div>`).join('')}</div>
+    </div>`:'';
     return`<div class="pick-card">
       <div class="pick-header">
         <div>
@@ -584,6 +608,7 @@ function renderPicks(){
           <div class="bp-odds">@${p.bestMkt.odds}</div>
         </div>
       </div>
+      ${commHTML}
     </div>`;
   }).join('');
 }
