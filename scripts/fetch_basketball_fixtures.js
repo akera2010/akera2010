@@ -98,37 +98,55 @@ async function fetchNBAAdvanced() {
 }
 
 /* ===== FETCH ESPN (una liga) ===== */
+function parseESPNEvents(events, league) {
+  const fixtures = [];
+  for (const e of (events || [])) {
+    const comp  = e.competitions[0];
+    const homeC = comp.competitors.find(c => c.homeAway === 'home');
+    const awayC = comp.competitors.find(c => c.homeAway === 'away');
+    if (!homeC || !awayC) continue;
+    const recH = parseRecord((homeC.records || []).find(r => r.type === 'total')?.summary);
+    const recA = parseRecord((awayC.records || []).find(r => r.type === 'total')?.summary);
+    const netH = estNet(recH.w, recH.l, league.isNBA);
+    const netA = estNet(recA.w, recA.l, league.isNBA);
+    const spread = roundHalf(netH - netA + league.hAdv);
+    fixtures.push({
+      id: `${league.leagueId.slice(0,3)}${fixtures.length + 1}`,
+      league: league.name, flag: league.flag, leagueId: league.leagueId,
+      isNBA: league.isNBA,
+      home: homeC.team.displayName,
+      away: awayC.team.displayName,
+      time: e.date,
+      status: comp.status?.type?.name || 'STATUS_SCHEDULED',
+      spreadLine: spread,
+      totalLine:  league.totalBase,
+      H: { ortg: null, drtg: null, pace: null, net: +netH.toFixed(1),
+           record: recH.w != null ? `${recH.w}-${recH.l}` : '?', injuries: [] },
+      A: { ortg: null, drtg: null, pace: null, net: +netA.toFixed(1),
+           record: recA.w != null ? `${recA.w}-${recA.l}` : '?', injuries: [] },
+      rest: { H: 1, A: 1 },
+    });
+  }
+  return fixtures;
+}
+
 function fetchESPN(league) {
   try {
-    const url = `https://${ESPN_HOST}/apis/site/v2/sports/basketball/${league.slug}/scoreboard`;
+    const now = new Date();
+    // Usar fecha ET (hora del Este) para coincidir con el calendario NBA
+    const etDate = now.toLocaleString('en-CA', { timeZone: 'America/New_York' }).slice(0, 10).replace(/-/g, '');
+    const url = `https://${ESPN_HOST}/apis/site/v2/sports/basketball/${league.slug}/scoreboard?dates=${etDate}`;
     const d = getJSON(url);
-    const fixtures = [];
-    for (const e of (d.events || [])) {
-      const comp  = e.competitions[0];
-      const homeC = comp.competitors.find(c => c.homeAway === 'home');
-      const awayC = comp.competitors.find(c => c.homeAway === 'away');
-      if (!homeC || !awayC) continue;
-      const recH = parseRecord((homeC.records || []).find(r => r.type === 'total')?.summary);
-      const recA = parseRecord((awayC.records || []).find(r => r.type === 'total')?.summary);
-      const netH = estNet(recH.w, recH.l, league.isNBA);
-      const netA = estNet(recA.w, recA.l, league.isNBA);
-      const spread = roundHalf(netH - netA + league.hAdv);
-      fixtures.push({
-        id: `${league.leagueId.slice(0,3)}${fixtures.length + 1}`,
-        league: league.name, flag: league.flag, leagueId: league.leagueId,
-        isNBA: league.isNBA,
-        home: homeC.team.displayName,
-        away: awayC.team.displayName,
-        time: e.date,
-        status: comp.status?.type?.name || 'Scheduled',
-        spreadLine: spread,
-        totalLine:  league.totalBase,
-        H: { ortg: null, drtg: null, pace: null, net: +netH.toFixed(1),
-             record: recH.w != null ? `${recH.w}-${recH.l}` : '?', injuries: [] },
-        A: { ortg: null, drtg: null, pace: null, net: +netA.toFixed(1),
-             record: recA.w != null ? `${recA.w}-${recA.l}` : '?', injuries: [] },
-        rest: { H: 1, A: 1 },
-      });
+    const fixtures = parseESPNEvents(d.events, league);
+
+    // Si todos están finalizados (ningún Scheduled), buscar mañana ET
+    const hasScheduled = fixtures.some(f => /scheduled/i.test(f.status));
+    if (!hasScheduled && league.isNBA) {
+      const etTomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+        .toLocaleString('en-CA', { timeZone: 'America/New_York' }).slice(0, 10).replace(/-/g, '');
+      console.log(`  ESPN ${league.name}: todos Final en ${etDate} → buscando ${etTomorrow}`);
+      const d2 = getJSON(`https://${ESPN_HOST}/apis/site/v2/sports/basketball/${league.slug}/scoreboard?dates=${etTomorrow}`);
+      return parseESPNEvents(d2.events, league);
     }
     return fixtures;
   } catch (e) {
@@ -286,11 +304,14 @@ async function main() {
     allFixtures.push(...f);
   }
 
-  // Filtrar estrictamente por HOY en zona Madrid para todas las ligas
+  // Filtrar: solo partidos STATUS_SCHEDULED en las próximas 36 horas
+  const now = new Date();
+  const windowEnd = new Date(now.getTime() + 36 * 60 * 60 * 1000);
   const fixtures = dedup(allFixtures.filter(f => {
     if (!f.time) return false;
-    const fDay = new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
-    return fDay === today;
+    const gameTime = new Date(f.time);
+    const isScheduled = /scheduled/i.test(f.status || '');
+    return isScheduled && gameTime >= now && gameTime <= windowEnd;
   }));
 
   console.log(`\n[fetch] Total partidos de hoy: ${fixtures.length}`);

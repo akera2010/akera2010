@@ -134,11 +134,14 @@ const dataFile = process.argv[2] || path.join(__dirname, '..', 'basketball_data.
 let _data = { updated: today, fixtures: [], picks: [], combos: [] };
 try { _data = JSON.parse(fs.readFileSync(dataFile, 'utf8')); } catch {}
 
-// Solo partidos de HOY para todas las ligas
+// Solo partidos Scheduled en las próximas 36 horas (el fetch ya garantiza esto, pero doble filtro)
+const now = new Date();
+const windowEnd = new Date(now.getTime() + 36 * 60 * 60 * 1000);
 const FIXTURES_JSON = (_data.fixtures || []).filter(f => {
   if (!f.time) return false;
-  const fDay = new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
-  return fDay === today;
+  const gameTime = new Date(f.time);
+  const isScheduled = !f.status || /scheduled/i.test(f.status);
+  return isScheduled && gameTime >= now && gameTime <= windowEnd;
 });
 
 // Legacy: fixtures hardcodeados solo si JSON está vacío Y no hay fecha actualizada

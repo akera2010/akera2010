@@ -6,279 +6,21 @@
       "league": "NBA",
       "flag": "🇺🇸",
       "leagueId": "nba",
-      "home": "Sacramento Kings",
-      "away": "Boston Celtics",
-      "time": "2026-11-22T03:00Z",
+      "home": "New York Knicks",
+      "away": "Indiana Pacers",
+      "time": "2026-11-23T01:00Z",
       "R": {
         "mc": {
-          "pHome": 0.20468574148669488,
-          "pAway": 0.7953142585133051,
-          "projH": 110.8,
-          "projA": 117,
-          "projMargin": -9.9,
-          "projTotal": 227.9,
-          "spreadLine": -10,
+          "pHome": 0.7832843664710742,
+          "pAway": 0.21671563352892576,
+          "projH": 116.4,
+          "projA": 113,
+          "projMargin": 9.4,
+          "projTotal": 229.4,
+          "spreadLine": 9.5,
           "totalLine": 225,
           "spreadDiv": -0.1,
-          "totalDiv": 2.9,
-          "rest": {
-            "H": 1,
-            "A": 1
-          }
-        },
-        "ortgH": null,
-        "drtgH": null,
-        "paceH": null,
-        "netH": -8.3,
-        "ortgA": null,
-        "drtgA": null,
-        "paceA": null,
-        "netA": 4.1,
-        "recordH": "2-14",
-        "recordA": "11-5",
-        "injuriesH": [],
-        "injuriesA": []
-      },
-      "markets": [
-        {
-          "code": "ml_away",
-          "label": "Ganador Visit. (Boston Celtics)",
-          "p": 0.79531,
-          "odds": 1.19
-        },
-        {
-          "code": "ml_home",
-          "label": "Ganador Local (Sacramento Kings)",
-          "p": 0.20469,
-          "odds": 4.64
-        },
-        {
-          "code": "spread_home",
-          "label": "Sacramento Kings -10",
-          "p": 0.53983,
-          "odds": 1.76
-        },
-        {
-          "code": "spread_away",
-          "label": "Boston Celtics +10",
-          "p": 0.46017,
-          "odds": 2.06
-        },
-        {
-          "code": "total_over",
-          "label": "Más 225 pts",
-          "p": 0.57665,
-          "odds": 1.65
-        },
-        {
-          "code": "total_under",
-          "label": "Menos 225 pts",
-          "p": 0.42335,
-          "odds": 2.24
-        }
-      ],
-      "bestMkt": {
-        "code": "ml_away",
-        "label": "Ganador Visit. (Boston Celtics)",
-        "p": 0.79531,
-        "odds": 1.19
-      },
-      "score": 0.79531,
-      "confidence": "Alto",
-      "statz": true
-    },
-    {
-      "id": "nba3",
-      "league": "NBA",
-      "flag": "🇺🇸",
-      "leagueId": "nba",
-      "home": "Dallas Mavericks",
-      "away": "LA Clippers",
-      "time": "2026-11-22T01:00Z",
-      "R": {
-        "mc": {
-          "pHome": 0.7733727155280088,
-          "pAway": 0.2266272844719912,
-          "projH": 115.7,
-          "projA": 112.5,
-          "projMargin": 9,
-          "projTotal": 228.2,
-          "spreadLine": 9,
-          "totalLine": 225,
-          "spreadDiv": 0,
-          "totalDiv": 3.15,
-          "rest": {
-            "H": 1,
-            "A": 1
-          }
-        },
-        "ortgH": null,
-        "drtgH": null,
-        "paceH": null,
-        "netH": 1.4,
-        "ortgA": null,
-        "drtgA": null,
-        "paceA": null,
-        "netA": -5.1,
-        "recordH": "9-7",
-        "recordA": "4-11",
-        "injuriesH": [],
-        "injuriesA": []
-      },
-      "markets": [
-        {
-          "code": "ml_home",
-          "label": "Ganador Local (Dallas Mavericks)",
-          "p": 0.77337,
-          "odds": 1.23
-        },
-        {
-          "code": "total_over",
-          "label": "Más 225 pts",
-          "p": 0.58317,
-          "odds": 1.63
-        },
-        {
-          "code": "total_under",
-          "label": "Menos 225 pts",
-          "p": 0.41683,
-          "odds": 2.28
-        },
-        {
-          "code": "ml_away",
-          "label": "Ganador Visit. (LA Clippers)",
-          "p": 0.22663,
-          "odds": 4.19
-        },
-        {
-          "code": "spread_home",
-          "label": "Dallas Mavericks +9",
-          "p": 0.5,
-          "odds": 1.9
-        },
-        {
-          "code": "spread_away",
-          "label": "LA Clippers -9",
-          "p": 0.5,
-          "odds": 1.9
-        }
-      ],
-      "bestMkt": {
-        "code": "ml_home",
-        "label": "Ganador Local (Dallas Mavericks)",
-        "p": 0.77337,
-        "odds": 1.23
-      },
-      "score": 0.77337,
-      "confidence": "Alto",
-      "statz": true
-    },
-    {
-      "id": "nba4",
-      "league": "NBA",
-      "flag": "🇺🇸",
-      "leagueId": "nba",
-      "home": "Minnesota Timberwolves",
-      "away": "Memphis Grizzlies",
-      "time": "2026-11-22T01:00Z",
-      "R": {
-        "mc": {
-          "pHome": 0.5825156159243567,
-          "pAway": 0.41748438407564326,
-          "projH": 117.3,
-          "projA": 117.3,
-          "projMargin": 2.5,
-          "projTotal": 234.5,
-          "spreadLine": 2.5,
-          "totalLine": 225,
-          "spreadDiv": 0,
-          "totalDiv": 9.5,
-          "rest": {
-            "H": 1,
-            "A": 1
-          }
-        },
-        "ortgH": null,
-        "drtgH": null,
-        "paceH": null,
-        "netH": 4.5,
-        "ortgA": null,
-        "drtgA": null,
-        "paceA": null,
-        "netA": 4.5,
-        "recordH": "12-5",
-        "recordA": "12-5",
-        "injuriesH": [],
-        "injuriesA": []
-      },
-      "markets": [
-        {
-          "code": "total_over",
-          "label": "Más 225 pts",
-          "p": 0.73674,
-          "odds": 1.29
-        },
-        {
-          "code": "total_under",
-          "label": "Menos 225 pts",
-          "p": 0.26326,
-          "odds": 3.61
-        },
-        {
-          "code": "ml_home",
-          "label": "Ganador Local (Minnesota Timberwolves)",
-          "p": 0.58252,
-          "odds": 1.63
-        },
-        {
-          "code": "ml_away",
-          "label": "Ganador Visit. (Memphis Grizzlies)",
-          "p": 0.41748,
-          "odds": 2.28
-        },
-        {
-          "code": "spread_home",
-          "label": "Minnesota Timberwolves +2.5",
-          "p": 0.5,
-          "odds": 1.9
-        },
-        {
-          "code": "spread_away",
-          "label": "Memphis Grizzlies -2.5",
-          "p": 0.5,
-          "odds": 1.9
-        }
-      ],
-      "bestMkt": {
-        "code": "total_over",
-        "label": "Más 225 pts",
-        "p": 0.73674,
-        "odds": 1.29
-      },
-      "score": 0.73674,
-      "confidence": "Alto",
-      "statz": true
-    },
-    {
-      "id": "nba2",
-      "league": "NBA",
-      "flag": "🇺🇸",
-      "leagueId": "nba",
-      "home": "New York Knicks",
-      "away": "Portland Trail Blazers",
-      "time": "2026-11-22T00:30Z",
-      "R": {
-        "mc": {
-          "pHome": 0.5825156159243567,
-          "pAway": 0.41748438407564326,
-          "projH": 116.4,
-          "projA": 116.4,
-          "projMargin": 2.5,
-          "projTotal": 232.8,
-          "spreadLine": 2.5,
-          "totalLine": 225,
-          "spreadDiv": 0,
-          "totalDiv": 7.8,
+          "totalDiv": 4.35,
           "rest": {
             "H": 1,
             "A": 1
@@ -291,80 +33,80 @@
         "ortgA": null,
         "drtgA": null,
         "paceA": null,
-        "netA": 2.8,
+        "netA": -4.1,
         "recordH": "10-6",
-        "recordA": "10-6",
+        "recordA": "5-11",
         "injuriesH": [],
         "injuriesA": []
       },
       "markets": [
         {
+          "code": "ml_home",
+          "label": "Ganador Local (New York Knicks)",
+          "p": 0.78328,
+          "odds": 1.21
+        },
+        {
           "code": "total_over",
           "label": "Más 225 pts",
-          "p": 0.69847,
-          "odds": 1.36
+          "p": 0.61409,
+          "odds": 1.55
         },
         {
           "code": "total_under",
           "label": "Menos 225 pts",
-          "p": 0.30153,
-          "odds": 3.15
-        },
-        {
-          "code": "ml_home",
-          "label": "Ganador Local (New York Knicks)",
-          "p": 0.58252,
-          "odds": 1.63
+          "p": 0.38591,
+          "odds": 2.46
         },
         {
           "code": "ml_away",
-          "label": "Ganador Visit. (Portland Trail Blazers)",
-          "p": 0.41748,
-          "odds": 2.28
+          "label": "Ganador Visit. (Indiana Pacers)",
+          "p": 0.21672,
+          "odds": 4.38
         },
         {
           "code": "spread_home",
-          "label": "New York Knicks +2.5",
-          "p": 0.5,
-          "odds": 1.9
+          "label": "New York Knicks +9.5",
+          "p": 0.46017,
+          "odds": 2.06
         },
         {
           "code": "spread_away",
-          "label": "Portland Trail Blazers -2.5",
-          "p": 0.5,
-          "odds": 1.9
+          "label": "Indiana Pacers -9.5",
+          "p": 0.53983,
+          "odds": 1.76
         }
       ],
       "bestMkt": {
-        "code": "total_over",
-        "label": "Más 225 pts",
-        "p": 0.69847,
-        "odds": 1.36
+        "code": "ml_home",
+        "label": "Ganador Local (New York Knicks)",
+        "p": 0.78328,
+        "odds": 1.21
       },
-      "score": 0.69847,
+      "score": 0.78328,
       "confidence": "Alto",
       "statz": true
     },
     {
-      "id": "nba5",
+      "id": "nba1",
       "league": "NBA",
       "flag": "🇺🇸",
       "leagueId": "nba",
-      "home": "San Antonio Spurs",
-      "away": "New Orleans Pelicans",
-      "time": "2026-11-22T01:00Z",
+      "home": "Atlanta Hawks",
+      "away": "Detroit Pistons",
+      "time": "2026-11-22T20:30Z",
       "R": {
         "mc": {
-          "pHome": 0.8865403983853087,
-          "pAway": 0.11345960161469126,
-          "projH": 118.5,
-          "projA": 112.5,
-          "projMargin": 14.5,
-          "projTotal": 231.1,
-          "spreadLine": 14.5,
+          "pHome": 0.5530351484320664,
+          "pAway": 0.44696485156793364,
+          "projH": 116.4,
+          "projA": 116.8,
+          "projMargin": 1.6,
+          "projTotal": 233.3,
+          "spreadLine": 1.5,
           "totalLine": 225,
-          "spreadDiv": 0,
-          "totalDiv": 6.1,
+          "spreadDiv": 0.1,
+          "totalDiv": 8.25,
           "rest": {
             "H": 1,
             "A": 1
@@ -373,13 +115,13 @@
         "ortgH": null,
         "drtgH": null,
         "paceH": null,
-        "netH": 7.1,
+        "netH": 2.8,
         "ortgA": null,
         "drtgA": null,
         "paceA": null,
-        "netA": -4.9,
-        "recordH": "14-3",
-        "recordA": "5-13",
+        "netA": 3.7,
+        "recordH": "10-6",
+        "recordA": "10-5",
         "injuriesH": [],
         "injuriesA": []
       },
@@ -387,30 +129,466 @@
         {
           "code": "total_over",
           "label": "Más 225 pts",
-          "p": 0.65787,
-          "odds": 1.44
+          "p": 0.70884,
+          "odds": 1.34
         },
         {
           "code": "total_under",
           "label": "Menos 225 pts",
-          "p": 0.34213,
-          "odds": 2.78
+          "p": 0.29116,
+          "odds": 3.26
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Atlanta Hawks)",
+          "p": 0.55304,
+          "odds": 1.72
         },
         {
           "code": "ml_away",
-          "label": "Ganador Visit. (New Orleans Pelicans)",
-          "p": 0.11346,
-          "odds": 8.37
+          "label": "Ganador Visit. (Detroit Pistons)",
+          "p": 0.44696,
+          "odds": 2.13
         },
         {
           "code": "spread_home",
-          "label": "San Antonio Spurs +14.5",
+          "label": "Atlanta Hawks +1.5",
+          "p": 0.53983,
+          "odds": 1.76
+        },
+        {
+          "code": "spread_away",
+          "label": "Detroit Pistons -1.5",
+          "p": 0.46017,
+          "odds": 2.06
+        }
+      ],
+      "bestMkt": {
+        "code": "total_over",
+        "label": "Más 225 pts",
+        "p": 0.70884,
+        "odds": 1.34
+      },
+      "score": 0.70884,
+      "confidence": "Alto",
+      "statz": true
+    },
+    {
+      "id": "nba2",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "home": "Miami Heat",
+      "away": "Oklahoma City Thunder",
+      "time": "2026-11-22T23:00Z",
+      "R": {
+        "mc": {
+          "pHome": 0.5629029382541009,
+          "pAway": 0.43709706174589913,
+          "projH": 116.1,
+          "projA": 116.4,
+          "projMargin": 1.9,
+          "projTotal": 232.5,
+          "spreadLine": 2,
+          "totalLine": 225,
+          "spreadDiv": -0.1,
+          "totalDiv": 7.5,
+          "rest": {
+            "H": 1,
+            "A": 1
+          }
+        },
+        "ortgH": null,
+        "drtgH": null,
+        "paceH": null,
+        "netH": 2.2,
+        "ortgA": null,
+        "drtgA": null,
+        "paceA": null,
+        "netA": 2.8,
+        "recordH": "9-6",
+        "recordA": "10-6",
+        "injuriesH": [],
+        "injuriesA": []
+      },
+      "markets": [
+        {
+          "code": "total_over",
+          "label": "Más 225 pts",
+          "p": 0.69146,
+          "odds": 1.37
+        },
+        {
+          "code": "total_under",
+          "label": "Menos 225 pts",
+          "p": 0.30854,
+          "odds": 3.08
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Miami Heat)",
+          "p": 0.5629,
+          "odds": 1.69
+        },
+        {
+          "code": "ml_away",
+          "label": "Ganador Visit. (Oklahoma City Thunder)",
+          "p": 0.4371,
+          "odds": 2.17
+        },
+        {
+          "code": "spread_home",
+          "label": "Miami Heat +2",
+          "p": 0.46017,
+          "odds": 2.06
+        },
+        {
+          "code": "spread_away",
+          "label": "Oklahoma City Thunder -2",
+          "p": 0.53983,
+          "odds": 1.76
+        }
+      ],
+      "bestMkt": {
+        "code": "total_over",
+        "label": "Más 225 pts",
+        "p": 0.69146,
+        "odds": 1.37
+      },
+      "score": 0.69146,
+      "confidence": "Alto",
+      "statz": true
+    },
+    {
+      "id": "nba5",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "home": "Utah Jazz",
+      "away": "Dallas Mavericks",
+      "time": "2026-11-23T00:00Z",
+      "R": {
+        "mc": {
+          "pHome": 0.3085375372760062,
+          "pAway": 0.6914624627239938,
+          "projH": 111.5,
+          "projA": 115.7,
+          "projMargin": -6,
+          "projTotal": 227.2,
+          "spreadLine": -6,
+          "totalLine": 225,
+          "spreadDiv": 0,
+          "totalDiv": 2.15,
+          "rest": {
+            "H": 1,
+            "A": 1
+          }
+        },
+        "ortgH": null,
+        "drtgH": null,
+        "paceH": null,
+        "netH": -7.1,
+        "ortgA": null,
+        "drtgA": null,
+        "paceA": null,
+        "netA": 1.4,
+        "recordH": "3-14",
+        "recordA": "9-7",
+        "injuriesH": [],
+        "injuriesA": []
+      },
+      "markets": [
+        {
+          "code": "ml_away",
+          "label": "Ganador Visit. (Dallas Mavericks)",
+          "p": 0.69146,
+          "odds": 1.37
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Utah Jazz)",
+          "p": 0.30854,
+          "odds": 3.08
+        },
+        {
+          "code": "spread_home",
+          "label": "Utah Jazz -6",
           "p": 0.5,
           "odds": 1.9
         },
         {
           "code": "spread_away",
-          "label": "New Orleans Pelicans -14.5",
+          "label": "Dallas Mavericks +6",
+          "p": 0.5,
+          "odds": 1.9
+        },
+        {
+          "code": "total_over",
+          "label": "Más 225 pts",
+          "p": 0.55699,
+          "odds": 1.71
+        },
+        {
+          "code": "total_under",
+          "label": "Menos 225 pts",
+          "p": 0.44301,
+          "odds": 2.14
+        }
+      ],
+      "bestMkt": {
+        "code": "ml_away",
+        "label": "Ganador Visit. (Dallas Mavericks)",
+        "p": 0.69146,
+        "odds": 1.37
+      },
+      "score": 0.69146,
+      "confidence": "Medio",
+      "statz": true
+    },
+    {
+      "id": "nba4",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "home": "Chicago Bulls",
+      "away": "Denver Nuggets",
+      "time": "2026-11-23T00:00Z",
+      "R": {
+        "mc": {
+          "pHome": 0.317393498706253,
+          "pAway": 0.682606501293747,
+          "projH": 112.5,
+          "projA": 116.5,
+          "projMargin": -5.7,
+          "projTotal": 229,
+          "spreadLine": -6,
+          "totalLine": 225,
+          "spreadDiv": -0.3,
+          "totalDiv": 4,
+          "rest": {
+            "H": 1,
+            "A": 1
+          }
+        },
+        "ortgH": null,
+        "drtgH": null,
+        "paceH": null,
+        "netH": -5.1,
+        "ortgA": null,
+        "drtgA": null,
+        "paceA": null,
+        "netA": 3.1,
+        "recordH": "4-11",
+        "recordA": "9-5",
+        "injuriesH": [],
+        "injuriesA": []
+      },
+      "markets": [
+        {
+          "code": "ml_away",
+          "label": "Ganador Visit. (Denver Nuggets)",
+          "p": 0.68261,
+          "odds": 1.39
+        },
+        {
+          "code": "total_over",
+          "label": "Más 225 pts",
+          "p": 0.60514,
+          "odds": 1.57
+        },
+        {
+          "code": "total_under",
+          "label": "Menos 225 pts",
+          "p": 0.39486,
+          "odds": 2.41
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Chicago Bulls)",
+          "p": 0.31739,
+          "odds": 2.99
+        },
+        {
+          "code": "spread_home",
+          "label": "Chicago Bulls -6",
+          "p": 0.61791,
+          "odds": 1.54
+        },
+        {
+          "code": "spread_away",
+          "label": "Denver Nuggets +6",
+          "p": 0.38209,
+          "odds": 2.49
+        }
+      ],
+      "bestMkt": {
+        "code": "ml_away",
+        "label": "Ganador Visit. (Denver Nuggets)",
+        "p": 0.68261,
+        "odds": 1.39
+      },
+      "score": 0.68261,
+      "confidence": "Medio",
+      "statz": true
+    },
+    {
+      "id": "nba7",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "home": "Golden State Warriors",
+      "away": "Boston Celtics",
+      "time": "2026-11-23T01:30Z",
+      "R": {
+        "mc": {
+          "pHome": 0.4469648515679336,
+          "pAway": 0.5530351484320664,
+          "projH": 115,
+          "projA": 117,
+          "projMargin": -1.6,
+          "projTotal": 232.1,
+          "spreadLine": -1.5,
+          "totalLine": 225,
+          "spreadDiv": 0.1,
+          "totalDiv": 7.05,
+          "rest": {
+            "H": 1,
+            "A": 1
+          }
+        },
+        "ortgH": null,
+        "drtgH": null,
+        "paceH": null,
+        "netH": 0,
+        "ortgA": null,
+        "drtgA": null,
+        "paceA": null,
+        "netA": 4.1,
+        "recordH": "8-8",
+        "recordA": "11-5",
+        "injuriesH": [],
+        "injuriesA": []
+      },
+      "markets": [
+        {
+          "code": "total_over",
+          "label": "Más 225 pts",
+          "p": 0.68082,
+          "odds": 1.4
+        },
+        {
+          "code": "total_under",
+          "label": "Menos 225 pts",
+          "p": 0.31918,
+          "odds": 2.98
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Golden State Warriors)",
+          "p": 0.44696,
+          "odds": 2.13
+        },
+        {
+          "code": "ml_away",
+          "label": "Ganador Visit. (Boston Celtics)",
+          "p": 0.55304,
+          "odds": 1.72
+        },
+        {
+          "code": "spread_home",
+          "label": "Golden State Warriors -1.5",
+          "p": 0.46017,
+          "odds": 2.06
+        },
+        {
+          "code": "spread_away",
+          "label": "Boston Celtics +1.5",
+          "p": 0.53983,
+          "odds": 1.76
+        }
+      ],
+      "bestMkt": {
+        "code": "total_over",
+        "label": "Más 225 pts",
+        "p": 0.68082,
+        "odds": 1.4
+      },
+      "score": 0.68082,
+      "confidence": "Alto",
+      "statz": true
+    },
+    {
+      "id": "nba3",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "home": "Washington Wizards",
+      "away": "Orlando Magic",
+      "time": "2026-11-23T00:00Z",
+      "R": {
+        "mc": {
+          "pHome": 0.5000000005,
+          "pAway": 0.49999999949999996,
+          "projH": 113.4,
+          "projA": 114.7,
+          "projMargin": 0,
+          "projTotal": 228.1,
+          "spreadLine": 0,
+          "totalLine": 225,
+          "spreadDiv": 0,
+          "totalDiv": 3.05,
+          "rest": {
+            "H": 1,
+            "A": 1
+          }
+        },
+        "ortgH": null,
+        "drtgH": null,
+        "paceH": null,
+        "netH": -3.2,
+        "ortgA": null,
+        "drtgA": null,
+        "paceA": null,
+        "netA": -0.7,
+        "recordH": "6-11",
+        "recordA": "7-8",
+        "injuriesH": [],
+        "injuriesA": []
+      },
+      "markets": [
+        {
+          "code": "total_over",
+          "label": "Más 225 pts",
+          "p": 0.58056,
+          "odds": 1.64
+        },
+        {
+          "code": "total_under",
+          "label": "Menos 225 pts",
+          "p": 0.41944,
+          "odds": 2.26
+        },
+        {
+          "code": "ml_home",
+          "label": "Ganador Local (Washington Wizards)",
+          "p": 0.5,
+          "odds": 1.9
+        },
+        {
+          "code": "ml_away",
+          "label": "Ganador Visit. (Orlando Magic)",
+          "p": 0.5,
+          "odds": 1.9
+        },
+        {
+          "code": "spread_home",
+          "label": "Washington Wizards 0",
+          "p": 0.5,
+          "odds": 1.9
+        },
+        {
+          "code": "spread_away",
+          "label": "Orlando Magic 0",
           "p": 0.5,
           "odds": 1.9
         }
@@ -418,78 +596,78 @@
       "bestMkt": {
         "code": "total_over",
         "label": "Más 225 pts",
-        "p": 0.65787,
-        "odds": 1.44
+        "p": 0.58056,
+        "odds": 1.64
       },
-      "score": 0.65787,
-      "confidence": "Alto",
+      "score": 0.58056,
+      "confidence": "Medio",
       "statz": true
     }
   ],
   "combos": [
     {
       "name": "Combinado 1",
-      "pComb": 0.45315,
-      "oddsComb": 1.89,
+      "pComb": 0.38391,
+      "oddsComb": 2.22,
       "picks": [
         {
-          "match": "Sacramento Kings vs Boston Celtics",
-          "label": "Ganador Visit. (Boston Celtics)",
-          "p": 0.79531,
-          "odds": 1.19
+          "match": "New York Knicks vs Indiana Pacers",
+          "label": "Ganador Local (New York Knicks)",
+          "p": 0.78328,
+          "odds": 1.21
         },
         {
-          "match": "Dallas Mavericks vs LA Clippers",
-          "label": "Ganador Local (Dallas Mavericks)",
-          "p": 0.77337,
-          "odds": 1.23
-        },
-        {
-          "match": "Minnesota Timberwolves vs Memphis Grizzlies",
+          "match": "Atlanta Hawks vs Detroit Pistons",
           "label": "Más 225 pts",
-          "p": 0.73674,
-          "odds": 1.29
+          "p": 0.70884,
+          "odds": 1.34
+        },
+        {
+          "match": "Miami Heat vs Oklahoma City Thunder",
+          "label": "Más 225 pts",
+          "p": 0.69146,
+          "odds": 1.37
         }
       ]
     },
     {
       "name": "Combinado 2",
-      "pComb": 0.42961,
-      "oddsComb": 1.99,
+      "pComb": 0.38391,
+      "oddsComb": 2.22,
       "picks": [
         {
-          "match": "Sacramento Kings vs Boston Celtics",
-          "label": "Ganador Visit. (Boston Celtics)",
-          "p": 0.79531,
-          "odds": 1.19
+          "match": "New York Knicks vs Indiana Pacers",
+          "label": "Ganador Local (New York Knicks)",
+          "p": 0.78328,
+          "odds": 1.21
         },
         {
-          "match": "Dallas Mavericks vs LA Clippers",
-          "label": "Ganador Local (Dallas Mavericks)",
-          "p": 0.77337,
-          "odds": 1.23
-        },
-        {
-          "match": "New York Knicks vs Portland Trail Blazers",
+          "match": "Atlanta Hawks vs Detroit Pistons",
           "label": "Más 225 pts",
-          "p": 0.69847,
-          "odds": 1.36
+          "p": 0.70884,
+          "odds": 1.34
+        },
+        {
+          "match": "Utah Jazz vs Dallas Mavericks",
+          "label": "Ganador Visit. (Dallas Mavericks)",
+          "p": 0.69146,
+          "odds": 1.37
         }
       ]
     }
   ],
   "fixtures": [
     {
-      "id": "nba2",
+      "id": "nba1",
       "league": "NBA",
       "flag": "🇺🇸",
       "leagueId": "nba",
       "isNBA": true,
-      "home": "New York Knicks",
-      "away": "Portland Trail Blazers",
-      "time": "2026-11-22T00:30Z",
-      "status": "STATUS_FINAL",
-      "spreadLine": 2.5,
+      "home": "Atlanta Hawks",
+      "away": "Detroit Pistons",
+      "time": "2026-11-22T20:30Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": 1.5,
       "totalLine": 225,
       "H": {
         "ortg": null,
@@ -497,6 +675,39 @@
         "pace": null,
         "net": 2.8,
         "record": "10-6",
+        "injuries": []
+      },
+      "A": {
+        "ortg": null,
+        "drtg": null,
+        "pace": null,
+        "net": 3.7,
+        "record": "10-5",
+        "injuries": []
+      },
+      "rest": {
+        "H": 1,
+        "A": 1
+      }
+    },
+    {
+      "id": "nba2",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "isNBA": true,
+      "home": "Miami Heat",
+      "away": "Oklahoma City Thunder",
+      "time": "2026-11-22T23:00Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": 2,
+      "totalLine": 225,
+      "H": {
+        "ortg": null,
+        "drtg": null,
+        "pace": null,
+        "net": 2.2,
+        "record": "9-6",
         "injuries": []
       },
       "A": {
@@ -518,26 +729,26 @@
       "flag": "🇺🇸",
       "leagueId": "nba",
       "isNBA": true,
-      "home": "Dallas Mavericks",
-      "away": "LA Clippers",
-      "time": "2026-11-22T01:00Z",
-      "status": "STATUS_FINAL",
-      "spreadLine": 9,
+      "home": "Washington Wizards",
+      "away": "Orlando Magic",
+      "time": "2026-11-23T00:00Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": 0,
       "totalLine": 225,
       "H": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": 1.4,
-        "record": "9-7",
+        "net": -3.2,
+        "record": "6-11",
         "injuries": []
       },
       "A": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": -5.1,
-        "record": "4-11",
+        "net": -0.7,
+        "record": "7-8",
         "injuries": []
       },
       "rest": {
@@ -551,26 +762,26 @@
       "flag": "🇺🇸",
       "leagueId": "nba",
       "isNBA": true,
-      "home": "Minnesota Timberwolves",
-      "away": "Memphis Grizzlies",
-      "time": "2026-11-22T01:00Z",
-      "status": "STATUS_FINAL",
-      "spreadLine": 2.5,
+      "home": "Chicago Bulls",
+      "away": "Denver Nuggets",
+      "time": "2026-11-23T00:00Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": -6,
       "totalLine": 225,
       "H": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": 4.5,
-        "record": "12-5",
+        "net": -5.1,
+        "record": "4-11",
         "injuries": []
       },
       "A": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": 4.5,
-        "record": "12-5",
+        "net": 3.1,
+        "record": "9-5",
         "injuries": []
       },
       "rest": {
@@ -584,26 +795,26 @@
       "flag": "🇺🇸",
       "leagueId": "nba",
       "isNBA": true,
-      "home": "San Antonio Spurs",
-      "away": "New Orleans Pelicans",
-      "time": "2026-11-22T01:00Z",
-      "status": "STATUS_FINAL",
-      "spreadLine": 14.5,
+      "home": "Utah Jazz",
+      "away": "Dallas Mavericks",
+      "time": "2026-11-23T00:00Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": -6,
       "totalLine": 225,
       "H": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": 7.1,
-        "record": "14-3",
+        "net": -7.1,
+        "record": "3-14",
         "injuries": []
       },
       "A": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": -4.9,
-        "record": "5-13",
+        "net": 1.4,
+        "record": "9-7",
         "injuries": []
       },
       "rest": {
@@ -617,18 +828,51 @@
       "flag": "🇺🇸",
       "leagueId": "nba",
       "isNBA": true,
-      "home": "Sacramento Kings",
-      "away": "Boston Celtics",
-      "time": "2026-11-22T03:00Z",
-      "status": "STATUS_FINAL",
-      "spreadLine": -10,
+      "home": "New York Knicks",
+      "away": "Indiana Pacers",
+      "time": "2026-11-23T01:00Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": 9.5,
       "totalLine": 225,
       "H": {
         "ortg": null,
         "drtg": null,
         "pace": null,
-        "net": -8.3,
-        "record": "2-14",
+        "net": 2.8,
+        "record": "10-6",
+        "injuries": []
+      },
+      "A": {
+        "ortg": null,
+        "drtg": null,
+        "pace": null,
+        "net": -4.1,
+        "record": "5-11",
+        "injuries": []
+      },
+      "rest": {
+        "H": 1,
+        "A": 1
+      }
+    },
+    {
+      "id": "nba7",
+      "league": "NBA",
+      "flag": "🇺🇸",
+      "leagueId": "nba",
+      "isNBA": true,
+      "home": "Golden State Warriors",
+      "away": "Boston Celtics",
+      "time": "2026-11-23T01:30Z",
+      "status": "STATUS_SCHEDULED",
+      "spreadLine": -1.5,
+      "totalLine": 225,
+      "H": {
+        "ortg": null,
+        "drtg": null,
+        "pace": null,
+        "net": 0,
+        "record": "8-8",
         "injuries": []
       },
       "A": {
