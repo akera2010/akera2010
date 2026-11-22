@@ -31,9 +31,11 @@ const SKIP_STATUSES = new Set([
 ]);
 
 /* ===== HTTP HELPER (túnel CONNECT via proxy) ===== */
-const PROXY_HOST = '127.0.0.1';
-const PROXY_PORT = 39645;
 const CA_BUNDLE  = '/root/.ccr/ca-bundle.crt';
+const _proxyUrl  = process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:39645';
+const _proxyM    = _proxyUrl.match(/:\/\/([^:]+):(\d+)/);
+const PROXY_HOST = _proxyM ? _proxyM[1] : '127.0.0.1';
+const PROXY_PORT = _proxyM ? +_proxyM[2] : 39645;
 
 function getJSON(urlPath) {
   return new Promise((resolve, reject) => {

@@ -38,14 +38,26 @@ function impliedOdds(p) {
 
 function projectGame(h, a, isNBA) {
   const lg = isNBA ? LG.nba : LG.euro;
-  const paceAvg = (h.pace + a.pace) / 2;
-  const projH = h.ortg * (a.drtg / lg.drtg) * paceAvg / 100;
-  const projA = a.ortg * (h.drtg / lg.drtg) * paceAvg / 100;
-  const projMargin = projH - projA + lg.hAdv;
+  // Modelo completo si hay ortg/drtg/pace reales
+  if (h.ortg != null && a.ortg != null && h.pace != null && a.pace != null) {
+    const paceAvg = (h.pace + a.pace) / 2;
+    const projH = h.ortg * (a.drtg / lg.drtg) * paceAvg / 100;
+    const projA = a.ortg * (h.drtg / lg.drtg) * paceAvg / 100;
+    const projMargin = projH - projA + lg.hAdv;
+    const projTotal = projH + projA;
+    const pHome = normalCDF(projMargin / lg.sigma_m);
+    return { projH, projA, projMargin, projTotal, pHome, pAway: 1 - pHome, sigma_m: lg.sigma_m, sigma_t: lg.sigma_t };
+  }
+  // Fallback desde net rating estimado (récord W-L)
+  const netH = h.net || 0;
+  const netA = a.net || 0;
+  const projMargin = netH - netA + lg.hAdv;
+  const base = lg.ortg;
+  const projH = base + netH * 0.5;
+  const projA = base + netA * 0.5;
   const projTotal = projH + projA;
   const pHome = normalCDF(projMargin / lg.sigma_m);
-  const pAway = 1 - pHome;
-  return { projH, projA, projMargin, projTotal, pHome, pAway, sigma_m: lg.sigma_m, sigma_t: lg.sigma_t };
+  return { projH, projA, projMargin, projTotal, pHome, pAway: 1 - pHome, sigma_m: lg.sigma_m, sigma_t: lg.sigma_t };
 }
 
 function buildMarkets(proj, spreadLine, totalLine) {
@@ -115,10 +127,22 @@ function buildCombos(picks) {
   return combos.slice(0, 2).map((c, i) => ({ ...c, name: `Combinado ${i + 1}` }));
 }
 
-/* ===== FIXTURES (actualizar diariamente) ===== */
+/* ===== FIXTURES DESDE JSON (no hardcodeados) ===== */
 const today = new Date().toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10);
+const dataFile = process.argv[2] || path.join(__dirname, '..', 'basketball_data.json');
+let _data = { updated: today, fixtures: [], picks: [], combos: [] };
+try { _data = JSON.parse(fs.readFileSync(dataFile, 'utf8')); } catch {}
 
-const FIXTURES = [
+// COMPATIBILIDAD: si hay fixtures en JSON los usa; sino usa array vacío
+const FIXTURES_JSON = (_data.fixtures || []).filter(f => {
+  if (!f.time) return false;
+  return new Date(f.time).toLocaleString('en-CA', { timeZone: 'Europe/Madrid' }).slice(0, 10) === today;
+});
+
+// Legacy: fixtures hardcodeados solo si JSON está vacío Y no hay fecha actualizada
+const _hasRealData = FIXTURES_JSON.length > 0 || _data.updated === today;
+
+const FIXTURES_LEGACY = _hasRealData ? [] : [
   // NBA
   {
     id: 'k1', league: 'NBA', flag: '🇺🇸', leagueId: 'nba',
@@ -189,6 +213,8 @@ const FIXTURES = [
   },
 ];
 
+const FIXTURES = FIXTURES_JSON.length > 0 ? FIXTURES_JSON : FIXTURES_LEGACY;
+
 /* ===== COMPUTE PICKS ===== */
 const picks = [];
 for (const f of FIXTURES) {
@@ -232,7 +258,8 @@ picks.sort((a, b) => b.score - a.score);
 const topPicks = picks.slice(0, TOP);
 const combos = buildCombos(topPicks);
 
-const output = { updated: today, picks: topPicks, combos };
-const outFile = process.argv[2] || path.join(__dirname, '..', 'basketball_data.json');
-fs.writeFileSync(outFile, JSON.stringify(output, null, 2), 'utf8');
-console.log(`✓ basketball_data.json generado: ${topPicks.length} picks, ${combos.length} combinados para ${today}`);
+_data.picks   = topPicks;
+_data.combos  = combos;
+_data.updated = today;
+fs.writeFileSync(dataFile, JSON.stringify(_data, null, 2), 'utf8');
+console.log(`✓ basketball_data.json generado: ${topPicks.length} picks, ${combos.length} combinados para ${today} (${FIXTURES.length} fixtures procesados)`);
