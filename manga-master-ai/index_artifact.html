@@ -275,8 +275,6 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 .badge{transition:transform .18s}
 .badge:hover{transform:rotate(8deg) scale(1.15)!important}
 #xpbar i{transition:width .5s cubic-bezier(.2,1.4,.4,1)!important}
-#mazMusicBtn.playing{background:var(--red)!important;color:#fff!important;animation:mazPulse .9s ease-in-out infinite alternate}
-@keyframes mazPulse{from{box-shadow:3px 3px 0 var(--ink)}to{box-shadow:3px 3px 0 var(--red),0 0 16px rgba(192,0,0,.55)}}
 @keyframes mazGlowPulse{from{filter:drop-shadow(0 0 22px rgba(192,0,0,.8)) drop-shadow(0 0 6px rgba(27,74,143,.5))}to{filter:drop-shadow(0 0 36px rgba(192,0,0,1)) drop-shadow(0 0 12px rgba(27,74,143,.8)) drop-shadow(0 0 3px rgba(255,200,0,.4))}}
 /* ===== PANEL DE NIVELES XP ===== */
 #xpbox{position:relative;cursor:pointer}
@@ -544,7 +542,6 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
       </div>
     </div>
     <a class="btn sm" href="https://hidrive.ionos.com/lnk/PZLQelmGv" target="_blank" rel="noopener" style="text-decoration:none">📥 Biblioteca de Técnicas</a>
-    <button class="btn sm" id="mazMusicBtn" onclick="toggleMazMusic()" title="Tema de Mazinger Z en síntesis Web Audio">🎵 Mazinger Z</button>
     <button class="btn sm" id="darkToggle" onclick="toggleDark()" title="Cambiar entre modo claro y oscuro">🌙 Modo</button>
     <button class="btn sm" id="replay">Ver intro</button>
     <button class="btn sm" id="reset" title="Pulsa dos veces para borrar el progreso">Reiniciar progreso</button>
@@ -1619,11 +1616,6 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
   </div>
 </div>
 
-<div class="panel" style="text-align:center;border-color:#C00000;background:radial-gradient(circle,var(--tone2) 1.2px,transparent 1.4px) 0 0/8px 8px,#fff">
-  <p style="margin:0 0 10px;font-weight:700">🎵 Escucha el tema de Mazinger Z mientras estudias</p>
-  <button class="btn red" id="mazMusicBtn25" onclick="toggleMazMusicAll()" style="font-size:16px;padding:12px 24px">🎵 Activar tema de Mazinger Z</button>
-  <p class="small" style="margin-top:8px">Síntesis Web Audio — sin descargas. Pulsa para activar/detener el bucle musical.</p>
-</div>
 
 <h3>⚙️ La Revolución del Mecha</h3>
 <div class="panel tone">
@@ -1880,7 +1872,6 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 
 <div class="chips" style="margin-top:12px">
   <button class="btn red" id="battleStartBtn" onclick="battleInit()">⚔ INICIAR BATALLA</button>
-  <button class="btn sm" onclick="toggleMazMusicAll()">🎵 Tema Mazinger Z</button>
 </div>
 <div class="firma"><span><b>Sarah Hernández | +34641216429 | akera7827@gmail.com</b></span></div>
 </section>
@@ -2336,47 +2327,8 @@ document.addEventListener('click',e=>{
 function xpFlash(){const el=document.getElementById('xpFlash');if(!el)return;el.style.transition='none';el.style.opacity='1';setTimeout(()=>{el.style.transition='opacity .65s';el.style.opacity='0'},60);}
 
 // ===== MAZINGER Z — WEB AUDIO SYNTHESIZER =====
-let _mazCtx=null,_mazPlay=false,_mazTimer=null,_mazOscs=[];
-function _mazAudio(){return _mazCtx||(_mazCtx=new(window.AudioContext||window.webkitAudioContext)())}
-function _mazNote(hz,t,d,type,vol){
-  const ctx=_mazAudio(),o=ctx.createOscillator(),g=ctx.createGain();
-  const dist=ctx.createWaveShaper();
-  const curve=new Float32Array(256);for(let i=0;i<256;i++){const x=i*2/256-1;curve[i]=x<0?-Math.pow(-x,.7):Math.pow(x,.7);}
-  dist.curve=curve;
-  o.connect(dist);dist.connect(g);g.connect(ctx.destination);
-  o.type=type||'sawtooth';o.frequency.value=hz;
-  const v=vol||.07,now=ctx.currentTime;
-  g.gain.setValueAtTime(0,now+t);g.gain.linearRampToValueAtTime(v,now+t+.018);
-  g.gain.setValueAtTime(v,now+t+d-.03);g.gain.linearRampToValueAtTime(0,now+t+d);
-  o.start(now+t);o.stop(now+t+d+.05);_mazOscs.push(o);
-}
-// Melodía principal (evoca el tema de Mazinger Z)
-const MAZ_MEL=[[392,.00,.20],[392,.24,.20],[392,.48,.20],[330,.72,.14],[392,.90,.22],[523,1.15,.44],[494,1.65,.20],[440,1.90,.20],[392,2.14,.58],[330,2.80,.20],[294,3.04,.14],[330,3.22,.20],[392,3.46,.20],[440,3.70,.20],[523,3.95,.44],[587,4.46,.20],[523,4.70,.20],[440,4.95,.55],[392,5.60,.20],[330,5.84,.20],[294,6.08,.20],[262,6.32,.60],[294,7.00,.20],[330,7.24,.20],[392,7.48,.58],[523,8.14,.86]];
-const MAZ_BAS=[[98,.00,.44],[110,.55,.44],[131,1.10,.44],[110,1.65,.44],[131,2.20,.44],[110,2.75,.44],[131,3.30,.44],[147,3.85,.44],[131,4.40,.44],[110,4.95,.44],[131,5.50,.44],[110,6.05,.44],[131,6.60,.44],[147,7.15,.44],[131,7.70,.86]];
-function _mazSeq(){
-  if(!_mazPlay)return;
-  const ctx=_mazAudio();if(ctx.state==='suspended')ctx.resume();
-  MAZ_MEL.forEach(([f,s,d])=>_mazNote(f,s,d,'sawtooth',.075));
-  MAZ_BAS.forEach(([f,s,d])=>_mazNote(f,s,d,'square',.042));
-  _mazTimer=setTimeout(()=>{_mazOscs=[];if(_mazPlay)_mazSeq();},9000);
-}
-function _mazUpdateBtns(playing){
-  ['mazMusicBtn','mazMusicBtn25'].forEach(id=>{
-    const b=document.getElementById(id);if(!b)return;
-    if(playing){b.textContent='⏹ Detener música';b.classList.add('playing');}
-    else{b.textContent=id==='mazMusicBtn25'?'🎵 Activar tema de Mazinger Z':'🎵 Mazinger Z';b.classList.remove('playing');}
-  });
-}
-function toggleMazMusic(){toggleMazMusicAll();}
-function toggleMazMusicAll(){
-  if(_mazPlay){
-    _mazPlay=false;clearTimeout(_mazTimer);
-    _mazOscs.forEach(o=>{try{o.stop()}catch(e){}});_mazOscs=[];
-    _mazUpdateBtns(false);
-  } else {
-    _mazPlay=true;_mazSeq();_mazUpdateBtns(true);
-  }
-}
+function toggleMazMusic(){}
+function toggleMazMusicAll(){}
 function renderXP(){
   let i=0;for(let k=0;k<LEVELS.length;k++) if(S.xp>=LEVELS[k][0]) i=k;
   $("#lvlName").textContent=LEVELS[i][1];
@@ -2529,7 +2481,7 @@ function robotFront(g,opt={}){ // draws simple front robot into group g, 300x380
   const close=()=>{
     clearTimeout(goTimer);
     ov.style.display="none";
-    if(typeof _mazPlay!=='undefined'&&_mazPlay&&typeof toggleMazMusicAll==='function'){toggleMazMusicAll();}
+
   };
   const enterBtn=document.getElementById("introEnter");const skipBtn=document.getElementById("introSkip");
   if(enterBtn)enterBtn.onclick=close;if(skipBtn)skipBtn.onclick=close;
