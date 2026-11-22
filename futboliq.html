@@ -27,9 +27,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .match-meta{font-size:.7rem;color:var(--muted);font-weight:400;margin-left:4px;white-space:nowrap}
 .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 #dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--acc);padding:6px 12px;border-radius:8px;border:1px solid var(--acc)}
-#refreshBtn,#pdfBtn{background:var(--acc);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
-#pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b)}
-#refreshBtn:hover,#pdfBtn:hover{opacity:.85}
+#pdfBtn{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
+#pdfBtn:hover{opacity:.85}
 #statusBar{font-size:.8rem;color:var(--muted);padding:4px 10px;background:var(--s2);border-radius:6px;border:1px solid var(--border)}
 .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--s1);padding:4px;border-radius:10px;border:1px solid var(--border)}
 .tab{flex:1;padding:10px;text-align:center;cursor:pointer;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--muted);transition:all .2s}
@@ -121,7 +120,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
     <div class="header-right">
       <div id="dateLabel">—</div>
       <span id="statusBar">Iniciando…</span>
-      <button id="refreshBtn" onclick="boot()">↻ Actualizar</button>
       <button id="pdfBtn" onclick="exportPDF()">⬇ PDF</button>
     </div>
   </header>
@@ -300,7 +298,6 @@ async function fetchStatzData(){
     if(!r.ok){console.warn('[FútbolIQ] statz_data.json HTTP',r.status);return;}
     const d=await r.json();
     if(d.cache&&typeof d.cache==='object'){
-      // Reemplaza el cache con los datos del día
       Object.keys(STATZ_CACHE).forEach(k=>delete STATZ_CACHE[k]);
       Object.assign(STATZ_CACHE,d.cache);
     }
@@ -308,10 +305,51 @@ async function fetchStatzData(){
       STATZ_FIXTURES.length=0;
       STATZ_FIXTURES.push(...d.fixtures);
     }
+    if(Array.isArray(d.picks)&&d.picks.length&&d.updated===todayMadrid()){
+      STATE.bakedPicks=d.picks;
+      STATE.bakedCombos=Array.isArray(d.combos)?d.combos:[];
+    }
     console.info('[FútbolIQ] Datos del día cargados:',d.updated||'?');
   }catch(e){
     console.warn('[FútbolIQ] fetch remoto fallido — usando caché local:',e.message);
   }
+}
+
+function computePicksFromStatz(){
+  const W=0.65,today=todayMadrid();
+  const games=STATZ_FIXTURES.filter(sf=>{
+    if(!sf.time)return false;
+    const d=new Date(sf.time).toLocaleString('en-CA',{timeZone:'Europe/Madrid'}).slice(0,10);
+    return d===today;
+  });
+  if(!games.length)return[];
+  const results=[];
+  for(const g of games){
+    const k=statzKey(g.home,g.away);
+    const sd=STATZ_CACHE[k]||{};
+    const lh=sd.xGH||(sd.winH?(sd.winH>0.5?1.9:1.3):1.5);
+    const la=sd.xGA||(sd.winA?(sd.winA>0.5?1.9:1.0):1.0);
+    let hs=0xDEAD;
+    for(let i=0;i<(g.home+g.away).length;i++){hs=Math.imul(hs^(g.home+g.away).charCodeAt(i),0x9e3779b9);hs^=hs>>>16;}
+    const mc=runMC(lh,la,hs>>>0);
+    if(sd.winH!==undefined){mc.p1=mc.p1*(1-W)+sd.winH*W;}
+    if(sd.winA!==undefined){mc.p2=mc.p2*(1-W)+sd.winA*W;}
+    if(sd.btts!==undefined){mc.BTTS=mc.BTTS*(1-W)+sd.btts*W;}
+    if(sd.goals2p!==undefined){mc['G+2.5']=mc['G+2.5']*(1-W)+sd.goals2p*W;}
+    if(sd.goals3p!==undefined){mc['G+1.5']=mc['G+1.5']*(1-W)+Math.min(sd.goals3p+.12,.99)*W;}
+    mc['G-1.5']=1-mc['G+1.5'];mc['G-2.5']=1-mc['G+2.5'];
+    const tot=mc.p1+mc.pX+mc.p2;if(tot>0){mc.p1/=tot;mc.pX/=tot;mc.p2/=tot;}
+    const R={mc,lh,la,ppgH:1.5,ppgA:1.0,hH:[],hA:[]};
+    const mkts=allMkts(R);mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
+    if(!mkts.length)continue;
+    const best=mkts[0];const sc=pscore(best,R);
+    if(sc<PRM.UMBRAL)continue;
+    results.push({...g,R,markets:mkts,bestMkt:best,score:sc,dataQ:0,statz:true});
+  }
+  results.sort((a,b)=>b.score-a.score);
+  const famC={},divP=[];
+  for(const r of results){const f=mktFamily(r.bestMkt.code);if((famC[f]||0)<2){famC[f]=(famC[f]||0)+1;divP.push(r);}if(divP.length>=PRM.TOP)break;}
+  return divP.length>=PRM.TOP?divP:results.slice(0,PRM.TOP);
 }
 
 /* ===== COMMENTARY (fuentes secundarias — actualizado: auto) ===== */
@@ -507,7 +545,7 @@ function buildCombos(picks){
 
 function mktFamily(code){if(code==='1'||code==='X'||code==='2')return'1x2';if(code==='btts')return'btts';return'goles';}
 /* ===== STATE ===== */
-let STATE={picks:[],combos:[],date:'',loading:false};
+let STATE={picks:[],combos:[],date:'',loading:false,lastFetch:0,bakedPicks:null,bakedCombos:null};
 
 async function boot(){
   if(STATE.loading)return;
@@ -515,37 +553,31 @@ async function boot(){
   const ov=document.getElementById('loadingOverlay');
   const lm=document.getElementById('loadingMsg');
   ov.classList.remove('hidden');
-  lm.textContent='Descargando partidos…';
-  document.getElementById('statusBar').textContent='Cargando…';
+  lm.textContent='Cargando partidos de hoy…';
+  document.getElementById('statusBar').textContent='Actualizando…';
   try{
     STATE.date=todayMadrid();
     document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Madrid'});
     lm.textContent='Actualizando estadísticas del día…';
+    STATE.bakedPicks=null;STATE.bakedCombos=null;
     await fetchStatzData();
-    lm.textContent='Descargando partidos…';
-    let games=await fetchGames();
-    lm.textContent=`${games.length} partidos encontrados. Calculando…`;
-    if(!games.length){games=demoGames();lm.textContent='Sin partidos en vivo — usando datos demo';}
-    const results=[];
-    for(let i=0;i<games.length&&results.length<PRM.TOP*2;i++){
-      const g=games[i];
-      lm.textContent=`Analizando ${g.home} vs ${g.away}…`;
-      const r=await computeGame(g,i);
-      if(r)results.push(r);
+    if(STATE.bakedPicks&&STATE.bakedPicks.length){
+      STATE.picks=STATE.bakedPicks;
+      STATE.combos=STATE.bakedCombos&&STATE.bakedCombos.length?STATE.bakedCombos:buildCombos(STATE.picks);
+    }else{
+      lm.textContent='Calculando picks del día…';
+      STATE.picks=computePicksFromStatz();
+      STATE.combos=buildCombos(STATE.picks);
     }
-    results.sort((a,b)=>b.score-a.score);
-    const famC={};const divP=[];
-    for(const r of results){const f=mktFamily(r.bestMkt.code);if((famC[f]||0)<2){famC[f]=(famC[f]||0)+1;divP.push(r);}if(divP.length>=PRM.TOP)break;}
-    STATE.picks=divP.length>=PRM.TOP?divP:results.slice(0,PRM.TOP);
-    if(!STATE.picks.length){STATE.picks=fallbackPicks();}
   }catch(err){
-    console.error(err);
-    STATE.picks=fallbackPicks();
+    console.error('[FútbolIQ] boot error:',err);
+    STATE.picks=computePicksFromStatz();
+    STATE.combos=buildCombos(STATE.picks);
   }
-  STATE.combos=buildCombos(STATE.picks);
-  saveRecord();
   STATE.lastFetch=Date.now();
-  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · Actualizado ${new Date().toLocaleTimeString('es-ES',{timeZone:'Europe/Madrid'})} · v${PRM.VERSION}`;
+  if(!STATE.combos.length&&STATE.picks.length)STATE.combos=buildCombos(STATE.picks);
+  saveRecord();
+  document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ${STATE.date} · v${PRM.VERSION}`;
   STATE.loading=false;
   ov.classList.add('hidden');
   renderAll();
