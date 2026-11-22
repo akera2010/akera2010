@@ -224,9 +224,34 @@ canvas{max-width:100%;display:block;touch-action:none}
 .festival-body{padding:14px}
 .festival-date{font-size:12px;font-weight:900;color:var(--sky);margin-bottom:8px}
 .festival-body p{font-size:13px;line-height:1.6;margin:0}
+
+/* ===== MODO BRUTAL — efectos de manga ===== */
+body{background:radial-gradient(circle at 50% 100%,#e8eff9 0%,#fff 60%)}
+body::before{content:"";position:fixed;inset:0;background-image:repeating-conic-gradient(from 0deg at 50% 160%,transparent 0deg 2.5deg,rgba(13,42,92,.022) 2.5deg 2.7deg);pointer-events:none;z-index:0;animation:speedRot 45s linear infinite;transform-origin:50% 160%}
+@keyframes speedRot{to{transform:rotate(360deg)}}
+#xpFlash{position:fixed;inset:0;pointer-events:none;z-index:998;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(192,0,0,.26) 0%,transparent 68%)}
+section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
+@keyframes mangaWipe{from{opacity:0;transform:translateX(-16px) skewX(-1.5deg)}to{opacity:1;transform:none}}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(192,0,0,.2) 0%,transparent 70%);opacity:0;transition:opacity .18s;pointer-events:none}
+.btn:active::after{opacity:1}
+.sthead{background:linear-gradient(90deg,#fff 0%,var(--tone) 100%)!important;box-shadow:9px 9px 0 var(--ink)!important}
+.sthead h2{text-shadow:2px 2px 0 rgba(27,74,143,.2)}
+.sthead .num{text-shadow:4px 4px 0 rgba(100,0,0,.3)}
+.panel{transition:box-shadow .12s,transform .12s}
+.panel:hover{box-shadow:9px 9px 0 var(--ink)!important;transform:translate(-2px,-2px)}
+#nav a{transition:background .12s,color .12s}
+#nav a:hover{background:var(--ink)!important;color:#fff!important}
+#nav a:hover .n{background:var(--red)!important}
+.badge{transition:transform .18s}
+.badge:hover{transform:rotate(8deg) scale(1.15)!important}
+#xpbar i{transition:width .5s cubic-bezier(.2,1.4,.4,1)!important}
+#mazMusicBtn.playing{background:var(--red)!important;color:#fff!important;animation:mazPulse .9s ease-in-out infinite alternate}
+@keyframes mazPulse{from{box-shadow:3px 3px 0 var(--ink)}to{box-shadow:3px 3px 0 var(--red),0 0 16px rgba(192,0,0,.55)}}
 </style>
 </head>
 <body>
+<div id="xpFlash" aria-hidden="true"></div>
 <!-- ============ INTRO ============ -->
 <div id="intro" role="dialog" aria-label="Intro Mazinger Z">
   <div id="introVids">
@@ -260,6 +285,7 @@ canvas{max-width:100%;display:block;touch-action:none}
   <div class="topbtns">
     <div id="xpbox" title="Puntos de experiencia"><span class="lvl" id="lvlName">見習い Aprendiz</span><div id="xpbar"><i></i></div><b id="xpNum">0</b></div>
     <a class="btn sm" href="https://hidrive.ionos.com/lnk/PZLQelmGv" target="_blank" rel="noopener" style="text-decoration:none">📥 Biblioteca de Técnicas</a>
+    <button class="btn sm" id="mazMusicBtn" onclick="toggleMazMusic()" title="Tema de Mazinger Z en síntesis Web Audio">🎵 Mazinger Z</button>
     <button class="btn sm" id="replay">Ver intro</button>
     <button class="btn sm" id="reset" title="Pulsa dos veces para borrar el progreso">Reiniciar progreso</button>
   </div>
@@ -899,6 +925,57 @@ canvas{max-width:100%;display:block;touch-action:none}
 
 </div>
 
+<h3>🤖 Ruta de Mazinger Z — Homenaje a Go Nagai (1972)</h3>
+<div class="box ojo"><b class="t">Estado actual (2024–2026)</b>En Japón no existe actualmente un recorrido virtual 360° dedicado exclusivamente a Mazinger Z. El museo principal fue dañado por el terremoto de 2024. Aquí tienes el mapa completo de los espacios físicos y recursos digitales.</div>
+
+<div class="grid2">
+  <div class="museum-card">
+    <div class="museum-flag">🏔️</div>
+    <div class="museum-body">
+      <div class="museum-title">Go Nagai Museum — Wonder Land</div>
+      <div class="museum-loc">📍 Wajima, Ishikawa · Japón</div>
+      <div class="museum-desc">El museo monográfico por excelencia de Go Nagai. Exhibía una estatua de Mazinger Z a escala 1/9 (2 metros) y más de 100 originales. <b>Cerrado tras el terremoto del 1 de enero de 2024</b> — estado incierto. Fue el único espacio con sala dedicada exclusivamente a la obra de Go Nagai.</div>
+      <div class="museum-links"><span class="tag r">⚠ Cerrado 2024</span></div>
+    </div>
+  </div>
+  <div class="museum-card">
+    <div class="museum-flag">🎬</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo de Animación de Toei</div>
+      <div class="museum-loc">📍 Nerima, Tokio · Japón</div>
+      <div class="museum-desc">Dedicado al estudio que animó Mazinger Z (1972–74). Mazinger Z aparece en sus exposiciones sobre la historia de Toei Animation. No tiene sala monográfica pero es parte esencial de su colección histórica.</div>
+      <div class="museum-links"><a href="https://www.toei-animation.co.jp/" target="_blank" rel="noopener" class="btn sm">Web Toei →</a></div>
+    </div>
+  </div>
+  <div class="museum-card">
+    <div class="museum-flag">🏮</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo Tokiwa-sō</div>
+      <div class="museum-loc">📍 Toshima, Tokio · Japón</div>
+      <div class="museum-desc">Acogió una exposición temporal por el 50 aniversario de Devilman y Mazinger Z en 2023. El espacio celebra la cuna del manga japonés donde vivieron Tezuka y otros pioneros. La exposición fue presencial y ya ha concluido.</div>
+      <div class="museum-links"><a href="https://tokiwasomm.jp/" target="_blank" rel="noopener" class="btn sm">Web Tokiwa-sō →</a></div>
+    </div>
+  </div>
+  <div class="museum-card">
+    <div class="museum-flag">🌐</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo de Arte del Manga — Virtual</div>
+      <div class="museum-loc">📍 Online · Acceso gratuito</div>
+      <div class="museum-desc">La alternativa virtual más cercana: exhibe manuscritos originales de autores del siglo XX, incluyendo la era de Go Nagai. Totalmente gratuito. Es el recurso más sólido para apreciar el arte del manga hasta que el Go Nagai Museum reabra.</div>
+      <div class="museum-links"><a href="https://manga-art.jp/" target="_blank" rel="noopener" class="btn sm">Visita virtual →</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="box mn" style="margin-top:14px">
+  <b class="t">💡 Explorar el legado de Mazinger Z online</b>
+  <ul style="margin:6px 0;padding-left:18px;font-size:14px">
+    <li><b>Toei Animation Archives</b> — El estudio ha publicado materiales del 50 aniversario en sus canales oficiales</li>
+    <li><b>Nippon TV / Dynamic Planning</b> — Gestores de los derechos originales con archivo histórico de imágenes</li>
+    <li><b>Manga109 Dataset</b> — Incluye volúmenes del manga original para estudio académico</li>
+  </ul>
+</div>
+
 <div class="panel" style="margin-top:16px;text-align:center">
   <button class="btn red" onclick="addXP(40);this.textContent='¡+40 XP! Destino desbloqueado ✓';this.disabled=true">🗺 Marcar como destino cultural (+40 XP)</button>
 </div>
@@ -1185,7 +1262,45 @@ try{const r=localStorage.getItem(KEY); if(r) S=Object.assign(S,JSON.parse(r));}c
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const LEVELS=[[0,"見習い Aprendiz"],[150,"アシスタント Asistente"],[400,"漫画家 Mangaka"],[800,"先生 Sensei"]];
-function addXP(n){S.xp+=n;save();renderXP();}
+function addXP(n){S.xp+=n;save();renderXP();xpFlash();}
+function xpFlash(){const el=document.getElementById('xpFlash');if(!el)return;el.style.transition='none';el.style.opacity='1';setTimeout(()=>{el.style.transition='opacity .65s';el.style.opacity='0'},60);}
+
+// ===== MAZINGER Z — WEB AUDIO SYNTHESIZER =====
+let _mazCtx=null,_mazPlay=false,_mazTimer=null,_mazOscs=[];
+function _mazAudio(){return _mazCtx||(_mazCtx=new(window.AudioContext||window.webkitAudioContext)())}
+function _mazNote(hz,t,d,type,vol){
+  const ctx=_mazAudio(),o=ctx.createOscillator(),g=ctx.createGain();
+  const dist=ctx.createWaveShaper();
+  const curve=new Float32Array(256);for(let i=0;i<256;i++){const x=i*2/256-1;curve[i]=x<0?-Math.pow(-x,.7):Math.pow(x,.7);}
+  dist.curve=curve;
+  o.connect(dist);dist.connect(g);g.connect(ctx.destination);
+  o.type=type||'sawtooth';o.frequency.value=hz;
+  const v=vol||.07,now=ctx.currentTime;
+  g.gain.setValueAtTime(0,now+t);g.gain.linearRampToValueAtTime(v,now+t+.018);
+  g.gain.setValueAtTime(v,now+t+d-.03);g.gain.linearRampToValueAtTime(0,now+t+d);
+  o.start(now+t);o.stop(now+t+d+.05);_mazOscs.push(o);
+}
+// Melodía principal (evoca el tema de Mazinger Z)
+const MAZ_MEL=[[392,.00,.20],[392,.24,.20],[392,.48,.20],[330,.72,.14],[392,.90,.22],[523,1.15,.44],[494,1.65,.20],[440,1.90,.20],[392,2.14,.58],[330,2.80,.20],[294,3.04,.14],[330,3.22,.20],[392,3.46,.20],[440,3.70,.20],[523,3.95,.44],[587,4.46,.20],[523,4.70,.20],[440,4.95,.55],[392,5.60,.20],[330,5.84,.20],[294,6.08,.20],[262,6.32,.60],[294,7.00,.20],[330,7.24,.20],[392,7.48,.58],[523,8.14,.86]];
+const MAZ_BAS=[[98,.00,.44],[110,.55,.44],[131,1.10,.44],[110,1.65,.44],[131,2.20,.44],[110,2.75,.44],[131,3.30,.44],[147,3.85,.44],[131,4.40,.44],[110,4.95,.44],[131,5.50,.44],[110,6.05,.44],[131,6.60,.44],[147,7.15,.44],[131,7.70,.86]];
+function _mazSeq(){
+  if(!_mazPlay)return;
+  const ctx=_mazAudio();if(ctx.state==='suspended')ctx.resume();
+  MAZ_MEL.forEach(([f,s,d])=>_mazNote(f,s,d,'sawtooth',.075));
+  MAZ_BAS.forEach(([f,s,d])=>_mazNote(f,s,d,'square',.042));
+  _mazTimer=setTimeout(()=>{_mazOscs=[];if(_mazPlay)_mazSeq();},9000);
+}
+function toggleMazMusic(){
+  const btn=document.getElementById('mazMusicBtn');
+  if(_mazPlay){
+    _mazPlay=false;clearTimeout(_mazTimer);
+    _mazOscs.forEach(o=>{try{o.stop()}catch(e){}});_mazOscs=[];
+    if(btn){btn.textContent='🎵 Mazinger Z';btn.classList.remove('playing');}
+  } else {
+    _mazPlay=true;_mazSeq();
+    if(btn){btn.textContent='⏹ Detener música';btn.classList.add('playing');}
+  }
+}
 function renderXP(){
   let i=0;for(let k=0;k<LEVELS.length;k++) if(S.xp>=LEVELS[k][0]) i=k;
   $("#lvlName").textContent=LEVELS[i][1];
