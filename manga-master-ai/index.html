@@ -267,6 +267,44 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 .lvl-badge.done{background:var(--blue);color:#fff}
 .lvl-badge.here{background:var(--red);color:#fff}
 .lvl-badge.next{background:var(--tone);color:var(--ink);border:1px solid var(--line)}
+/* ===== HUB DE INICIO ===== */
+#homeHub{padding:0}
+.hub-hero{background:var(--ink);color:#fff;padding:28px 24px 22px;position:relative;overflow:hidden}
+.hub-hero::before{content:"";position:absolute;inset:0;background-image:repeating-conic-gradient(from 0deg at 50% 200%,transparent 0deg 2.5deg,rgba(255,255,255,.04) 2.5deg 2.7deg);pointer-events:none}
+.hub-title{font-family:var(--disp);font-size:clamp(32px,8vw,72px);line-height:.9;position:relative;-webkit-text-stroke:2px var(--red);text-shadow:4px 4px 0 var(--red)}
+.hub-sub{font-size:clamp(12px,2vw,15px);color:#cfe0ff;margin-top:6px;position:relative;letter-spacing:.05em}
+.hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:4px solid var(--ink)}
+@media(max-width:680px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:400px){.hub-grid{grid-template-columns:1fr}}
+.hub-card{border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);padding:18px 16px;cursor:pointer;background:var(--paper);transition:background .15s,transform .12s;position:relative;overflow:hidden;text-align:left}
+.hub-card:nth-child(3n){border-right:none}
+@media(max-width:680px){.hub-card:nth-child(2n){border-right:none}}
+.hub-card:hover{background:var(--tone);transform:scale(1.02);z-index:1}
+.hub-card:active{transform:scale(.98)}
+.hub-ck{font-family:var(--disp);font-size:clamp(32px,6vw,52px);line-height:1;color:var(--blue);display:block;margin-bottom:4px}
+.hub-card.red .hub-ck{color:var(--red)}
+.hub-card.gold .hub-ck{color:#8a6200}
+.hub-card.purple .hub-ck{color:#5a2d82}
+.hub-card.green .hub-ck{color:#1a6632}
+.hub-card.dark .hub-ck{color:var(--ink)}
+.hub-ct{font-family:var(--disp);font-size:clamp(13px,2.5vw,16px);line-height:1.1;color:var(--ink);display:block;margin-bottom:4px}
+.hub-cd{font-size:12px;color:var(--muted);display:block;line-height:1.4}
+.hub-tag{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;border:1.5px solid currentColor}
+.hub-card.red .hub-tag{color:var(--red)}
+.hub-card.gold .hub-tag{color:#8a6200}
+.hub-card.purple .hub-tag{color:#5a2d82}
+.hub-card.green .hub-tag{color:#1a6632}
+.hub-card.dark .hub-tag{color:var(--ink)}
+/* concursos */
+.cc-block{border:2px solid var(--line);border-left:4px solid var(--cc-col,var(--blue));padding:14px 16px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.cc-block h4{margin:0 0 6px;font-family:var(--disp);font-size:14px;color:var(--cc-col,var(--blue))}
+.cc-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:4px;font-size:13px}
+.cc-label{font-weight:700;min-width:70px;flex-shrink:0;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding-top:1px}
+.cc-prize{display:inline-block;background:var(--tone);border:1.5px solid var(--line);padding:3px 8px;border-radius:2px;font-weight:700;font-size:12px;color:var(--ink);margin-top:4px}
+.cc-deadline{display:inline-block;padding:3px 8px;border-radius:2px;font-size:11px;font-weight:700;margin-top:4px;border:1.5px solid currentColor}
+.cc-open{color:#1a6632;border-color:#1a6632;background:#e8f5ed}
+.cc-closed{color:#888;border-color:#ccc;background:#f5f5f5}
+.cc-group{font-family:var(--disp);font-size:13px;color:var(--muted);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid var(--line);padding-bottom:6px}
 /* ===== LÍNEA DE TIEMPO AMPLIADA ===== */
 .tl-entry{border:2px solid var(--line);border-left:4px solid var(--dec,var(--blue));border-radius:4px;overflow:hidden;margin-bottom:4px}
 .tl-entry>summary{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;background:var(--paper);flex-wrap:wrap;list-style:none;user-select:none}
@@ -345,6 +383,59 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 <main id="main"></main>
 </div>
 <template id="tplStations">
+
+<!-- 0 — INICIO HUB -->
+<section class="st" data-id="0" data-t="Inicio" data-k="門">
+<div id="homeHub">
+  <div class="hub-hero">
+    <div class="hub-title">MANGA<br>MASTER</div>
+    <div class="hub-sub">para Noa Bello · de Sarah Hernández · マンガ・マスター</div>
+  </div>
+  <div class="hub-grid">
+    <div class="hub-card" onclick="location.hash='#s1'">
+      <span class="hub-tag">Est. 1–5</span>
+      <span class="hub-ck">初</span>
+      <span class="hub-ct">Nivel Aprendiz</span>
+      <span class="hub-cd">¿Manga o anime? Historia, públicos, géneros y herramientas. Empieza aquí.</span>
+    </div>
+    <div class="hub-card purple" onclick="location.hash='#s6'">
+      <span class="hub-tag">Est. 6–12</span>
+      <span class="hub-ck">中</span>
+      <span class="hub-ct">Nivel Medio</span>
+      <span class="hub-cd">Técnicas de dibujo, hiperrealismo, rostro, viñetas, animación y maestros.</span>
+    </div>
+    <div class="hub-card red" onclick="location.hash='#s16'">
+      <span class="hub-tag">Est. 16–20</span>
+      <span class="hub-ck">上</span>
+      <span class="hub-ct">Nivel Avanzado</span>
+      <span class="hub-cd">Entrenador SRS, examen final, dojo hiperrealista y competencias semanales.</span>
+    </div>
+    <div class="hub-card dark" onclick="location.hash='#s25'">
+      <span class="hub-tag">Est. 25</span>
+      <span class="hub-ck">Z</span>
+      <span class="hub-ct">Mazinger Z</span>
+      <span class="hub-cd">La estación sagrada. Vídeos, música, legado y la revolución mecha de Go Nagai.</span>
+    </div>
+    <div class="hub-card green" onclick="location.hash='#s15'">
+      <span class="hub-tag">Est. 15</span>
+      <span class="hub-ck">館</span>
+      <span class="hub-ct">Museos y Festivales</span>
+      <span class="hub-cd">Visitas virtuales gratuitas, museos de Doraemon, Ghibli y grandes salones.</span>
+    </div>
+    <div class="hub-card gold" onclick="location.hash='#s26'">
+      <span class="hub-tag">Est. 26</span>
+      <span class="hub-ck">賞</span>
+      <span class="hub-ct">Concursos</span>
+      <span class="hub-cd">8 concursos con proyección profesional: Norma, Manga Barcelona, Japón y más.</span>
+    </div>
+  </div>
+  <div style="padding:16px 20px;background:var(--tone);border-top:3px solid var(--ink);display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <span style="font-size:13px;color:var(--muted)">Progreso global:</span>
+    <div id="homeXpBar" style="flex:1;min-width:120px;height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div id="homeXpFill" style="height:100%;background:var(--red);width:0;transition:width .5s"></div></div>
+    <span id="homeXpLabel" style="font-family:var(--disp);font-size:13px;color:var(--ink)">0 XP · 見習い</span>
+  </div>
+</div>
+</section>
 
 <!-- 1 -->
 <section class="st" data-id="1" data-t="¿Manga o anime?" data-k="漫">
@@ -1371,6 +1462,95 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
 
 </section>
 
+<!-- 26 — CONCURSOS -->
+<section class="st" data-id="26" data-t="Concursos" data-k="賞">
+<div class="sthead"><div class="num">26</div><div class="tt"><h2>Concursos de manga y cómic</h2><div class="jp">コンクール · 受賞 jushō</div></div><div class="kj">賞</div></div>
+<p>8 concursos con proyección profesional vinculados a salones y editoriales, ordenados de mayor a menor impacto en tu carrera. Las fechas son de 2026 — útiles para planificar tu participación en 2027.</p>
+
+<div class="box mn" style="margin-bottom:18px"><b class="t">Consejo de planificación</b>Para los concursos de mayor nivel (Norma Editorial, Premio Internacional de Japón), empieza el proyecto con 4–6 meses de antelación. Para los locales (Manlleu, Alhaurín, Sant Martí), suscríbete a las alertas de las webs municipales o sigue sus redes — el plazo suele abrirse en primavera u otoño.</div>
+
+<div class="cc-group">★ Concursos con proyección profesional o vinculados a salones</div>
+
+<div class="cc-block" style="--cc-col:#C00000">
+  <h4>1. Concurso de Manga · Manga Barcelona (Ficomic)</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Jóvenes artistas de <b>18 a 35 años</b> residentes en España.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>1 portada + 4 páginas inspiradas en la temática de la edición (2026: mascotas Onachan y Kumamon).</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">✈ Viaje al 31 Manga Barcelona</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">2026 cerrado — vigilar web desde septiembre</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://www.manga-barcelona.com/es/concurso-de-manga.cfm" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 manga-barcelona.com</a></span></div>
+</div>
+
+<div class="cc-block" style="--cc-col:#1b4a8f">
+  <h4>2. Concurso Manga · Norma Editorial</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Carácter <b>internacional</b>. Cualquier nacionalidad y edad (incluidos menores). Obras en cualquier idioma.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Proyecto para un manga autoconclusivo de <b>176 páginas</b>: resumen completo del argumento (máx. 4.400 caracteres) + resumen de presentación (5–6 líneas) + las <b>8 primeras páginas dibujadas</b>. Opcional: portada y fichas de personajes.</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">💶 4.500 € (anticipo royalties) + contrato de edición</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-open">28 sept. 2026 · 23:59h (hora peninsular)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://www.normaeditorial.cat/noticia/bases-del-concurso-manga-2026" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 normaeditorial.cat</a></span></div>
+</div>
+
+<div class="cc-block" style="--cc-col:#1a6632">
+  <h4>3. Concurs Manga · Manlleu (Barcelona)</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Residentes en España. Tres categorías: <b>A-Infantil (7–11)</b>, <b>B-Juvenil (12–17)</b>, <b>C-Adulto (18+)</b>.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Una única ilustración estilo manga en <b>DIN-A3</b>, temática variable (2026: vampiros y licántropos). Envío en JPG por correo, sin firma.</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">🎨 Lotes manga + material + hasta 150 € (adultos)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">6 junio 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://www.manlleu.cat" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 manlleu.cat → Juventud</a></span></div>
+</div>
+
+<div class="cc-block" style="--cc-col:#8a6200">
+  <h4>4. Concurso Cartel Oficial · Murcia se Remanga</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Cualquier persona, individualmente o en grupo.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Ilustración digital a color, formato vertical <b>A3 (297×420 mm)</b>, sin texto. Se convierte en el cartel oficial del salón. No se aceptan obras generadas por IA — los finalistas aportan archivo editable + vídeo del proceso.</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">🖥 1º: Tablet XPPEN + 200 € · 2º: 100 € · 3º: 50 €</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">26 oct. 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://murciaseremanga.es" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 murciaseremanga.es</a></span></div>
+</div>
+
+<div class="cc-block" style="--cc-col:#2f63b0">
+  <h4>5. Concurso Juvenil de Dibujo Manga · Alhaurín de la Torre (Málaga)</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Jóvenes de <b>12 a 17 años</b> (ámbito local).</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Dibujo original en A3 sobre cartulina, en color, técnica libre. Se admiten personajes de anime existentes. Entrega presencial sin firmar. <b>La obra ganadora se convierte en el cartel del Salón del Manga del año siguiente.</b></span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">🎨 Sets dibujo: 75 € · 45 € · 35 €</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">9–27 nov. 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://alhaurindelatorre.es/abierto-el-plazo-para-participar-en-el-ii-concurso-de-dibujo-juvenil-manga/" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 alhaurindelatorre.es</a></span></div>
+</div>
+
+<div class="cc-group">🎨 Premios con temática específica (ámbito local)</div>
+
+<div class="cc-block" style="--cc-col:#5a2d82">
+  <h4>6. Premio Joven de Cómic Sant Martí · Barcelona</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Personas que vivan, estudien o trabajen en Barcelona con hasta 25 años. Cat. A (16–25), Cat. B (menores de 16). Centros educativos: Cat. C (fanzine).</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Temática <b>obligatoria</b>: prevención y erradicación de las violencias machistas. La obra se publica en la web del premio.</span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">29 ene – 27 mar 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://ajuntament.barcelona.cat/es/informacion-administrativa/premios/premio-joven-de-comic-sant-marti-para-la-prevencion-y-la-erradicacion-de-las-violencias-machistas-ano-2026" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 ajuntament.barcelona.cat</a></span></div>
+</div>
+
+<div class="cc-block" style="--cc-col:#8a4000">
+  <h4>7. II Certamen Juvenil Humor Gráfico "Jara Carrillo" · Alcantarilla (Murcia)</h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Jóvenes de <b>12 a 20 años</b> de la Región de Murcia.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Obras de humor gráfico en formatos como cómic, viñeta, novela gráfica, manga o fanzine.</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">🎨 350 € · 250 € · 150 € (accésit)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">15 sept – 6 nov 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://www.injuve.es/gl/convocatorias/premios/ii-certamen-juvenil-de-humor-grafico-jara-carrillo" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 injuve.es</a></span></div>
+</div>
+
+<div class="cc-group">🌐 Oportunidad internacional (gestionada desde España)</div>
+
+<div class="cc-block" style="--cc-col:#C00000">
+  <h4>8. Premio Internacional MANGA de Japón <i>(Japan International MANGA Award)</i></h4>
+  <div class="cc-row"><span class="cc-label">Quién</span><span>Autores de manga <b>no residentes en Japón</b>. Según CCAA: Cataluña/Valencia/Baleares → Consulado en Barcelona; Canarias → Consulado Las Palmas; resto → Embajada en Madrid.</span></div>
+  <div class="cc-row"><span class="cc-label">Qué</span><span>Obra manga inédita. Formulario en inglés o japonés. Envío en PDF (A4), con posibilidad de adjuntar traducción.</span></div>
+  <div class="cc-row"><span class="cc-label">Premio</span><span><span class="cc-prize">🥇 Oro (1) · 🥈 Plata (3) · 🥉 Bronce (11)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Plazo</span><span><span class="cc-deadline cc-closed">15 abr – 30 jun 2026 (cerrado)</span></span></div>
+  <div class="cc-row"><span class="cc-label">Enlace</span><span><a href="https://www.manga-award.mofa.go.jp/en/application/20/index.html" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 manga-award.mofa.go.jp</a> <a href="https://www.barcelona.es.emb-japan.go.jp/itpr_es/20_premio_manga.html" target="_blank" rel="noopener" class="btn sm" style="font-size:11px;padding:3px 8px;text-decoration:none">🔗 Consulado Barcelona</a></span></div>
+</div>
+
+<div class="box ej" style="margin-top:16px"><b class="t">➕ Draw This In Your Style · Manga Barcelona</b>Ficomic también organiza este reto en el marco del salón: reinterpretar el cartel oficial (2026: ilustrado por Kamome Shirahama) con estilo propio. No es un concurso narrativo, sino un reto de ilustración abierto. El plazo de la edición 2026 finalizaba el 8 de diciembre. Atenta a la web de Manga Barcelona cada año desde septiembre.</div>
+
+<div class="mini" data-tag="cc"></div>
+</section>
+
 </template>
 <script>
 // ================= DATA =================
@@ -1727,6 +1907,9 @@ function renderXP(){
   $("#xpbar i").style.width=clamp((S.xp-base)/(next-base)*100,0,100)+"%";
   $("#xpNum").textContent=S.xp;
   const p=document.getElementById('lvlPanel');if(p&&p.classList.contains('open'))updateLvlPanel();
+  const fill=document.getElementById('homeXpFill');const lbl=document.getElementById('homeXpLabel');
+  if(fill){const pct=Math.min((S.xp/(LEVELS[LEVELS.length-1][0]))*100,100);fill.style.width=pct+'%';}
+  if(lbl)lbl.textContent=S.xp+' XP · '+LEVELS[i][1];
 }
 function stat(ok){S.stats.tries++; if(ok){S.stats.ok++;S.stats.streak++;S.stats.best=Math.max(S.stats.best,S.stats.streak);addXP(10)} else {S.stats.streak=0;save()}}
 
@@ -1761,7 +1944,7 @@ function renderProgress(){
 }
 const INIT={};
 function show(id){
-  if(!STS.find(s=>s.dataset.id===id)) id="1";
+  if(!STS.find(s=>s.dataset.id===id)) id="0";
   STS.forEach(s=>s.classList.toggle("show",s.dataset.id===id));
   $$("#nav a").forEach(a=>a.classList.toggle("cur",a.dataset.id===id));
   S.visited[id]=1;save();renderProgress();
@@ -1769,7 +1952,7 @@ function show(id){
   const cur=$(`#nav a[data-id="${id}"]`); if(cur&&window.innerWidth<860) cur.scrollIntoView({inline:"center",block:"nearest"});
   window.scrollTo({top:0});
 }
-function route(){const m=location.hash.match(/^#s(\d+)$/);show(m?m[1]:"1")}
+function route(){const m=location.hash.match(/^#s(\d+)$/);show(m?m[1]:"0")}
 window.addEventListener("hashchange",route);
 
 // reset (double click)
