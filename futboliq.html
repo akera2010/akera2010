@@ -21,8 +21,10 @@ body{background:#f4f7fb;color:var(--text);font-family:'Segoe UI',system-ui,sans-
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text)}
-.logo-text span{font-size:.75rem;color:var(--muted)}
+.logo-text h1{font-size:1.4rem;font-weight:700;color:var(--text);line-height:1.2}
+.logo-text .sub-brand{display:block;font-size:.8rem;font-weight:600;color:var(--text);margin-top:2px}
+.logo-text .sub-algo{display:block;font-size:.72rem;color:var(--muted);margin-top:1px}
+.match-meta{font-size:.7rem;color:var(--muted);font-weight:400;margin-left:4px;white-space:nowrap}
 .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 #dateLabel{font-size:.85rem;color:#fff;font-weight:700;background:var(--acc);padding:6px 12px;border-radius:8px;border:1px solid var(--acc)}
 #refreshBtn,#pdfBtn{background:var(--acc);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
@@ -102,8 +104,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
     <div class="logo">
       <div class="logo-icon">⚽</div>
       <div class="logo-text">
-        <h1>FútbolIQ · Sandra Blanco</h1>
-        <span>Análisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100K</span>
+        <h1>Fútbol<span style="color:#c00000">IQ</span></h1>
+        <span class="sub-brand">Por Data Science Sandra Blanco</span>
+        <span class="sub-algo">Análisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100K</span>
       </div>
     </div>
     <div class="header-right">
@@ -163,20 +166,12 @@ const LEAGUE_TZ={
   'cze.1':'Europe/Prague',
   'pol.1':'Europe/Warsaw',
 };
-function fmtTime(iso,lgId,venue,city){
+function fmtTime(iso){
   if(!iso)return'';
   const d=new Date(iso);
   const mad=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'});
   const car=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'America/Caracas'});
-  const localTZ=LEAGUE_TZ[lgId];
-  let localPart='';
-  if(localTZ){
-    const localT=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:localTZ});
-    const tzShort=localTZ.split('/')[1].replace(/_/g,' ');
-    localPart=` · ${localT}<span class="tz-name">📍${tzShort}</span>`;
-  }
-  const venueStr=(city||venue)?`<span class="venue-info">🏟 ${[city,venue].filter(Boolean).join(' · ')}</span>`:'';
-  return`<span class="time-dual">${mad}<span class="tz-name">MAD</span> · ${car}<span class="tz-name">CCS</span>${localPart}${venueStr}</span>`;
+  return`<span class="time-dual">${mad}<span class="tz-name">MAD</span> · ${car}<span class="tz-name">CCS</span></span>`;
 }
 
 /* ===== MEDIAS POR LIGA (goles/partido) ===== */
@@ -556,12 +551,16 @@ function renderPicks(){
   grid.innerHTML=STATE.picks.map((p,i)=>{
     const mc=p.R.mc,sc=p.score;
     const cls=sc>=.85?'high':sc>=.80?'med':'';
+    const lgTZ=LEAGUE_TZ[p.leagueId];
+    const localT=p.time&&lgTZ?new Date(p.time).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:lgTZ}):'';
+    const cityStr=[p.city,p.venue].filter(Boolean)[0]||'';
+    const matchMeta=(localT||cityStr)?`<span class="match-meta">${[localT?'🕐 '+localT:'',cityStr?'📍 '+cityStr:''].filter(Boolean).join(' · ')}</span>`:'';
     return`<div class="pick-card">
       <div class="pick-header">
         <div>
-          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}</div>
+          <div class="pick-match">${p.flag||''} ${p.home} <span style="color:var(--muted)">vs</span> ${p.away}${matchMeta}</div>
           <div class="pick-league">${p.league} · Pick #${i+1}</div>
-          ${p.time?fmtTime(p.time,p.leagueId,p.venue,p.city):''}
+          ${p.time?fmtTime(p.time):''}
         </div>
         <div class="pick-badge ${cls}">${(sc*100).toFixed(0)}%</div>
       </div>
