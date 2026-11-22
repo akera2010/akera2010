@@ -211,6 +211,20 @@ canvas{max-width:100%;display:block;touch-action:none}
 .panel.avanzado{background:linear-gradient(135deg,var(--tone) 0%,#e8f4ff 100%);border-left:5px solid var(--blue)}
 .tip-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
 .tip-card{background:#fff;border:2px solid var(--ink);padding:10px;text-align:center;font-size:13px;box-shadow:3px 3px 0 var(--ink)}
+.museum-card{border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);display:flex;flex-direction:column;overflow:hidden}
+.museum-flag{font-size:32px;text-align:center;padding:14px;background:var(--tone)}
+.museum-body{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.museum-title{font-family:var(--disp);font-size:15px;line-height:1.2}
+.museum-loc{font-size:12px;color:var(--sky);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.museum-desc{font-size:13px;line-height:1.6;flex:1;margin:4px 0}
+.museum-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.festival-card{border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);overflow:hidden}
+.festival-header{display:flex;align-items:center;gap:10px;padding:12px 14px;color:#fff}
+.festival-flag{font-size:22px}
+.festival-name{font-family:var(--disp);font-size:15px;line-height:1.2}
+.festival-body{padding:14px}
+.festival-date{font-size:12px;font-weight:900;color:var(--sky);margin-bottom:8px}
+.festival-body p{font-size:13px;line-height:1.6;margin:0}
 </style>
 </head>
 <body>
@@ -699,6 +713,123 @@ canvas{max-width:100%;display:block;touch-action:none}
   <div class="tip-card"><b>4. Traducción</b><br>Traducción con contexto manga (argot, honoríficos)</div>
 </div>
 </div>
+</section>
+
+<section class="st" data-id="24" data-t="Museos y Festivales" data-k="館">
+<div class="sthead"><div class="num">24</div><div class="tt"><h2>Museos y Festivales</h2><div class="jp">美術館・祭り · Cultura viva del manga</div></div><div class="kj">館</div></div>
+<p>El manga no vive solo en las páginas — existe en museos, festivales y eventos que reúnen a millones de personas cada año. Visita (en persona o virtualmente) los lugares donde se guarda y celebra esta cultura.</p>
+
+<h3 style="margin:18px 0 10px;font-family:var(--disp);font-size:clamp(18px,4vw,26px);color:var(--blue)">🏛 Museos de Manga</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+
+  <div class="museum-card">
+    <div class="museum-flag">🇯🇵</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo Internacional de Manga de Kioto</div>
+      <div class="museum-loc">Kioto, Japón</div>
+      <p class="museum-desc">El museo de manga más grande de Japón con 300.000 artículos. Audioguía gratuita en 8 idiomas disponible en el navegador.</p>
+      <div class="museum-links">
+        <a href="https://www.kyotomm.jp/" target="_blank" rel="noopener" class="btn sm">Web oficial →</a>
+        <a href="https://www.mappu.ai/audio-guides/japan/kyoto/kyoto-international-manga-museum" target="_blank" rel="noopener" class="btn sm" style="background:var(--red);color:#fff">🎧 Audioguía gratis</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="museum-card">
+    <div class="museum-flag">🇯🇵</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo Tokiwa-sō</div>
+      <div class="museum-loc">Tokio, Japón</div>
+      <p class="museum-desc">Recrea el edificio donde vivieron Osamu Tezuka y otras leyendas. Visita virtual completa en 360° y Google Street View.</p>
+      <div class="museum-links">
+        <a href="https://tokiwasomm.jp/" target="_blank" rel="noopener" class="btn sm">Web oficial + Visita 360° →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="museum-card" style="border-color:var(--red)">
+    <div class="museum-flag">🌐</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo de Arte del Manga</div>
+      <div class="museum-loc">Online · Gratuito</div>
+      <p class="museum-desc">Museo totalmente virtual. Exhibe manuscritos originales de manga del siglo XX con comentarios exclusivos de los propios autores.</p>
+      <div class="museum-links">
+        <a href="https://manga-art.jp/" target="_blank" rel="noopener" class="btn sm" style="background:var(--red);color:#fff">🖼 Visitar museo virtual →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="museum-card">
+    <div class="museum-flag">🇪🇸</div>
+    <div class="museum-body">
+      <div class="museum-title">Museo del Cómic y la Ilustración</div>
+      <div class="museum-loc">Sant Cugat, Barcelona, España</div>
+      <p class="museum-desc">Sala permanente dedicada a la historia del manga, desde el siglo XIX hasta su impacto en España. Referencia clave en Europa.</p>
+      <div class="museum-links">
+        <a href="https://museucomic.cat/" target="_blank" rel="noopener" class="btn sm">Web oficial →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<h3 style="margin:28px 0 10px;font-family:var(--disp);font-size:clamp(18px,4vw,26px);color:var(--red)">🎉 Festivales de Manga y Anime</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+
+  <div class="festival-card">
+    <div class="festival-header" style="background:var(--red)">
+      <span class="festival-flag">🇪🇸</span>
+      <span class="festival-name">Manga Barcelona 2026</span>
+    </div>
+    <div class="festival-body">
+      <div class="festival-date">📅 5–8 Diciembre 2026 · Fira Gran Via</div>
+      <p>32ª edición. Invitado estelar: <b>Junji Ito</b> (maestro del terror). El evento de referencia del manga en España.</p>
+      <a href="https://www.manga-barcelona.com/" target="_blank" rel="noopener" class="btn sm" style="margin-top:8px">Web oficial →</a>
+    </div>
+  </div>
+
+  <div class="festival-card">
+    <div class="festival-header" style="background:var(--ink)">
+      <span class="festival-flag">🇯🇵</span>
+      <span class="festival-name">Comiket 2026</span>
+    </div>
+    <div class="festival-body">
+      <div class="festival-date">📅 C108: 15–16 Ago · C109: 29–31 Dic · Tokyo Big Sight</div>
+      <p>El mayor mercado de dōjinshi del mundo. Dos ediciones anuales con cientos de miles de visitantes y miles de círculos independientes.</p>
+      <a href="https://www.comiket.co.jp/" target="_blank" rel="noopener" class="btn sm" style="margin-top:8px">Web oficial →</a>
+    </div>
+  </div>
+
+  <div class="festival-card">
+    <div class="festival-header" style="background:var(--blue)">
+      <span class="festival-flag">🇯🇵</span>
+      <span class="festival-name">AnimeJapan 2026</span>
+    </div>
+    <div class="festival-body">
+      <div class="festival-date">📅 28–29 Marzo 2026 · Tokyo Big Sight</div>
+      <p>Uno de los mayores eventos de anime del mundo con 156.000 visitantes. Presentaciones exclusivas de nuevas series y películas.</p>
+      <a href="https://anime-japan.jp/" target="_blank" rel="noopener" class="btn sm" style="margin-top:8px">Web oficial →</a>
+    </div>
+  </div>
+
+  <div class="festival-card">
+    <div class="festival-header" style="background:#5a2d82">
+      <span class="festival-flag">🇯🇵</span>
+      <span class="festival-name">Japan Media Arts Festival</span>
+    </div>
+    <div class="festival-body">
+      <div class="festival-date">📅 Anual · Agencia de Asuntos Culturales de Japón</div>
+      <p>Premia lo mejor en manga, animación y videojuegos. Plataforma fundamental para descubrir obras innovadoras y ganadoras de premio.</p>
+      <a href="https://www.bunka.go.jp/j-mediaarts-festival/en/award/" target="_blank" rel="noopener" class="btn sm" style="margin-top:8px">Ver premios →</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="panel" style="margin-top:16px;text-align:center">
+  <button class="btn red" onclick="addXP(40);this.textContent='¡+40 XP! Destino desbloqueado ✓';this.disabled=true">🗺 Marcar como destino cultural (+40 XP)</button>
+</div>
+
 </section>
 </template>
 <script>
