@@ -529,8 +529,7 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <div id="longdate"></div>
   </div>
   <div class="topbtns">
-<button class="btn sm" onclick="exportarHTML()" title="Exportar aplicación como HTML">⬇ Exportar</button>
-    <div id="xpbox" title="Ver todos los niveles" onclick="toggleLvlPanel()">
+<div id="xpbox" title="Ver todos los niveles" onclick="toggleLvlPanel()">
       <span class="lvl" id="lvlName">見習い Aprendiz</span>
       <div id="xpbar"><i></i></div>
       <b id="xpNum">0</b>
@@ -686,6 +685,13 @@ section.st.show{animation:mangaWipe .38s cubic-bezier(.15,1.5,.4,1) both}
     <span style="font-size:13px;color:var(--muted)">Progreso global:</span>
     <div id="homeXpBar" style="flex:1;min-width:120px;height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div id="homeXpFill" style="height:100%;background:var(--red);width:0;transition:width .5s"></div></div>
     <span id="homeXpLabel" style="font-family:var(--disp);font-size:13px;color:var(--ink)">0 XP · 見習い</span>
+  </div>
+
+  <!-- EXPORTAR -->
+  <div style="margin-top:18px;padding:16px 18px;border:2px solid var(--red);border-radius:12px;background:var(--paper)">
+    <div style="font-family:var(--disp);font-size:16px;font-weight:900;color:var(--red);margin-bottom:6px">⬇ Exportar aplicación</div>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Descarga el HTML completo con videos y sonidos integrados. Funciona sin internet en cualquier navegador.</p>
+    <button class="btn blue" onclick="exportarHTML()" style="font-size:14px;padding:10px 20px">Descargar manga-master.html</button>
   </div>
 </div>
 </section>
