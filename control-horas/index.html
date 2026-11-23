@@ -74,18 +74,20 @@ input,select,textarea{font-family:inherit;font-size:14px}
 #topbar{background:var(--primary);color:#fff;display:flex;flex-direction:column;padding:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 #topbar-main{display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-bottom:1px solid rgba(255,255,255,.12)}
 #topbar-actions{display:flex;align-items:center;gap:4px;padding:0 10px;height:36px}
-#topbar h1{font-size:17px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;flex-shrink:0;margin:0}
+#topbar h1{font-size:21px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;flex-shrink:0;margin:0}
 #topbar-actions-spacer{flex:1}
-#live-clock{display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;min-width:0}
-#live-clock .lc-time{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap}
-#live-clock .lc-sep{opacity:.4;font-size:13px}
-#live-clock .lc-date{font-size:11px;font-weight:500;opacity:.75;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:170px}
+#live-clock{display:flex;align-items:center;gap:5px;flex:1;justify-content:flex-end;min-width:0;opacity:.62}
+#live-clock .lc-time{font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap}
+#live-clock .lc-sep{opacity:.5;font-size:11px}
+#live-clock .lc-date{font-size:10px;font-weight:400;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:140px}
 .icon-btn{background:none;border:none;color:inherit;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
 .icon-btn:hover{background:rgba(255,255,255,.18)}
 
 /* user avatar + dropdown */
-#user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);color:#fff;font-size:13px;font-weight:800;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
+#user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.45);color:#fff;font-size:13px;font-weight:800;cursor:pointer;display:grid;place-items:center;flex-shrink:0;position:relative}
 #user-avatar:hover{background:rgba(255,255,255,.35)}
+#user-avatar::after{content:attr(data-tooltip);position:absolute;top:42px;right:0;background:rgba(0,0,0,.78);color:#fff;font-size:11px;font-weight:500;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:1000}
+#user-avatar:hover::after{opacity:1}
 #user-menu{position:absolute;right:0;top:44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);min-width:170px;z-index:999;overflow:hidden}
 #user-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:11px 16px;background:none;border:none;color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:background .15s}
 #user-menu button:hover{background:var(--surface2)}
@@ -445,8 +447,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
         <span class="lc-time" id="lc-t"></span>
       </div>
       <div id="user-avatar-wrap" style="position:relative;display:flex;align-items:center;flex-shrink:0">
-        <button id="user-avatar" onclick="toggleUserMenu()" aria-label="Menú usuario">?</button>
+        <button id="user-avatar" onclick="toggleUserMenu()" aria-label="Menú usuario" data-tooltip="Cuenta / Logout">?</button>
         <div id="user-menu" hidden>
+          <div id="user-menu-name" style="padding:10px 16px 6px;font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)"></div>
           <button onclick="doLogout()">🚪 <span data-i18n="settings.logout">Cerrar sesión</span></button>
         </div>
       </div>
@@ -794,63 +797,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
 <!-- Help / Info modal -->
 <div id="overlay-help" class="overlay" onclick="closeHelp(event)">
   <div class="sheet" style="max-height:85vh;overflow-y:auto">
-    <div class="sheet-title">ℹ️ ControlHoras — Guía de uso</div>
-    <div id="help-content">
-
-      <div class="help-section">
-        <div class="help-sec-title">🚀 ¿Qué es ControlHoras?</div>
-        <p class="help-p">Aplicación de registro de jornada laboral. Registra tus horas de trabajo, calcula salario bruto/neto y genera informes oficiales en PDF, Excel y JPG.</p>
-      </div>
-
-      <div class="help-section">
-        <div class="help-sec-title">📋 Funcionalidades principales</div>
-        <div class="help-feat-grid">
-          <div class="hf"><span class="hf-icon">⏱</span><div><b>Registro de horas</b><br><span>Pulsa + para añadir una jornada. Elige fecha, tipo de día, horas trabajadas y notas.</span></div></div>
-          <div class="hf"><span class="hf-icon">💰</span><div><b>Cálculo salarial</b><br><span>Configura tu tarifa por hora y la app calcula bruto/neto aplicando IRPF y Seguridad Social.</span></div></div>
-          <div class="hf"><span class="hf-icon">📊</span><div><b>Informes exportables</b><br><span>Exporta en PDF (imprimible), Excel (.xls) y JPG con encabezado profesional.</span></div></div>
-          <div class="hf"><span class="hf-icon">🌍</span><div><b>10 idiomas</b><br><span>ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Cambia el idioma desde la barra superior.</span></div></div>
-          <div class="hf"><span class="hf-icon">🏳️</span><div><b>55 países</b><br><span>Preajustes de legislación laboral: moneda, IRPF, SS y horas máximas. Ve a ⚙️ → País.</span></div></div>
-          <div class="hf"><span class="hf-icon">🌙</span><div><b>Tipos de jornada</b><br><span>Normal, Nocturna, Fin de semana, Festivo, Vacaciones, Baja médica, Libre.</span></div></div>
-          <div class="hf"><span class="hf-icon">📈</span><div><b>Estadísticas</b><br><span>Heatmap mensual, racha actual, top días, resumen anual. Pulsa 📊 en las pestañas.</span></div></div>
-          <div class="hf"><span class="hf-icon">🔔</span><div><b>Recordatorio diario</b><br><span>Activa la notificación diaria en ⚙️ → Valores por defecto para no olvidar fichar.</span></div></div>
-        </div>
-      </div>
-
-      <div class="help-section">
-        <div class="help-sec-title">⚙️ Cómo configurar la aplicación</div>
-        <div class="help-steps">
-          <div class="help-step"><span class="hs-num">1</span><div><b>Datos del trabajador</b> — En ⚙️ introduce tu nombre, empresa, puesto y número de contrato. Aparecerán en todos los informes.</div></div>
-          <div class="help-step"><span class="hs-num">2</span><div><b>Selecciona tu país</b> — En ⚙️ → Legislación por país elige tu país. Se rellenan automáticamente la moneda, IRPF % y SS %. Puedes ajustarlos manualmente.</div></div>
-          <div class="help-step"><span class="hs-num">3</span><div><b>Tarifa por hora</b> — Introduce tu salario bruto por hora en ⚙️ → Tarifa. La app calculará bruto y neto en cada entrada.</div></div>
-          <div class="help-step"><span class="hs-num">4</span><div><b>Periodo de visualización</b> — Alterna entre Semana / Mes / Estadísticas con los botones de la barra de período. Navega con ‹ › entre períodos.</div></div>
-          <div class="help-step"><span class="hs-num">5</span><div><b>Generar informe</b> — Pulsa 📊 en la barra superior, revisa el resumen y exporta en el formato deseado.</div></div>
-          <div class="help-step"><span class="hs-num">6</span><div><b>Tema y color</b> — En ⚙️ → Tema elige Claro / Sistema / Oscuro y personaliza el color de acento.</div></div>
-        </div>
-      </div>
-
-      <div class="help-section">
-        <div class="help-sec-title">📤 Exportación de informes</div>
-        <table class="help-table">
-          <tr><th>Formato</th><th>Contenido</th><th>Uso recomendado</th></tr>
-          <tr><td>📄 PDF</td><td>Informe formal imprimible</td><td>Entregar a empresa / inspector</td></tr>
-          <tr><td>📊 Excel</td><td>Hoja de cálculo .xls con todos los registros</td><td>Contabilidad / análisis</td></tr>
-          <tr><td>🖼️ JPG</td><td>Imagen del informe con encabezado</td><td>Compartir por WhatsApp / email</td></tr>
-          <tr><td>⬇ CSV</td><td>Datos en texto plano separados por comas</td><td>Importar en otras apps</td></tr>
-          <tr><td>⬇ HTML</td><td>Informe completo en formato web</td><td>Archivar / imprimir con estilo</td></tr>
-        </table>
-      </div>
-
-      <div class="help-section">
-        <div class="help-sec-title">🔐 Acceso y datos</div>
-        <p class="help-p">Los datos se guardan localmente en tu dispositivo (localStorage). Crea una cuenta para identificarte o usa el <b>modo demo</b> para explorar la aplicación sin registro.</p>
-        <p class="help-p" style="margin-top:6px"><b>Cuenta demo:</b> demo@controlhoras.app / demo123</p>
-      </div>
-
-      <div class="help-footer">
-        <span>Sarah Hernández · +34641216429 · akera7827@gmail.com</span>
-      </div>
-    </div>
-    <button class="btn-save" style="width:100%;margin-top:12px" onclick="closeHelp()">Cerrar</button>
+    <div class="sheet-title" id="help-title">ℹ️ ControlHoras</div>
+    <div id="help-content"></div>
+    <button class="btn-save" style="width:100%;margin-top:12px" id="help-close-btn" onclick="closeHelp()">Cerrar</button>
   </div>
 </div>
 
@@ -1270,9 +1219,350 @@ const LANG = {
   }
 };
 
+const HELP_LANG = {
+  es:{
+    title:'ℹ️ ControlHoras — Guía de uso',
+    what_title:'🚀 ¿Qué es ControlHoras?',
+    what_text:'Aplicación de registro de jornada laboral. Registra tus horas de trabajo, calcula salario bruto/neto y genera informes oficiales en PDF, Excel y JPG.',
+    feat_title:'📋 Funcionalidades principales',
+    feats:[
+      ['⏱','Registro de horas','Pulsa + para añadir una jornada. Elige fecha, tipo de día, horas trabajadas y notas.'],
+      ['💰','Cálculo salarial','Configura tu tarifa por hora y la app calcula bruto/neto aplicando IRPF y Seguridad Social.'],
+      ['📊','Informes exportables','Exporta en PDF (imprimible), Excel (.xls) y JPG con encabezado profesional.'],
+      ['🌍','10 idiomas','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Cambia el idioma desde la barra superior.'],
+      ['🏳️','55 países','Preajustes de legislación laboral: moneda, IRPF, SS y horas máximas. Ve a ⚙️ → País.'],
+      ['🌙','Tipos de jornada','Normal, Nocturna, Fin de semana, Festivo, Vacaciones, Baja médica, Libre.'],
+      ['📈','Estadísticas','Heatmap mensual, racha actual, top días, resumen anual. Pulsa 📊 en las pestañas.'],
+      ['🔔','Recordatorio diario','Activa la notificación diaria en ⚙️ → Valores por defecto para no olvidar fichar.'],
+    ],
+    cfg_title:'⚙️ Cómo configurar la aplicación',
+    steps:[
+      ['Datos del trabajador','En ⚙️ introduce tu nombre, empresa, puesto y número de contrato. Aparecerán en todos los informes.'],
+      ['Selecciona tu país','En ⚙️ → Legislación por país elige tu país. Se rellenan automáticamente la moneda, IRPF % y SS %.'],
+      ['Tarifa por hora','Introduce tu salario bruto por hora en ⚙️ → Tarifa. La app calculará bruto y neto en cada entrada.'],
+      ['Periodo de visualización','Alterna entre Semana / Mes / Estadísticas con los botones de la barra de período. Navega con ‹ › entre períodos.'],
+      ['Generar informe','Pulsa 📊 en la barra superior, revisa el resumen y exporta en el formato deseado.'],
+      ['Tema y color','En ⚙️ → Tema elige Claro / Sistema / Oscuro y personaliza el color de acento.'],
+    ],
+    exp_title:'📤 Exportación de informes',
+    exp_hdr:['Formato','Contenido','Uso recomendado'],
+    exports:[['📄 PDF','Informe formal imprimible','Entregar a empresa / inspector'],['📊 Excel','Hoja de cálculo .xls con todos los registros','Contabilidad / análisis'],['🖼️ JPG','Imagen del informe con encabezado','Compartir por WhatsApp / email'],['⬇ CSV','Datos en texto plano separados por comas','Importar en otras apps'],['⬇ HTML','Informe completo en formato web','Archivar / imprimir con estilo']],
+    acc_title:'🔐 Acceso y datos',
+    acc_text:'Los datos se guardan localmente en tu dispositivo (localStorage). Crea una cuenta para identificarte o usa el <b>modo demo</b> para explorar la aplicación sin registro.',
+    acc_demo:'<b>Cuenta demo:</b> demo@controlhoras.app / demo123',
+    close:'Cerrar',
+  },
+  en:{
+    title:'ℹ️ ControlHoras — User Guide',
+    what_title:'🚀 What is ControlHoras?',
+    what_text:'Work-hours tracking app. Record your working hours, calculate gross/net salary, and generate official reports in PDF, Excel and JPG.',
+    feat_title:'📋 Main features',
+    feats:[
+      ['⏱','Hours tracking','Tap + to add a shift. Choose date, day type, hours worked and notes.'],
+      ['💰','Salary calculation','Set your hourly rate and the app calculates gross/net applying income tax and social security.'],
+      ['📊','Exportable reports','Export as PDF (printable), Excel (.xls) and JPG with professional header.'],
+      ['🌍','10 languages','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Change language from the top bar.'],
+      ['🏳️','55 countries','Labour law presets: currency, income tax, SS and max hours. Go to ⚙️ → Country.'],
+      ['🌙','Shift types','Normal, Night, Weekend, Holiday, Vacation, Sick leave, Day off.'],
+      ['📈','Statistics','Monthly heatmap, current streak, top days, annual summary. Tap 📊 in the tabs.'],
+      ['🔔','Daily reminder','Enable daily notification in ⚙️ → Defaults so you never forget to clock in.'],
+    ],
+    cfg_title:'⚙️ How to configure the app',
+    steps:[
+      ['Worker data','In ⚙️ enter your name, company, role and contract number. They appear in all reports.'],
+      ['Select your country','In ⚙️ → Country legislation choose your country. Currency, income tax % and SS % fill in automatically.'],
+      ['Hourly rate','Enter your gross hourly wage in ⚙️ → Rate. The app will calculate gross and net for each entry.'],
+      ['View period','Switch between Week / Month / Statistics with the period bar buttons. Navigate with ‹ › between periods.'],
+      ['Generate report','Tap 📊 in the top bar, review the summary and export in the desired format.'],
+      ['Theme & colour','In ⚙️ → Theme choose Light / System / Dark and customise the accent colour.'],
+    ],
+    exp_title:'📤 Report export',
+    exp_hdr:['Format','Content','Recommended use'],
+    exports:[['📄 PDF','Formal printable report','Submit to employer / inspector'],['📊 Excel','.xls spreadsheet with all records','Accounting / analysis'],['🖼️ JPG','Report image with header','Share via WhatsApp / email'],['⬇ CSV','Plain text comma-separated data','Import into other apps'],['⬇ HTML','Full report in web format','Archive / styled print']],
+    acc_title:'🔐 Access & data',
+    acc_text:'Data is saved locally on your device (localStorage). Create an account to identify yourself or use <b>demo mode</b> to explore the app without registering.',
+    acc_demo:'<b>Demo account:</b> demo@controlhoras.app / demo123',
+    close:'Close',
+  },
+  uk:{
+    title:'ℹ️ ControlHoras — Довідник',
+    what_title:'🚀 Що таке ControlHoras?',
+    what_text:'Додаток для обліку робочого часу. Записуйте робочі години, розраховуйте брутто/нетто зарплату та створюйте офіційні звіти у PDF, Excel та JPG.',
+    feat_title:'📋 Основні функції',
+    feats:[
+      ['⏱','Облік годин','Натисніть + щоб додати зміну. Виберіть дату, тип дня, кількість годин та нотатки.'],
+      ['💰','Розрахунок зарплати','Введіть погодинну ставку — додаток розрахує брутто/нетто з урахуванням податків.'],
+      ['📊','Експорт звітів','Експорт у PDF, Excel (.xls) та JPG із професійним заголовком.'],
+      ['🌍','10 мов','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Змініть мову у верхній панелі.'],
+      ['🏳️','55 країн','Пресети трудового законодавства: валюта, податок, соцвнесок, макс. годин. ⚙️ → Країна.'],
+      ['🌙','Типи змін','Звичайна, Нічна, Вихідні, Свято, Відпустка, Лікарняний, Вихідний.'],
+      ['📈','Статистика','Місячна теплова карта, поточна серія, топ-3 дні, річний підсумок.'],
+      ['🔔','Щоденне нагадування','Увімкніть сповіщення в ⚙️ → Параметри за замовчуванням.'],
+    ],
+    cfg_title:'⚙️ Налаштування додатку',
+    steps:[
+      ['Дані працівника','В ⚙️ введіть ПІБ, компанію, посаду та номер контракту.'],
+      ['Вибір країни','В ⚙️ → Країна виберіть свою країну. Валюта та ставки заповнюються автоматично.'],
+      ['Погодинна ставка','Введіть годинну брутто-ставку в ⚙️ → Тариф.'],
+      ['Перегляд periodу','Перемикайтесь між Тиждень / Місяць / Статистика кнопками. Навігація ‹ ›.'],
+      ['Генерація звіту','Натисніть 📊 у верхній панелі, перегляньте підсумок та експортуйте.'],
+      ['Тема та колір','В ⚙️ → Тема виберіть Світла / Система / Темна та колір акценту.'],
+    ],
+    exp_title:'📤 Експорт звітів',
+    exp_hdr:['Формат','Вміст','Рекомендоване використання'],
+    exports:[['📄 PDF','Офіційний друкований звіт','Подати роботодавцю / інспектору'],['📊 Excel','Таблиця .xls з усіма записами','Бухгалтерія / аналіз'],['🖼️ JPG','Зображення звіту із заголовком','Поширити через WhatsApp / email'],['⬇ CSV','Дані у текстовому форматі через кому','Імпорт в інші додатки'],['⬇ HTML','Повний звіт у веб-форматі','Архів / друк']],
+    acc_title:'🔐 Доступ та дані',
+    acc_text:'Дані зберігаються локально на вашому пристрої. Створіть акаунт або використайте <b>демо-режим</b> без реєстрації.',
+    acc_demo:'<b>Демо-акаунт:</b> demo@controlhoras.app / demo123',
+    close:'Закрити',
+  },
+  ro:{
+    title:'ℹ️ ControlHoras — Ghid de utilizare',
+    what_title:'🚀 Ce este ControlHoras?',
+    what_text:'Aplicație de evidență a orelor de muncă. Înregistrează orele lucrate, calculează salariul brut/net și generează rapoarte oficiale în PDF, Excel și JPG.',
+    feat_title:'📋 Funcționalități principale',
+    feats:[
+      ['⏱','Înregistrare ore','Apasă + pentru a adăuga o tură. Alege data, tipul zilei, ore lucrate și note.'],
+      ['💰','Calcul salarial','Configurează tariful orar și aplicația calculează brut/net cu impozit și contribuții sociale.'],
+      ['📊','Rapoarte exportabile','Export în PDF (imprimabil), Excel (.xls) și JPG cu antet profesional.'],
+      ['🌍','10 limbi','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Schimbă limba din bara superioară.'],
+      ['🏳️','55 țări','Presetări legislație muncii: monedă, impozit, contrib. socială, ore maxime. ⚙️ → Țară.'],
+      ['🌙','Tipuri de tură','Normal, Noapte, Weekend, Sărbătoare, Concediu, Concediu medical, Zi liberă.'],
+      ['📈','Statistici','Heatmap lunar, seria curentă, top 3 zile, rezumat anual.'],
+      ['🔔','Memento zilnic','Activează notificarea zilnică în ⚙️ → Valori implicite.'],
+    ],
+    cfg_title:'⚙️ Cum se configurează aplicația',
+    steps:[
+      ['Date angajat','În ⚙️ introdu numele, compania, postul și numărul contractului.'],
+      ['Selectează țara','În ⚙️ → Legislație selectează țara ta. Moneda, impozitul și contribuția se completează automat.'],
+      ['Tarif orar','Introdu salariul brut orar în ⚙️ → Tarif.'],
+      ['Perioadă de vizualizare','Comută între Săptămână / Lună / Statistici cu butoanele barei de perioadă.'],
+      ['Generare raport','Apasă 📊 în bara superioară, verifică rezumatul și exportă în formatul dorit.'],
+      ['Temă și culoare','În ⚙️ → Temă alege Luminos / Sistem / Întunecat și personalizează culoarea de accent.'],
+    ],
+    exp_title:'📤 Export rapoarte',
+    exp_hdr:['Format','Conținut','Utilizare recomandată'],
+    exports:[['📄 PDF','Raport formal imprimabil','Înmânare angajator / inspector'],['📊 Excel','Foaie de calcul .xls cu toate înregistrările','Contabilitate / analiză'],['🖼️ JPG','Imagine raport cu antet','Trimite pe WhatsApp / email'],['⬇ CSV','Date text separate prin virgulă','Import în alte aplicații'],['⬇ HTML','Raport complet web','Arhivare / imprimare cu stil']],
+    acc_title:'🔐 Acces și date',
+    acc_text:'Datele sunt salvate local pe dispozitivul tău. Creează un cont sau folosește <b>modul demo</b> fără înregistrare.',
+    acc_demo:'<b>Cont demo:</b> demo@controlhoras.app / demo123',
+    close:'Închide',
+  },
+  ru:{
+    title:'ℹ️ ControlHoras — Руководство',
+    what_title:'🚀 Что такое ControlHoras?',
+    what_text:'Приложение для учёта рабочего времени. Записывайте часы работы, рассчитывайте зарплату брутто/нетто и создавайте официальные отчёты в PDF, Excel и JPG.',
+    feat_title:'📋 Основные функции',
+    feats:[
+      ['⏱','Учёт часов','Нажмите + для добавления смены. Выберите дату, тип дня, отработанные часы и заметки.'],
+      ['💰','Расчёт зарплаты','Укажите почасовую ставку — приложение рассчитает брутто/нетто с учётом налогов.'],
+      ['📊','Экспорт отчётов','Экспорт в PDF, Excel (.xls) и JPG с профессиональной шапкой.'],
+      ['🌍','10 языков','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Смените язык на верхней панели.'],
+      ['🏳️','55 стран','Пресеты трудового законодательства: валюта, налог, соцвзнос, макс. часов. ⚙️ → Страна.'],
+      ['🌙','Типы смен','Обычная, Ночная, Выходные, Праздник, Отпуск, Больничный, Выходной.'],
+      ['📈','Статистика','Тепловая карта за месяц, текущая серия, топ-3 дня, годовой итог.'],
+      ['🔔','Ежедневное напоминание','Включите уведомление в ⚙️ → Параметры по умолчанию.'],
+    ],
+    cfg_title:'⚙️ Настройка приложения',
+    steps:[
+      ['Данные работника','В ⚙️ введите ФИО, компанию, должность и номер контракта.'],
+      ['Выбор страны','В ⚙️ → Страна выберите свою страну. Валюта и ставки заполнятся автоматически.'],
+      ['Почасовая ставка','Введите почасовую брутто-ставку в ⚙️ → Тариф.'],
+      ['Период просмотра','Переключайтесь между Неделя / Месяц / Статистика кнопками. Навигация ‹ ›.'],
+      ['Генерация отчёта','Нажмите 📊 на верхней панели, проверьте итоги и экспортируйте.'],
+      ['Тема и цвет','В ⚙️ → Тема выберите Светлая / Система / Тёмная и цвет акцента.'],
+    ],
+    exp_title:'📤 Экспорт отчётов',
+    exp_hdr:['Формат','Содержание','Рекомендуемое использование'],
+    exports:[['📄 PDF','Официальный печатный отчёт','Передать работодателю / инспектору'],['📊 Excel','Таблица .xls со всеми записями','Бухгалтерия / анализ'],['🖼️ JPG','Изображение отчёта с шапкой','Отправить через WhatsApp / email'],['⬇ CSV','Данные в текстовом формате через запятую','Импорт в другие приложения'],['⬇ HTML','Полный отчёт в веб-формате','Архив / печать']],
+    acc_title:'🔐 Доступ и данные',
+    acc_text:'Данные хранятся локально на вашем устройстве. Создайте аккаунт или используйте <b>демо-режим</b> без регистрации.',
+    acc_demo:'<b>Демо-аккаунт:</b> demo@controlhoras.app / demo123',
+    close:'Закрыть',
+  },
+  fr:{
+    title:'ℹ️ ControlHoras — Guide d\'utilisation',
+    what_title:'🚀 Qu\'est-ce que ControlHoras ?',
+    what_text:'Application de suivi du temps de travail. Enregistrez vos heures, calculez le salaire brut/net et générez des rapports officiels en PDF, Excel et JPG.',
+    feat_title:'📋 Fonctionnalités principales',
+    feats:[
+      ['⏱','Enregistrement des heures','Appuyez sur + pour ajouter une vacation. Choisissez la date, le type de jour, les heures et les notes.'],
+      ['💰','Calcul du salaire','Configurez votre taux horaire et l\'app calcule le brut/net avec impôts et cotisations sociales.'],
+      ['📊','Rapports exportables','Exportez en PDF (imprimable), Excel (.xls) et JPG avec en-tête professionnel.'],
+      ['🌍','10 langues','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Changez la langue depuis la barre supérieure.'],
+      ['🏳️','55 pays','Préréglages législation du travail : devise, impôt, cotisations, heures max. ⚙️ → Pays.'],
+      ['🌙','Types de journée','Normal, Nuit, Week-end, Férié, Congés, Arrêt maladie, Jour de repos.'],
+      ['📈','Statistiques','Carte de chaleur mensuelle, série en cours, top 3 jours, résumé annuel.'],
+      ['🔔','Rappel quotidien','Activez la notification quotidienne dans ⚙️ → Valeurs par défaut.'],
+    ],
+    cfg_title:'⚙️ Comment configurer l\'application',
+    steps:[
+      ['Données du travailleur','Dans ⚙️, saisissez votre nom, entreprise, poste et numéro de contrat.'],
+      ['Sélectionner votre pays','Dans ⚙️ → Législation, choisissez votre pays. Devise, impôt % et cotisations % se remplissent automatiquement.'],
+      ['Taux horaire','Saisissez votre salaire brut horaire dans ⚙️ → Tarifs.'],
+      ['Période d\'affichage','Basculez entre Semaine / Mois / Statistiques avec les boutons de la barre de période.'],
+      ['Générer un rapport','Appuyez sur 📊 dans la barre supérieure, vérifiez le résumé et exportez au format souhaité.'],
+      ['Thème et couleur','Dans ⚙️ → Thème, choisissez Clair / Système / Sombre et personnalisez la couleur d\'accent.'],
+    ],
+    exp_title:'📤 Export des rapports',
+    exp_hdr:['Format','Contenu','Utilisation recommandée'],
+    exports:[['📄 PDF','Rapport formel imprimable','Remettre à l\'employeur / inspecteur'],['📊 Excel','Tableur .xls avec tous les enregistrements','Comptabilité / analyse'],['🖼️ JPG','Image du rapport avec en-tête','Partager par WhatsApp / email'],['⬇ CSV','Données texte séparées par des virgules','Importer dans d\'autres apps'],['⬇ HTML','Rapport complet au format web','Archiver / imprimer avec style']],
+    acc_title:'🔐 Accès et données',
+    acc_text:'Les données sont sauvegardées localement sur votre appareil. Créez un compte ou utilisez le <b>mode démo</b> sans inscription.',
+    acc_demo:'<b>Compte démo :</b> demo@controlhoras.app / demo123',
+    close:'Fermer',
+  },
+  de:{
+    title:'ℹ️ ControlHoras — Benutzerhandbuch',
+    what_title:'🚀 Was ist ControlHoras?',
+    what_text:'App zur Arbeitszeiterfassung. Erfassen Sie Ihre Arbeitszeiten, berechnen Sie Brutto-/Nettogehalt und erstellen Sie offizielle Berichte in PDF, Excel und JPG.',
+    feat_title:'📋 Hauptfunktionen',
+    feats:[
+      ['⏱','Stundenerfassung','Tippen Sie auf + um eine Schicht hinzuzufügen. Wählen Sie Datum, Tagestyp, Stunden und Notizen.'],
+      ['💰','Gehaltsberechnung','Stundenlohn eingeben — die App berechnet Brutto/Netto mit Steuern und Sozialabgaben.'],
+      ['📊','Exportierbare Berichte','Export als PDF (druckbar), Excel (.xls) und JPG mit professionellem Kopfbereich.'],
+      ['🌍','10 Sprachen','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Sprache in der oberen Leiste ändern.'],
+      ['🏳️','55 Länder','Arbeitsrechtliche Voreinstellungen: Währung, Steuer, Sozialversicherung, Maximalstunden. ⚙️ → Land.'],
+      ['🌙','Schichttypen','Normal, Nacht, Wochenende, Feiertag, Urlaub, Krankenstand, Freier Tag.'],
+      ['📈','Statistiken','Monatliche Heatmap, aktuelle Serie, Top-3-Tage, Jahresübersicht.'],
+      ['🔔','Tägliche Erinnerung','Tägliche Benachrichtigung in ⚙️ → Standardwerte aktivieren.'],
+    ],
+    cfg_title:'⚙️ App konfigurieren',
+    steps:[
+      ['Mitarbeiterdaten','In ⚙️ Name, Unternehmen, Position und Vertragsnummer eingeben.'],
+      ['Land auswählen','In ⚙️ → Land Ihr Land auswählen. Währung, Steuer % und SV % werden automatisch ausgefüllt.'],
+      ['Stundenlohn','Brutto-Stundenlohn in ⚙️ → Tarife eingeben.'],
+      ['Anzeigeperiode','Mit den Periodenbalken-Schaltflächen zwischen Woche / Monat / Statistiken wechseln.'],
+      ['Bericht erstellen','📊 in der oberen Leiste tippen, Zusammenfassung prüfen und im gewünschten Format exportieren.'],
+      ['Thema und Farbe','In ⚙️ → Thema Hell / System / Dunkel wählen und Akzentfarbe anpassen.'],
+    ],
+    exp_title:'📤 Berichtsexport',
+    exp_hdr:['Format','Inhalt','Empfohlene Verwendung'],
+    exports:[['📄 PDF','Formaler druckbarer Bericht','Arbeitgeber / Inspektor übergeben'],['📊 Excel','.xls-Tabelle mit allen Einträgen','Buchhaltung / Analyse'],['🖼️ JPG','Berichtsbild mit Kopfzeile','Per WhatsApp / E-Mail teilen'],['⬇ CSV','Klartextdaten, kommagetrennt','In andere Apps importieren'],['⬇ HTML','Vollständiger Bericht im Webformat','Archivieren / Drucken']],
+    acc_title:'🔐 Zugang und Daten',
+    acc_text:'Daten werden lokal auf Ihrem Gerät gespeichert. Erstellen Sie ein Konto oder nutzen Sie den <b>Demo-Modus</b> ohne Registrierung.',
+    acc_demo:'<b>Demo-Konto:</b> demo@controlhoras.app / demo123',
+    close:'Schließen',
+  },
+  it:{
+    title:'ℹ️ ControlHoras — Guida utente',
+    what_title:'🚀 Cos\'è ControlHoras?',
+    what_text:'App per il monitoraggio dell\'orario di lavoro. Registra le ore lavorate, calcola il salario lordo/netto e genera report ufficiali in PDF, Excel e JPG.',
+    feat_title:'📋 Funzionalità principali',
+    feats:[
+      ['⏱','Registrazione ore','Premi + per aggiungere un turno. Scegli data, tipo di giorno, ore lavorate e note.'],
+      ['💰','Calcolo stipendio','Imposta la tariffa oraria e l\'app calcola lordo/netto con tasse e contributi sociali.'],
+      ['📊','Report esportabili','Esporta in PDF (stampabile), Excel (.xls) e JPG con intestazione professionale.'],
+      ['🌍','10 lingue','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Cambia la lingua dalla barra superiore.'],
+      ['🏳️','55 paesi','Preimpostazioni legislazione del lavoro: valuta, tasse, contributi, ore max. ⚙️ → Paese.'],
+      ['🌙','Tipi di turno','Normale, Notturno, Fine settimana, Festivo, Ferie, Malattia, Riposo.'],
+      ['📈','Statistiche','Heatmap mensile, serie attuale, top 3 giorni, riepilogo annuale.'],
+      ['🔔','Promemoria giornaliero','Attiva la notifica giornaliera in ⚙️ → Valori predefiniti.'],
+    ],
+    cfg_title:'⚙️ Come configurare l\'app',
+    steps:[
+      ['Dati lavoratore','In ⚙️ inserisci nome, azienda, ruolo e numero di contratto.'],
+      ['Seleziona il paese','In ⚙️ → Legislazione scegli il tuo paese. Valuta, tassa % e contributi % vengono riempiti automaticamente.'],
+      ['Tariffa oraria','Inserisci il salario lordo orario in ⚙️ → Tariffa.'],
+      ['Periodo di visualizzazione','Alterna tra Settimana / Mese / Statistiche con i pulsanti della barra del periodo.'],
+      ['Generare report','Premi 📊 nella barra superiore, rivedi il riepilogo ed esporta nel formato desiderato.'],
+      ['Tema e colore','In ⚙️ → Tema scegli Chiaro / Sistema / Scuro e personalizza il colore di accento.'],
+    ],
+    exp_title:'📤 Esportazione report',
+    exp_hdr:['Formato','Contenuto','Uso consigliato'],
+    exports:[['📄 PDF','Report formale stampabile','Consegnare a datore di lavoro / ispettore'],['📊 Excel','Foglio .xls con tutti i record','Contabilità / analisi'],['🖼️ JPG','Immagine del report con intestazione','Condividere su WhatsApp / email'],['⬇ CSV','Dati testo separati da virgola','Importare in altre app'],['⬇ HTML','Report completo in formato web','Archiviare / stampa stilizzata']],
+    acc_title:'🔐 Accesso e dati',
+    acc_text:'I dati vengono salvati localmente sul tuo dispositivo. Crea un account o usa la <b>modalità demo</b> senza registrazione.',
+    acc_demo:'<b>Account demo:</b> demo@controlhoras.app / demo123',
+    close:'Chiudi',
+  },
+  pt:{
+    title:'ℹ️ ControlHoras — Guia do usuário',
+    what_title:'🚀 O que é o ControlHoras?',
+    what_text:'Aplicativo de controle de jornada de trabalho. Registre suas horas, calcule o salário bruto/líquido e gere relatórios oficiais em PDF, Excel e JPG.',
+    feat_title:'📋 Funcionalidades principais',
+    feats:[
+      ['⏱','Registro de horas','Toque em + para adicionar um turno. Escolha data, tipo de dia, horas trabalhadas e notas.'],
+      ['💰','Cálculo salarial','Configure sua tarifa por hora e o app calcula bruto/líquido com impostos e contribuições.'],
+      ['📊','Relatórios exportáveis','Exporte em PDF (imprimível), Excel (.xls) e JPG com cabeçalho profissional.'],
+      ['🌍','10 idiomas','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Mude o idioma na barra superior.'],
+      ['🏳️','55 países','Configurações de legislação trabalhista: moeda, IR, previdência, horas máximas. ⚙️ → País.'],
+      ['🌙','Tipos de turno','Normal, Noturno, Fim de semana, Feriado, Férias, Licença médica, Folga.'],
+      ['📈','Estatísticas','Mapa de calor mensal, sequência atual, top 3 dias, resumo anual.'],
+      ['🔔','Lembrete diário','Ative a notificação diária em ⚙️ → Padrões para não esquecer de registrar.'],
+    ],
+    cfg_title:'⚙️ Como configurar o aplicativo',
+    steps:[
+      ['Dados do trabalhador','Em ⚙️, insira seu nome, empresa, cargo e número de contrato.'],
+      ['Selecionar país','Em ⚙️ → Legislação, escolha seu país. Moeda, IR % e contrib. % são preenchidos automaticamente.'],
+      ['Tarifa por hora','Insira seu salário bruto por hora em ⚙️ → Tarifa.'],
+      ['Período de visualização','Alterne entre Semana / Mês / Estatísticas com os botões da barra de período.'],
+      ['Gerar relatório','Toque em 📊 na barra superior, revise o resumo e exporte no formato desejado.'],
+      ['Tema e cor','Em ⚙️ → Tema, escolha Claro / Sistema / Escuro e personalize a cor de destaque.'],
+    ],
+    exp_title:'📤 Exportação de relatórios',
+    exp_hdr:['Formato','Conteúdo','Uso recomendado'],
+    exports:[['📄 PDF','Relatório formal imprimível','Entregar à empresa / fiscal'],['📊 Excel','Planilha .xls com todos os registros','Contabilidade / análise'],['🖼️ JPG','Imagem do relatório com cabeçalho','Compartilhar via WhatsApp / email'],['⬇ CSV','Dados em texto separados por vírgula','Importar em outros apps'],['⬇ HTML','Relatório completo em formato web','Arquivar / imprimir com estilo']],
+    acc_title:'🔐 Acesso e dados',
+    acc_text:'Os dados são salvos localmente no seu dispositivo. Crie uma conta ou use o <b>modo demo</b> sem cadastro.',
+    acc_demo:'<b>Conta demo:</b> demo@controlhoras.app / demo123',
+    close:'Fechar',
+  },
+  ar:{
+    title:'ℹ️ ControlHoras — دليل الاستخدام',
+    what_title:'🚀 ما هو ControlHoras؟',
+    what_text:'تطبيق لتسجيل ساعات العمل. سجّل ساعات عملك، احسب الراتب الإجمالي/الصافي وأنشئ تقارير رسمية بصيغ PDF وExcel وJPG.',
+    feat_title:'📋 الميزات الرئيسية',
+    feats:[
+      ['⏱','تسجيل الساعات','اضغط + لإضافة وردية. اختر التاريخ ونوع اليوم وساعات العمل والملاحظات.'],
+      ['💰','حساب الراتب','حدد أجرك بالساعة وسيحسب التطبيق الإجمالي والصافي بعد الضرائب والاشتراكات.'],
+      ['📊','تقارير قابلة للتصدير','تصدير بصيغة PDF وExcel وJPG مع ترويسة احترافية.'],
+      ['🌍','10 لغات','ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. غيّر اللغة من شريط الأدوات العلوي.'],
+      ['🏳️','55 دولة','إعدادات مسبقة لتشريعات العمل: العملة والضريبة والتأمين والحد الأقصى للساعات. ⚙️ → الدولة.'],
+      ['🌙','أنواع الوردية','عادية، ليلية، عطلة نهاية الأسبوع، عطلة رسمية، إجازة، إجازة مرضية، يوم إجازة.'],
+      ['📈','الإحصائيات','خريطة حرارية شهرية، السلسلة الحالية، أفضل 3 أيام، ملخص سنوي.'],
+      ['🔔','تذكير يومي','فعّل الإشعار اليومي في ⚙️ → الإعدادات الافتراضية.'],
+    ],
+    cfg_title:'⚙️ كيفية ضبط إعدادات التطبيق',
+    steps:[
+      ['بيانات الموظف','في ⚙️ أدخل اسمك والشركة والمنصب ورقم العقد.'],
+      ['اختيار الدولة','في ⚙️ → التشريعات اختر دولتك. تُملأ العملة والضريبة والاشتراكات تلقائياً.'],
+      ['الأجر بالساعة','أدخل أجرك الإجمالي بالساعة في ⚙️ → التعريفات.'],
+      ['فترة العرض','بدّل بين الأسبوع / الشهر / الإحصائيات باستخدام أزرار شريط الفترة. التنقل ‹ ›.'],
+      ['إنشاء تقرير','اضغط 📊 في الشريط العلوي، راجع الملخص وصدّر بالصيغة المطلوبة.'],
+      ['المظهر واللون','في ⚙️ → المظهر اختر فاتح / تلقائي / داكن وخصّص لون التمييز.'],
+    ],
+    exp_title:'📤 تصدير التقارير',
+    exp_hdr:['الصيغة','المحتوى','الاستخدام المقترح'],
+    exports:[['📄 PDF','تقرير رسمي قابل للطباعة','تسليم لصاحب العمل / المفتش'],['📊 Excel','جدول .xls بجميع السجلات','المحاسبة / التحليل'],['🖼️ JPG','صورة التقرير مع الترويسة','المشاركة عبر واتساب / البريد'],['⬇ CSV','بيانات نصية مفصولة بفواصل','الاستيراد في تطبيقات أخرى'],['⬇ HTML','تقرير كامل بتنسيق الويب','الأرشفة / الطباعة']],
+    acc_title:'🔐 الوصول والبيانات',
+    acc_text:'تُحفظ البيانات محلياً على جهازك. أنشئ حساباً أو استخدم <b>الوضع التجريبي</b> دون تسجيل.',
+    acc_demo:'<b>الحساب التجريبي:</b> demo@controlhoras.app / demo123',
+    close:'إغلاق',
+  },
+};
+
 let curLang = 'es';
 
 function t(key){ return (LANG[curLang]||LANG.es)[key] || (LANG.es[key]||key); }
+
+function renderHelp(){
+  const h = HELP_LANG[curLang] || HELP_LANG.es;
+  const esc = s => s.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const feats = h.feats.map(([ic,title,desc])=>`<div class="hf"><span class="hf-icon">${ic}</span><div><b>${esc(title)}</b><br><span>${esc(desc)}</span></div></div>`).join('');
+  const steps = h.steps.map(([title,desc],i)=>`<div class="help-step"><span class="hs-num">${i+1}</span><div><b>${esc(title)}</b> — ${esc(desc)}</div></div>`).join('');
+  const exps = h.exports.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('');
+  const hdrCells = h.exp_hdr.map(c=>`<th>${esc(c)}</th>`).join('');
+  document.getElementById('help-title').textContent = h.title;
+  document.getElementById('help-close-btn').textContent = h.close;
+  document.getElementById('help-content').innerHTML = `
+    <div class="help-section"><div class="help-sec-title">${h.what_title}</div><p class="help-p">${esc(h.what_text)}</p></div>
+    <div class="help-section"><div class="help-sec-title">${h.feat_title}</div><div class="help-feat-grid">${feats}</div></div>
+    <div class="help-section"><div class="help-sec-title">${h.cfg_title}</div><div class="help-steps">${steps}</div></div>
+    <div class="help-section"><div class="help-sec-title">${h.exp_title}</div><table class="help-table"><tr>${hdrCells}</tr>${exps}</table></div>
+    <div class="help-section"><div class="help-sec-title">${h.acc_title}</div><p class="help-p">${h.acc_text}</p><p class="help-p" style="margin-top:6px">${h.acc_demo}</p></div>
+    <div class="help-footer"><span>Sarah Hernández · +34641216429 · akera7827@gmail.com</span></div>`;
+}
 
 function setLang(code){
   curLang = code;
@@ -1287,6 +1577,8 @@ function setLang(code){
     else el.textContent = val;
   });
   if(curUser) renderPeriod();
+  const ov=document.getElementById('overlay-help');
+  if(ov&&ov.classList.contains('open')) renderHelp();
 }
 
 function cur(){
@@ -1467,9 +1759,15 @@ function startApp(){
   }
   // restore lang
   try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;document.getElementById('lang-sel').value=l;setLang(l);}}catch(e){}
-  // avatar initials
+  // avatar initials + tooltip + user name in menu
   const av=document.getElementById('user-avatar');
-  if(av&&curUser){const src=curUser.name||curUser.email||'?';av.textContent=src[0].toUpperCase();}
+  if(av&&curUser){
+    const src=curUser.name||curUser.email||'?';
+    av.textContent=src[0].toUpperCase();
+    av.setAttribute('data-tooltip',src);
+    const mn=document.getElementById('user-menu-name');
+    if(mn) mn.textContent='👤 '+src;
+  }
   // restore color theme
   try{const ct=localStorage.getItem('ch_color_theme');if(ct&&COLOR_THEMES[ct])setColorTheme(ct);}catch(e){}
   renderPeriod();
@@ -2375,7 +2673,7 @@ function openReport(){
 function closeReport(e){ if(e.target===document.getElementById('overlay-report')) document.getElementById('overlay-report').classList.remove('open'); }
 
 /* ══════════ HELP MODAL ══════════ */
-function openHelp(){document.getElementById('overlay-help').classList.add('open');}
+function openHelp(){renderHelp();document.getElementById('overlay-help').classList.add('open');}
 function closeHelp(e){
   const ov=document.getElementById('overlay-help');
   if(!e||e.target===ov) ov.classList.remove('open');
