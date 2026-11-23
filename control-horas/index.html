@@ -1003,6 +1003,11 @@ function startApp(){
   applyTheme(getSettings(curUser.email).theme);
   // restore lang
   try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;document.getElementById('lang-sel').value=l;setLang(l);}}catch(e){}
+  // avatar initials
+  const av=document.getElementById('user-avatar');
+  if(av&&curUser){const src=curUser.name||curUser.email||'?';av.textContent=src[0].toUpperCase();}
+  // restore color theme
+  try{const ct=localStorage.getItem('ch_color_theme');if(ct&&COLOR_THEMES[ct])setColorTheme(ct);}catch(e){}
   renderPeriod();
   setupScrollFloat();
 }
@@ -1062,6 +1067,7 @@ function renderPeriod(){
   renderSummary(entries,start,end);
   renderChart(entries,start,end);
   renderList(entries);
+  setTimeout(observeEntries,50);
 }
 
 /* ═══════════════════════════════════════════════
@@ -1575,6 +1581,9 @@ function openSettings(){
     const themes=['light','system','dark'];
     b.classList.toggle('active',themes[i]===cfg.theme);
   });
+  // mark color theme
+  try{const ct=localStorage.getItem('ch_color_theme')||'blue';
+    document.querySelectorAll('.ctbtn').forEach(b=>b.classList.toggle('active',b.dataset.color===ct));}catch(e){}
   document.getElementById('overlay-settings').classList.add('open');
 }
 function closeSettings(e){ if(e.target===document.getElementById('overlay-settings')) document.getElementById('overlay-settings').classList.remove('open'); }
