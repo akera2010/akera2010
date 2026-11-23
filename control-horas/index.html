@@ -1422,8 +1422,11 @@ function renderList(entries){
   empty.style.display='none';
   const sorted=[...entries].sort((a,b)=>b.date.localeCompare(a.date));
   const cfg=getSettings(curUser.email);
-  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado,vacaciones:0,baja:0,festivo0:0};
+  const absenceEmoji={vacaciones:'🏖️',baja:'🤒',festivo0:'📅'};
+  const workEmoji={normal:'🏢',noche:'🌙',finde:'🌴',feriado:'🎉'};
   const typeLabels=t('type_labels');
+  const absenceLabels={vacaciones:t('type.vacaciones')||'Vacaciones',baja:t('type.baja')||'Baja',festivo0:t('type.festivo0')||'Festivo s/remun.'};
   const months=t('months');
   const wdFull=t('weekdaysFull');
   const retTotal=(cfg.irpf+cfg.ss)/100;
@@ -1532,15 +1535,18 @@ function closeEntry(e){
 }
 function selType(type){
   curType=type;
+  const allTypes=['normal','noche','finde','feriado','vacaciones','baja','festivo0'];
   document.querySelectorAll('.type-btn').forEach(b=>{
     b.className='type-btn';
-    if(b.onclick&&b.onclick.toString().includes(type)) b.classList.add('active-'+type);
   });
   document.querySelectorAll('.type-btn').forEach((b,i)=>{
-    const types=['normal','noche','finde','feriado'];
-    b.classList.remove('active-normal','active-noche','active-finde','active-feriado');
-    if(types[i]===type) b.classList.add('active-'+type);
+    if(allTypes[i]===type) b.classList.add('active-'+type);
   });
+  // hide/show hours for absence types
+  const isAbsence=['vacaciones','baja','festivo0'].includes(type);
+  const hourRow=document.querySelector('.hour-row');
+  if(hourRow)hourRow.style.opacity=isAbsence?'.35':'1';
+  if(isAbsence){const eh=document.getElementById('eHours');if(eh)eh.value=0;}
   updatePayPreview();
 }
 function autoType(){
@@ -1561,19 +1567,26 @@ function stepHours(d){
 function updatePayPreview(){
   const cfg=getSettings(curUser.email);
   const h=parseFloat(document.getElementById('eHours').value)||0;
+  const isAbsence=['vacaciones','baja','festivo0'].includes(curType);
   const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
-  const rate=rateMap[curType]||cfg.rateNormal;
-  const pay=h*rate;
+  const rate=isAbsence?0:(rateMap[curType]||cfg.rateNormal);
+  const pay=isAbsence?0:h*rate;
   const retTotal=(cfg.irpf+cfg.ss)/100;
   const net=pay*(1-retTotal);
   const pp=document.getElementById('pay-preview');
-  pp.innerHTML=`${fmtH(h)} × €${rate}/h = <strong>€${pay.toFixed(2)}</strong> · <span class="net-prev">Neto: €${net.toFixed(2)}</span>`;
+  if(isAbsence){
+    const labels={vacaciones:'🏖️ Vacaciones — 0h · €0',baja:'🤒 Baja/Enfermedad — 0h · €0',festivo0:'📅 Festivo sin remunerar — 0h · €0'};
+    pp.innerHTML=`<span style="color:var(--muted)">${labels[curType]}</span>`;
+  } else {
+    pp.innerHTML=`${fmtH(h)} × €${rate}/h = <strong>€${pay.toFixed(2)}</strong> · <span class="net-prev">Neto: €${net.toFixed(2)}</span>`;
+  }
 }
 function saveEntry(){
   const date=document.getElementById('eDate').value;
-  const hours=parseFloat(document.getElementById('eHours').value);
+  const isAbsence=['vacaciones','baja','festivo0'].includes(curType);
+  const hours=isAbsence?0:(parseFloat(document.getElementById('eHours').value)||0);
   const notes=document.getElementById('eNotes').value.trim();
-  if(!date||!hours){toast('⚠️ Fecha y horas requeridas');return;}
+  if(!date||(hours===0&&!isAbsence)){toast('⚠️ Fecha y horas requeridas');return;}
   if(editId){
     const e=DB.entries.find(x=>x.id==editId);
     if(e){e.date=date;e.hours=hours;e.type=curType;e.notes=notes;}
@@ -1943,25 +1956,264 @@ function exportCSV(){
   toast('📊 CSV exportado');
 }
 
-function exportHTMLReport(){
+function _buildReportData(){
   const cfg=getSettings(curUser.email);
-  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
+  const wi=getWorkerInfo();
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado,vacaciones:0,baja:0,festivo0:0};
   const retTotal=(cfg.irpf+cfg.ss)/100;
   const typeLabels=t('type_labels');
   const sorted=[..._curEntries].sort((a,b)=>a.date.localeCompare(b.date));
   let total=0,payTotal=0;
-  let rows='';
+  const rows=[];
   sorted.forEach(e=>{
     const h=e.hours||0; total+=h;
-    const pay=h*(rateMap[e.type]||cfg.rateNormal); payTotal+=pay;
+    const pay=h*(rateMap[e.type]!=null?rateMap[e.type]:cfg.rateNormal); payTotal+=pay;
     const net=pay*(1-retTotal);
-    rows+=`<tr><td>${e.date}</td><td>${typeLabels[e.type]||e.type}</td><td>${h}h</td><td>€${pay.toFixed(2)}</td><td>€${net.toFixed(2)}</td><td>${e.notes||''}</td></tr>`;
+    rows.push({date:e.date,type:typeLabels[e.type]||e.type,hours:h,gross:pay,net,notes:e.notes||''});
   });
-  const net=payTotal*(1-retTotal);
-  const months=t('months');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>ControlHoras</title><style>body{font-family:system-ui;padding:24px;max-width:800px;margin:0 auto}h1{color:#3f51b5}table{width:100%;border-collapse:collapse}th,td{border:1px solid #e0e0e0;padding:8px 12px;text-align:left}th{background:#3f51b5;color:#fff}tr:nth-child(even){background:#f5f5f5}.summary{background:#e8eaf6;padding:16px;border-radius:8px;margin-top:20px;display:flex;gap:24px}</style></head><body><h1>⏱ ControlHoras</h1><p>Período: ${document.getElementById('period-label').textContent} · Usuario: ${curUser.name}</p><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Horas</th><th>Bruto</th><th>Neto</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div><strong>Total horas:</strong> ${fmtH(total)}</div><div><strong>Bruto:</strong> €${payTotal.toFixed(2)}</div><div><strong>Neto:</strong> €${net.toFixed(2)}</div></div><p style="margin-top:16px;color:#999;font-size:12px">por @MauGonzalez · ControlHoras</p></body></html>`;
-  download('informe-horas.html',html,'text/html');
+  const netTotal=payTotal*(1-retTotal);
+  const period=document.getElementById('period-label').textContent;
+  const today=new Date().toLocaleDateString([],{day:'2-digit',month:'2-digit',year:'numeric'});
+  return {cfg,wi,rows,total,payTotal,netTotal,period,today,retTotal,curUser};
+}
+
+function _formalHTMLReport(d){
+  const colH='#1a237e'; const colL='#e8eaf6'; const colT='#f5f5f5';
+  const name=d.wi.name||d.curUser.name||'—'; const employer=d.wi.employer||'—';
+  const contract=d.wi.contract||'—'; const role=d.wi.role||'—';
+  const rows=d.rows.map((r,i)=>`<tr style="background:${i%2===0?'#fff':colT}">
+    <td>${r.date}</td><td>${r.type}</td><td style="text-align:right">${r.hours}h</td>
+    <td style="text-align:right">€${r.gross.toFixed(2)}</td><td style="text-align:right">€${r.net.toFixed(2)}</td>
+    <td style="color:#666;font-size:12px">${r.notes}</td></tr>`).join('');
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<title>Informe ControlHoras – ${d.period}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a1a;background:#f0f2f5;padding:0}
+.page{max-width:820px;margin:0 auto;background:#fff;padding:40px 48px;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid ${colH};padding-bottom:20px;margin-bottom:28px}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.logo-icon{font-size:32px;line-height:1}
+.logo-text{font-size:22px;font-weight:800;color:${colH};letter-spacing:-.5px}
+.logo-sub{font-size:11px;color:#666;font-weight:500;margin-top:1px}
+.meta-box{background:${colL};border-radius:8px;padding:12px 18px;text-align:right;font-size:12px;line-height:1.6;color:#555}
+.meta-box strong{color:${colH};display:block;font-size:13px;margin-bottom:4px}
+.worker-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:18px 22px;margin-bottom:24px}
+.wf-item label{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em}
+.wf-item p{font-size:14px;font-weight:600;color:#1a1a1a;margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px}
+thead tr{background:${colH};color:#fff}
+thead th{padding:10px 12px;text-align:left;font-weight:700;font-size:12px;letter-spacing:.03em}
+thead th:nth-child(3),thead th:nth-child(4),thead th:nth-child(5){text-align:right}
+tbody td{padding:9px 12px;border-bottom:1px solid #eee}
+tbody td:nth-child(3),tbody td:nth-child(4),tbody td:nth-child(5){text-align:right;font-variant-numeric:tabular-nums}
+.totals-row td{padding:12px 12px;background:${colL};font-weight:700;border-top:2px solid ${colH};font-size:13px}
+.totals-row td:nth-child(3),
+.totals-row td:nth-child(4),
+.totals-row td:nth-child(5){text-align:right;font-variant-numeric:tabular-nums;color:${colH}}
+.summary-boxes{display:flex;gap:16px;margin-bottom:28px}
+.sum-box{flex:1;padding:14px 16px;border-radius:8px;text-align:center}
+.sum-box .sv{font-size:22px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.sum-box .sl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;opacity:.7}
+.sb-hours{background:${colL};color:${colH}}
+.sb-gross{background:#e8f5e9;color:#2e7d32}
+.sb-net{background:#e3f2fd;color:#1565c0}
+.sb-days{background:#f3e5f5;color:#6a1b9a}
+.signature-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px;padding-top:20px;border-top:1px solid #e0e0e0}
+.sig-block{text-align:center}
+.sig-line{border-top:1.5px solid #666;margin:0 20px 8px}
+.sig-name{font-size:12px;color:#555;font-weight:600}
+.footer{margin-top:28px;text-align:center;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:16px}
+@media print{body{background:#fff}.page{padding:20px;box-shadow:none}@page{margin:1cm}}
+</style></head><body>
+<div class="page">
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-icon">⏱</div>
+      <div>
+        <div class="logo-text">ControlHoras</div>
+        <div class="logo-sub">Registro oficial de jornada laboral</div>
+      </div>
+    </div>
+    <div class="meta-box">
+      <strong>Período: ${d.period}</strong>
+      Generado: ${d.today}<br>
+      Empleado: ${name}
+    </div>
+  </div>
+  <div class="worker-section">
+    <div class="wf-item"><label>Trabajador</label><p>${name}</p></div>
+    <div class="wf-item"><label>Empresa / Empleador</label><p>${employer}</p></div>
+    <div class="wf-item"><label>Puesto / Cargo</label><p>${role}</p></div>
+    <div class="wf-item"><label>Nº Contrato</label><p>${contract}</p></div>
+  </div>
+  <div class="summary-boxes">
+    <div class="sum-box sb-hours"><div class="sv">${fmtH(d.total)}</div><div class="sl">Total horas</div></div>
+    <div class="sum-box sb-gross"><div class="sv">€${d.payTotal.toFixed(2)}</div><div class="sl">Bruto</div></div>
+    <div class="sum-box sb-net"><div class="sv">€${d.netTotal.toFixed(2)}</div><div class="sl">Neto</div></div>
+    <div class="sum-box sb-days"><div class="sv">${d.rows.length}</div><div class="sl">Entradas</div></div>
+  </div>
+  <table>
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Horas</th><th>Bruto</th><th>Neto</th><th>Notas</th></tr></thead>
+    <tbody>${rows}<tr class="totals-row"><td colspan="2"><strong>TOTAL</strong></td><td>${fmtH(d.total)}</td><td>€${d.payTotal.toFixed(2)}</td><td>€${d.netTotal.toFixed(2)}</td><td></td></tr></tbody>
+  </table>
+  <div class="signature-row">
+    <div class="sig-block">
+      <div style="height:48px"></div>
+      <div class="sig-line"></div>
+      <div class="sig-name">Firma del trabajador<br>${name}</div>
+    </div>
+    <div class="sig-block">
+      <div style="height:48px"></div>
+      <div class="sig-line"></div>
+      <div class="sig-name">Firma del empleador<br>${employer}</div>
+    </div>
+  </div>
+  <div class="footer">por @MauGonzalez · ControlHoras · ${d.today}</div>
+</div>
+</body></html>`;
+}
+
+function exportHTMLReport(){
+  const d=_buildReportData();
+  download('informe-horas.html',_formalHTMLReport(d),'text/html');
   toast('📄 HTML exportado');
+}
+
+function exportPDF(){
+  const d=_buildReportData();
+  const win=window.open('','_blank','width=900,height=700');
+  if(!win){toast('❌ Bloqueo de popup');return;}
+  win.document.write(_formalHTMLReport(d));
+  win.document.close();
+  win.focus();
+  setTimeout(()=>{win.print();},600);
+  toast('🖨️ PDF preparado');
+}
+
+function exportXLSX(){
+  const d=_buildReportData();
+  const name=d.wi.name||d.curUser.name||'—'; const employer=d.wi.employer||'—';
+  const contract=d.wi.contract||'—'; const role=d.wi.role||'—';
+  const rows=d.rows.map(r=>`<Row>
+    <Cell><Data ss:Type="String">${r.date}</Data></Cell>
+    <Cell><Data ss:Type="String">${r.type}</Data></Cell>
+    <Cell><Data ss:Type="Number">${r.hours}</Data></Cell>
+    <Cell><Data ss:Type="Number">${r.gross.toFixed(2)}</Data></Cell>
+    <Cell><Data ss:Type="Number">${r.net.toFixed(2)}</Data></Cell>
+    <Cell><Data ss:Type="String">${r.notes}</Data></Cell>
+  </Row>`).join('');
+  const xml=`<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Worksheet ss:Name="ControlHoras"><Table>
+<Row>
+  <Cell ss:MergeAcross="5"><Data ss:Type="String">⏱ ControlHoras – ${d.period}</Data></Cell>
+</Row>
+<Row>
+  <Cell><Data ss:Type="String">Trabajador:</Data></Cell>
+  <Cell ss:MergeAcross="2"><Data ss:Type="String">${name}</Data></Cell>
+  <Cell><Data ss:Type="String">Empresa:</Data></Cell>
+  <Cell ss:MergeAcross="1"><Data ss:Type="String">${employer}</Data></Cell>
+</Row>
+<Row>
+  <Cell><Data ss:Type="String">Puesto:</Data></Cell>
+  <Cell ss:MergeAcross="2"><Data ss:Type="String">${role}</Data></Cell>
+  <Cell><Data ss:Type="String">Contrato:</Data></Cell>
+  <Cell ss:MergeAcross="1"><Data ss:Type="String">${contract}</Data></Cell>
+</Row>
+<Row></Row>
+<Row>
+  <Cell><Data ss:Type="String">Fecha</Data></Cell>
+  <Cell><Data ss:Type="String">Tipo</Data></Cell>
+  <Cell><Data ss:Type="String">Horas</Data></Cell>
+  <Cell><Data ss:Type="String">Bruto (€)</Data></Cell>
+  <Cell><Data ss:Type="String">Neto (€)</Data></Cell>
+  <Cell><Data ss:Type="String">Notas</Data></Cell>
+</Row>
+${rows}
+<Row>
+  <Cell ss:MergeAcross="1"><Data ss:Type="String">TOTAL</Data></Cell>
+  <Cell><Data ss:Type="Number">${d.total.toFixed(1)}</Data></Cell>
+  <Cell><Data ss:Type="Number">${d.payTotal.toFixed(2)}</Data></Cell>
+  <Cell><Data ss:Type="Number">${d.netTotal.toFixed(2)}</Data></Cell>
+  <Cell><Data ss:Type="String"></Data></Cell>
+</Row>
+<Row></Row>
+<Row><Cell ss:MergeAcross="5"><Data ss:Type="String">por @MauGonzalez · ControlHoras · ${d.today}</Data></Cell></Row>
+</Table></Worksheet></Workbook>`;
+  const blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='ControlHoras-'+d.period.replace(/\s/g,'-')+'.xls';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  toast('📊 Excel exportado');
+}
+
+function exportJPG(){
+  const d=_buildReportData();
+  const name=d.wi.name||d.curUser.name||'—'; const employer=d.wi.employer||'—';
+  const role=d.wi.role||'—'; const contract=d.wi.contract||'—';
+  const W=900, ROW_H=28, HEAD_H=200;
+  const H=HEAD_H+ROW_H*(d.rows.length+4)+80;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  // background
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
+  // header stripe
+  ctx.fillStyle='#1a237e'; ctx.fillRect(0,0,W,80);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 28px system-ui,sans-serif'; ctx.fillText('⏱ ControlHoras',24,52);
+  ctx.font='13px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.8)';
+  ctx.fillText('Registro oficial de jornada laboral',24,70);
+  ctx.fillText(d.period,W-200,52); ctx.fillText(d.today,W-200,70);
+  // worker bar
+  ctx.fillStyle='#e8eaf6'; ctx.fillRect(0,80,W,60);
+  ctx.fillStyle='#1a237e'; ctx.font='bold 12px system-ui,sans-serif';
+  ctx.fillText('TRABAJADOR', 24, 103); ctx.fillText('EMPRESA', 230, 103); ctx.fillText('PUESTO', 460, 103); ctx.fillText('Nº CONTRATO', 680, 103);
+  ctx.fillStyle='#1a1a1a'; ctx.font='14px system-ui,sans-serif';
+  ctx.fillText(name.slice(0,24), 24, 125); ctx.fillText(employer.slice(0,22), 230, 125);
+  ctx.fillText(role.slice(0,22), 460, 125); ctx.fillText(contract.slice(0,16), 680, 125);
+  // summary boxes
+  const boxes=[{v:fmtH(d.total),l:'TOTAL HORAS',bg:'#e8eaf6',tc:'#1a237e'},{v:'€'+d.payTotal.toFixed(0),l:'BRUTO',bg:'#e8f5e9',tc:'#2e7d32'},{v:'€'+d.netTotal.toFixed(0),l:'NETO',bg:'#e3f2fd',tc:'#1565c0'},{v:''+d.rows.length,l:'ENTRADAS',bg:'#f3e5f5',tc:'#6a1b9a'}];
+  boxes.forEach((b,i)=>{
+    const x=24+i*(W-48)/4+2; const w=(W-48)/4-4;
+    ctx.fillStyle=b.bg; ctx.beginPath(); ctx.roundRect(x,148,w,44,6); ctx.fill();
+    ctx.fillStyle=b.tc; ctx.font='bold 20px system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(b.v,x+w/2,170);
+    ctx.font='bold 9px system-ui,sans-serif'; ctx.fillStyle='#555'; ctx.fillText(b.l,x+w/2,185);
+  });
+  ctx.textAlign='left';
+  // table header
+  let y=HEAD_H;
+  ctx.fillStyle='#1a237e'; ctx.fillRect(0,y,W,ROW_H);
+  ctx.fillStyle='#fff'; ctx.font='bold 12px system-ui,sans-serif';
+  ['Fecha','Tipo','Horas','Bruto','Neto','Notas'].forEach((h,i)=>ctx.fillText(h,[24,160,290,370,460,560][i],y+18));
+  y+=ROW_H;
+  // rows
+  d.rows.forEach((r,i)=>{
+    ctx.fillStyle=i%2===0?'#fff':'#f5f7ff'; ctx.fillRect(0,y,W,ROW_H);
+    ctx.fillStyle='#333'; ctx.font='12px system-ui,sans-serif';
+    ctx.fillText(r.date,24,y+18); ctx.fillText(r.type,160,y+18);
+    ctx.fillText(r.hours+'h',290,y+18); ctx.fillText('€'+r.gross.toFixed(2),370,y+18);
+    ctx.fillText('€'+r.net.toFixed(2),460,y+18);
+    ctx.fillText(r.notes.slice(0,22),560,y+18);
+    y+=ROW_H;
+  });
+  // totals
+  ctx.fillStyle='#e8eaf6'; ctx.fillRect(0,y,W,ROW_H);
+  ctx.fillStyle='#1a237e'; ctx.font='bold 13px system-ui,sans-serif';
+  ctx.fillText('TOTAL',24,y+18); ctx.fillText(fmtH(d.total),290,y+18);
+  ctx.fillText('€'+d.payTotal.toFixed(2),370,y+18); ctx.fillText('€'+d.netTotal.toFixed(2),460,y+18);
+  y+=ROW_H+20;
+  // footer
+  ctx.fillStyle='#aaa'; ctx.font='11px system-ui,sans-serif';
+  ctx.fillText('por @MauGonzalez · ControlHoras · '+d.today,24,y);
+  // download
+  cv.toBlob(blob=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='ControlHoras-'+d.period.replace(/\s/g,'-')+'.jpg';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  },'image/jpeg',0.95);
+  toast('🖼️ JPG exportado');
 }
 
 function copyHours(){
@@ -2069,6 +2321,182 @@ try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;const sel=d
   if(dEl)dEl.textContent=now.toLocaleDateString([],{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
   setTimeout(tickClock,1000);
 })();
+
+/* ═══ EXPORT HELPERS ═══ */
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    if(document.querySelector('script[src="'+src+'"]')){resolve();return;}
+    const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
+function _periodFilename(){
+  return (document.getElementById('period-label').textContent||'informe').replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
+}
+async function exportPDF(){
+  toast('⏳ Generando PDF...');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+  const cfg=getSettings(curUser.email);
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
+  const ret=(cfg.irpf+cfg.ss)/100;
+  const labels=t('type_labels');
+  const wdFull=t('weekdaysFull');
+  const sorted=[..._curEntries].sort((a,b)=>a.date.localeCompare(b.date));
+  let totH=0,totB=0;
+  const rows=sorted.map(e=>{
+    const h=e.hours||0;totH+=h;
+    const rate=rateMap[e.type]||cfg.rateNormal;
+    const br=h*rate;totB+=br;
+    const d=new Date(e.date+'T12:00:00');
+    return[e.date,wdFull[d.getDay()],labels[e.type]||e.type,fmtH(h),'€'+rate.toFixed(2)+'/h','€'+br.toFixed(2),'€'+(br*(1-ret)).toFixed(2)];
+  });
+  const totN=totB*(1-ret);
+  rows.push(['','','TOTAL',fmtH(totH),'','€'+totB.toFixed(2),'€'+totN.toFixed(2)]);
+  const drawHdr=()=>{
+    doc.setFillColor(63,81,181);doc.rect(0,0,W,28,'F');
+    doc.setTextColor(255,255,255);doc.setFontSize(16);doc.setFont('helvetica','bold');
+    doc.text('⏱ ControlHoras',12,12);
+    doc.setFontSize(10);doc.setFont('helvetica','normal');
+    doc.text('Informe de Jornada Laboral',12,20);
+    doc.setTextColor(26,26,46);
+  };
+  const drawFtr=(n,total)=>{
+    doc.setDrawColor(220,220,220);doc.line(10,H-15,W-10,H-15);
+    doc.setFontSize(9);doc.setTextColor(150,150,150);
+    doc.setFont('helvetica','italic');doc.text('@MauGonzalez \xB7 ControlHoras',W/2,H-9,{align:'center'});
+    doc.setFont('helvetica','normal');
+    doc.text('P\xE1g '+n+' de '+total,W-12,H-9,{align:'right'});
+    doc.text(new Date().toLocaleString(),12,H-9);
+  };
+  drawHdr();
+  doc.setFontSize(11);doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');
+  doc.text('Trabajador: '+(curUser.name||curUser.email),12,36);
+  doc.setFont('helvetica','normal');
+  doc.text('Per\xEDodo: '+document.getElementById('period-label').textContent,12,43);
+  doc.text('Generado: '+new Date().toLocaleString(),12,50);
+  doc.autoTable({
+    head:[['Fecha','D\xEDa','Tipo','Horas','Tarifa','Bruto','Neto']],
+    body:rows,startY:56,
+    styles:{fontSize:9,cellPadding:2.5},
+    headStyles:{fillColor:[63,81,181],textColor:[255,255,255],fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[245,245,245]},
+    didDrawPage:(d)=>{if(d.pageNumber>1)drawHdr();},
+    margin:{top:32}
+  });
+  const fy=doc.lastAutoTable.finalY+8;
+  doc.setFillColor(232,234,246);doc.setDrawColor(63,81,181);
+  doc.roundedRect(12,fy,W-24,28,3,3,'FD');
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(63,81,181);
+  doc.text('RESUMEN',18,fy+7);
+  doc.setFontSize(9);doc.setTextColor(26,26,46);
+  doc.text('Total horas: '+fmtH(totH),18,fy+15);
+  doc.text('Bruto: €'+totB.toFixed(2),70,fy+15);
+  doc.text('Neto: €'+totN.toFixed(2),125,fy+15);
+  doc.text('IRPF: '+cfg.irpf+'%  |  S.S.: '+cfg.ss+'%',18,fy+22);
+  const pc=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pc;i++){doc.setPage(i);drawFtr(i,pc);}
+  doc.save('ControlHoras_'+_periodFilename()+'.pdf');
+  toast('📄 PDF generado');
+}
+
+async function exportJPG(){
+  toast('⏳ Generando imagen...');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  const cfg=getSettings(curUser.email);
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
+  const ret=(cfg.irpf+cfg.ss)/100;
+  const labels=t('type_labels');
+  const wdFull=t('weekdaysFull');
+  const sorted=[..._curEntries].sort((a,b)=>a.date.localeCompare(b.date));
+  const periodLabel=document.getElementById('period-label').textContent;
+  let totH=0,totB=0,rowsHTML='';
+  sorted.forEach((e,i)=>{
+    const h=e.hours||0;totH+=h;
+    const rate=rateMap[e.type]||cfg.rateNormal;
+    const br=h*rate;totB+=br;
+    const neto=br*(1-ret);
+    const d=new Date(e.date+'T12:00:00');
+    const bg=i%2?'#f5f5f5':'#fff';
+    rowsHTML+=`<tr style="background:${bg}"><td>${e.date}</td><td>${wdFull[d.getDay()]}</td><td>${labels[e.type]||e.type}</td><td style="text-align:center;font-weight:700">${fmtH(h)}</td><td style="text-align:right">€${rate.toFixed(2)}/h</td><td style="text-align:right">€${br.toFixed(2)}</td><td style="text-align:right">€${neto.toFixed(2)}</td></tr>`;
+  });
+  const totN=totB*(1-ret);
+  const preview=document.getElementById('report-print-preview');
+  preview.innerHTML=`<div style="font-family:Inter,system-ui,sans-serif;background:#fff;width:800px;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.12)"><div style="background:#3f51b5;padding:20px 28px;display:flex;align-items:center;justify-content:space-between"><div><div style="color:#fff;font-size:22px;font-weight:800">⏱ ControlHoras</div><div style="color:rgba(255,255,255,.8);font-size:12px;margin-top:4px">Informe de Jornada Laboral</div></div><div style="text-align:right;color:rgba(255,255,255,.75);font-size:11px"><div>${curUser.name||curUser.email}</div><div>${periodLabel}</div><div>${new Date().toLocaleDateString()}</div></div></div><div style="padding:20px 28px"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#3f51b5;color:#fff"><th style="padding:8px 10px;text-align:left">Fecha</th><th style="padding:8px 10px;text-align:left">D\xEDa</th><th style="padding:8px 10px;text-align:left">Tipo</th><th style="padding:8px 10px;text-align:center">Horas</th><th style="padding:8px 10px;text-align:right">Tarifa</th><th style="padding:8px 10px;text-align:right">Bruto</th><th style="padding:8px 10px;text-align:right">Neto</th></tr></thead><tbody>${rowsHTML}</tbody><tfoot><tr style="background:#e8eaf6;font-weight:800"><td colspan="3" style="padding:10px;color:#3f51b5">TOTALES</td><td style="padding:10px;text-align:center;color:#3f51b5">${fmtH(totH)}</td><td></td><td style="padding:10px;text-align:right;color:#2e7d32">€${totB.toFixed(2)}</td><td style="padding:10px;text-align:right;color:#00695c">€${totN.toFixed(2)}</td></tr></tfoot></table><div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap"><div style="flex:1;min-width:140px;background:#e8eaf6;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#3f51b5">${fmtH(totH)}</div><div style="font-size:10px;color:#607d8b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px">Total horas</div></div><div style="flex:1;min-width:140px;background:#e8f5e9;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#2e7d32">€${totB.toFixed(2)}</div><div style="font-size:10px;color:#607d8b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px">Bruto</div></div><div style="flex:1;min-width:140px;background:#e0f7fa;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#00695c">€${totN.toFixed(2)}</div><div style="font-size:10px;color:#607d8b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px">Neto</div></div><div style="flex:1;min-width:140px;background:#fff3e0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#e65100">${cfg.irpf}%+${cfg.ss}%</div><div style="font-size:10px;color:#607d8b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px">IRPF+S.S.</div></div></div><div style="border-top:1px solid #e0e0e0;margin-top:20px;padding-top:12px;text-align:center;font-size:11px;color:#9e9e9e;font-style:italic">@MauGonzalez \xB7 ControlHoras \xB7 ${new Date().toLocaleString()}</div></div></div>`;
+  preview.style.cssText='position:fixed;top:-9999px;left:-9999px;display:block;z-index:-1';
+  try{
+    const canvas=await html2canvas(preview.firstElementChild,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false});
+    preview.style.cssText='display:none';
+    const lnk=document.createElement('a');
+    lnk.download='ControlHoras_'+_periodFilename()+'.jpg';
+    lnk.href=canvas.toDataURL('image/jpeg',0.95);lnk.click();
+    toast('🖼️ JPG generado');
+  }catch(err){preview.style.cssText='display:none';toast('❌ Error al generar JPG');}
+}
+
+async function exportXLSX(){
+  toast('⏳ Generando Excel...');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+  const cfg=getSettings(curUser.email);
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
+  const ret=(cfg.irpf+cfg.ss)/100;
+  const labels=t('type_labels');
+  const wdFull=t('weekdaysFull');
+  const sorted=[..._curEntries].sort((a,b)=>a.date.localeCompare(b.date));
+  const periodLabel=document.getElementById('period-label').textContent;
+  let totH=0,totB=0,noche=0,finde=0,feriado=0,normalH=0;
+  const dataRows=sorted.map(e=>{
+    const h=e.hours||0;totH+=h;
+    const rate=rateMap[e.type]||cfg.rateNormal;
+    const br=h*rate;totB+=br;const neto=parseFloat((br*(1-ret)).toFixed(2));
+    if(e.type==='noche')noche+=h;else if(e.type==='finde')finde+=h;
+    else if(e.type==='feriado')feriado+=h;else normalH+=h;
+    const d=new Date(e.date+'T12:00:00');
+    return[e.date,wdFull[d.getDay()],labels[e.type]||e.type,h,rate,parseFloat(br.toFixed(2)),neto,e.notes||''];
+  });
+  const totN=totB*(1-ret);
+  const rows1=[
+    ['ControlHoras - Informe de Jornada Laboral'],
+    ['Per\xEDodo: '+periodLabel+' | Generado: '+new Date().toLocaleString()],
+    ['Trabajador: '+(curUser.name||curUser.email)],
+    [],
+    ['Fecha','D\xEDa','Tipo','Horas','Tarifa €/h','Bruto €','Neto €','Notas'],
+    ...dataRows,
+    ['','','TOTAL',parseFloat(totH.toFixed(2)),'',parseFloat(totB.toFixed(2)),parseFloat(totN.toFixed(2)),'']
+  ];
+  const ws1=XLSX.utils.aoa_to_sheet(rows1);
+  ws1['!merges']=[{s:{r:0,c:0},e:{r:0,c:7}}];
+  ws1['!cols']=[{wch:12},{wch:14},{wch:20},{wch:8},{wch:11},{wch:11},{wch:11},{wch:28}];
+  const rows2=[
+    ['ControlHoras - Resumen del Per\xEDodo'],
+    [],
+    ['Concepto','Valor'],
+    ['Total horas',parseFloat(totH.toFixed(2))],
+    ['D\xEDas con registro',sorted.length],
+    ['Total bruto €',parseFloat(totB.toFixed(2))],
+    ['Total neto €',parseFloat(totN.toFixed(2))],
+    ['IRPF aplicado',cfg.irpf+'%'],
+    ['Seguridad Social',cfg.ss+'%'],
+    [],
+    ['Desglose por tipo','Horas'],
+    ['Normal',parseFloat(normalH.toFixed(2))],
+    ['Nocturno',parseFloat(noche.toFixed(2))],
+    ['Fin de semana',parseFloat(finde.toFixed(2))],
+    ['Festivo',parseFloat(feriado.toFixed(2))],
+    [],[''],['por @MauGonzalez','']
+  ];
+  const ws2=XLSX.utils.aoa_to_sheet(rows2);
+  ws2['!cols']=[{wch:28},{wch:16}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws1,'Registros');
+  XLSX.utils.book_append_sheet(wb,ws2,'Resumen');
+  XLSX.writeFile(wb,'ControlHoras_'+_periodFilename()+'.xlsx');
+  toast('📊 Excel generado');
+}
 </script>
+<div id="report-print-preview" style="display:none;position:fixed;top:-9999px;left:-9999px;z-index:-1"></div>
 </body>
 </html>
