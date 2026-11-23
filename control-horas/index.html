@@ -103,6 +103,12 @@ input,select,textarea{font-family:inherit;font-size:14px}
 /* lang selector */
 #lang-sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:2px 6px;font-size:12px;font-weight:600;cursor:pointer;min-width:62px;height:28px}
 #lang-sel option{background:#3f51b5;color:#fff}
+/* RTL support for Arabic */
+[dir="rtl"]{text-align:right;direction:rtl}
+[dir="rtl"] #topbar,[dir="rtl"] #period-bar,[dir="rtl"] .modal-row{flex-direction:row-reverse}
+[dir="rtl"] .rate-grid,[dir="rtl"] .sheet-title,[dir="rtl"] .settings-section h3{direction:rtl;text-align:right}
+[dir="rtl"] .sheet{text-align:right}
+[dir="rtl"] #entry-list{direction:rtl}
 #topbar-actions .icon-btn{width:32px;height:28px;font-size:16px;border-radius:6px}
 
 /* period bar */
@@ -455,6 +461,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
         <option value="ru">🇷🇺 RU</option>
         <option value="fr">🇫🇷 FR</option>
         <option value="de">🇩🇪 DE</option>
+        <option value="it">🇮🇹 IT</option>
+        <option value="pt">🇧🇷 PT</option>
+        <option value="ar">🇸🇦 AR</option>
       </select>
       <div id="topbar-actions-spacer"></div>
       <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
@@ -683,6 +692,85 @@ input,select,textarea{font-family:inherit;font-size:14px}
       </div>
     </div>
 
+    <div class="settings-section">
+      <h3 data-i18n="settings.country">País / Legislación</h3>
+      <select id="cfg-country" onchange="applyCountryPreset(this.value)" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--surface2);color:var(--ink);font-size:14px;cursor:pointer;margin-bottom:8px">
+        <optgroup label="── Europa ──">
+          <option value="ESP">🇪🇸 España</option>
+          <option value="FRA">🇫🇷 France</option>
+          <option value="DEU">🇩🇪 Deutschland</option>
+          <option value="ITA">🇮🇹 Italia</option>
+          <option value="PRT">🇵🇹 Portugal</option>
+          <option value="NLD">🇳🇱 Nederland</option>
+          <option value="BEL">🇧🇪 Belgique</option>
+          <option value="AUT">🇦🇹 Österreich</option>
+          <option value="CHE">🇨🇭 Schweiz</option>
+          <option value="SWE">🇸🇪 Sverige</option>
+          <option value="NOR">🇳🇴 Norge</option>
+          <option value="DNK">🇩🇰 Danmark</option>
+          <option value="FIN">🇫🇮 Suomi</option>
+          <option value="GBR">🇬🇧 United Kingdom</option>
+          <option value="IRL">🇮🇪 Ireland</option>
+          <option value="POL">🇵🇱 Polska</option>
+          <option value="CZE">🇨🇿 Česko</option>
+          <option value="SVK">🇸🇰 Slovensko</option>
+          <option value="HUN">🇭🇺 Magyarország</option>
+          <option value="ROU">🇷🇴 România</option>
+          <option value="BGR">🇧🇬 България</option>
+          <option value="HRV">🇭🇷 Hrvatska</option>
+          <option value="SVN">🇸🇮 Slovenija</option>
+          <option value="EST">🇪🇪 Eesti</option>
+          <option value="LVA">🇱🇻 Latvija</option>
+          <option value="LTU">🇱🇹 Lietuva</option>
+          <option value="LUX">🇱🇺 Luxembourg</option>
+          <option value="GRC">🇬🇷 Ελλάδα</option>
+          <option value="MLT">🇲🇹 Malta</option>
+          <option value="CYP">🇨🇾 Κύπρος</option>
+          <option value="UKR">🇺🇦 Україна</option>
+          <option value="SRB">🇷🇸 Srbija</option>
+          <option value="TUR">🇹🇷 Türkiye</option>
+        </optgroup>
+        <optgroup label="── América ──">
+          <option value="USA">🇺🇸 United States</option>
+          <option value="CAN">🇨🇦 Canada</option>
+          <option value="MEX">🇲🇽 México</option>
+          <option value="BRA">🇧🇷 Brasil</option>
+          <option value="ARG">🇦🇷 Argentina</option>
+          <option value="CHL">🇨🇱 Chile</option>
+          <option value="COL">🇨🇴 Colombia</option>
+          <option value="PER">🇵🇪 Perú</option>
+          <option value="VEN">🇻🇪 Venezuela</option>
+          <option value="ECU">🇪🇨 Ecuador</option>
+          <option value="BOL">🇧🇴 Bolivia</option>
+          <option value="PRY">🇵🇾 Paraguay</option>
+          <option value="URY">🇺🇾 Uruguay</option>
+          <option value="CRI">🇨🇷 Costa Rica</option>
+          <option value="GTM">🇬🇹 Guatemala</option>
+          <option value="HND">🇭🇳 Honduras</option>
+          <option value="SLV">🇸🇻 El Salvador</option>
+          <option value="NIC">🇳🇮 Nicaragua</option>
+          <option value="PAN">🇵🇦 Panamá</option>
+          <option value="CUB">🇨🇺 Cuba</option>
+          <option value="DOM">🇩🇴 Rep. Dominicana</option>
+          <option value="PRI">🇵🇷 Puerto Rico</option>
+        </optgroup>
+      </select>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+        <label for="cfg-currency" style="color:var(--muted)" data-i18n="settings.currency">Moneda</label>
+        <input type="text" id="cfg-currency" maxlength="5" style="width:64px;padding:5px 8px;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--surface2);color:var(--ink);font-size:14px;text-align:center">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3 data-i18n="worker.section">Datos del empleado</h3>
+      <div class="rate-grid">
+        <div class="rate-item"><label data-i18n="worker.name">Nombre completo</label><input type="text" id="cfg-wname" placeholder="—"></div>
+        <div class="rate-item"><label data-i18n="worker.employer">Empresa</label><input type="text" id="cfg-employer" placeholder="—"></div>
+        <div class="rate-item"><label data-i18n="worker.contract">N. contrato</label><input type="text" id="cfg-contract" placeholder="—"></div>
+        <div class="rate-item"><label data-i18n="worker.role">Cargo</label><input type="text" id="cfg-role" placeholder="—"></div>
+      </div>
+    </div>
+
     <button class="btn-save" style="width:100%" onclick="saveSettings()" data-i18n="settings.save">Guardar ajustes</button>
   </div>
 </div>
@@ -810,6 +898,10 @@ const LANG = {
     'type_labels':{'normal':'Jornada Normal','noche':'Turno Nocturno','finde':'Fin de Semana','feriado':'Feriado/Festivo'},
     'report.print':'🖨️ Imprimir PDF','report.pdf':'📄 PDF Formal','report.xlsx':'📊 Excel','report.jpg':'🖼️ Imagen JPG','notif.toggle':'Recordatorio diario','notif.time':'Hora del recordatorio',
     'notif.msg':'¿Ya registraste tu jornada de hoy?','entries.count':'entradas',
+    'settings.country':'País / Legislación','settings.currency':'Moneda',
+    'type.vacaciones':'Vacaciones','type.baja':'Baja / Enfermedad','type.festivo0':'Festivo sin remunerar',
+    'worker.section':'Datos del empleado','worker.name':'Nombre completo','worker.employer':'Empresa / Empleador','worker.contract':'N.º contrato','worker.role':'Cargo / Puesto',
+    'compare.title':'Esta semana vs. anterior',
   },
   en: {
     'auth.subtitle':'Track your working hours',
@@ -848,6 +940,10 @@ const LANG = {
     'type_labels':{'normal':'Regular shift','noche':'Night shift','finde':'Weekend','feriado':'Holiday'},
     'report.print':'🖨️ Print PDF','report.pdf':'📄 Formal PDF','report.xlsx':'📊 Excel','report.jpg':'🖼️ Image JPG','notif.toggle':'Daily reminder','notif.time':'Reminder time',
     'notif.msg':'Have you logged your shift for today?','entries.count':'entries',
+    'settings.country':'Country / Legislation','settings.currency':'Currency',
+    'type.vacaciones':'Vacation','type.baja':'Sick leave','type.festivo0':'Unpaid holiday',
+    'worker.section':'Employee info','worker.name':'Full name','worker.employer':'Company / Employer','worker.contract':'Contract No.','worker.role':'Position / Role',
+    'compare.title':'This week vs. previous',
   },
   uk: {
     'auth.subtitle':'Облік робочих годин',
@@ -1041,6 +1137,136 @@ const LANG = {
     'type.vacaciones':'Urlaub','type.baja':'Krankenstand','type.festivo0':'Feiertag ohne Bezahlung',
     'worker.section':'Mitarbeiterdaten','worker.name':'Vollständiger Name','worker.employer':'Firma / Arbeitgeber','worker.contract':'Vertrags-Nr.','worker.role':'Stelle / Position',
     'compare.title':'Diese Woche vs. letzte',
+    'settings.country':'Land / Gesetzgebung','settings.currency':'Währung',
+  },
+  it: {
+    'auth.subtitle':'Gestione delle ore di lavoro',
+    'auth.login':'Accedi','auth.register':'Registrati',
+    'auth.email':'Email','auth.password':'Password','auth.name':'Nome',
+    'auth.loginBtn':'Accedi','auth.registerBtn':'Crea account',
+    'auth.demo':'👀 Demo senza registrazione',
+    'auth.err.nouser':'Utente non trovato','auth.err.wrongpass':'Password errata',
+    'auth.err.exists':'Email già registrata','auth.err.fill':'Compila tutti i campi',
+    'sum.hours':'Ore','sum.days':'Giorni lav.','sum.gross':'Lordo','sum.net':'Netto',
+    'sum.avg':'Med/giorno','sum.night':'🌙 Notturno','sum.weekend':'🌴 Weekend','sum.holiday':'🎉 Festivo',
+    'period.week':'Settimana','period.month':'Mese','period.today':'Oggi',
+    'list.empty':'Nessuna voce per questo periodo.\nPremi + per aggiungere.',
+    'type.normal':'Normale','type.night':'Notturno','type.weekend':'Weekend','type.holiday':'Festivo',
+    'entry.title':'Nuova voce','entry.date':'Data','entry.notes':'Note (facoltativo)','entry.save':'Salva',
+    'entry.edit':'Modifica voce',
+    'settings.title':'Impostazioni','settings.rates':'Tariffe orarie',
+    'settings.deductions':'Ritenute (%)','settings.ss':'Prev. sociale %',
+    'settings.defaults':'Predefiniti','settings.defHours':'Ore/giorno',
+    'settings.minHours':'Min. giornata completa','settings.autoday':'Rileva weekend auto.',
+    'settings.theme':'Tema','settings.save':'Salva impostazioni',
+    'theme.light':'☀️ Chiaro','theme.system':'🌓 Sistema','theme.dark':'🌙 Scuro',
+    'report.title':'Report del periodo','report.csv':'⬇ CSV','report.html':'⬇ HTML',
+    'ot.msg':'Limite ore/sett. superato:','days.label':'giorni di',
+    'dup':'Duplica','del':'Elimina',
+    'period.stats':'📊','settings.weekGoal':'Obiettivo ore/sett.',
+    'punch.in':'▶ ENTRO','punch.out':'⏹ ESCO','punch.elapsed':'Durata:',
+    'stats.heatmap':'Mappa attività mensile','stats.topdays':'Top 3 giorni per ore',
+    'stats.streak':'Serie','stats.curstreak':'Serie attuale','stats.beststreak':'Migliore serie',
+    'stats.monthdays':'Giorni questo mese','stats.annual':'Riepilogo annuale','stats.goal':'OBIETTIVO',
+    'stats.nodata':'Dati insufficienti',
+    'months':['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+    'weekdays':['Do','Lu','Ma','Me','Gi','Ve','Sa'],
+    'weekdaysFull':['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
+    'settings.colorTheme':'Colore accento','settings.logout':'Disconnetti',
+    'type_labels':{'normal':'Turno normale','noche':'Turno notturno','finde':'Weekend','feriado':'Festivo'},
+    'report.print':'🖨️ Stampa PDF','report.pdf':'📄 PDF Formale','report.xlsx':'📊 Excel','report.jpg':'🖼️ Immagine JPG',
+    'notif.toggle':'Promemoria giornaliero','notif.time':'Ora del promemoria',
+    'notif.msg':'Hai registrato il turno di oggi?','entries.count':'voci',
+    'type.vacaciones':'Ferie','type.baja':'Malattia','type.festivo0':'Festivo non retribuito',
+    'worker.section':'Dati dipendente','worker.name':'Nome completo','worker.employer':'Azienda / Datore','worker.contract':'N. contratto','worker.role':'Mansione',
+    'compare.title':'Questa settimana vs. precedente',
+    'settings.country':'Paese / Legislazione','settings.currency':'Valuta',
+  },
+  pt: {
+    'auth.subtitle':'Controle da jornada de trabalho',
+    'auth.login':'Entrar','auth.register':'Registrar',
+    'auth.email':'Email','auth.password':'Senha','auth.name':'Nome',
+    'auth.loginBtn':'Entrar','auth.registerBtn':'Criar conta',
+    'auth.demo':'👀 Demo sem registro',
+    'auth.err.nouser':'Usuário não encontrado','auth.err.wrongpass':'Senha incorreta',
+    'auth.err.exists':'Email já registrado','auth.err.fill':'Preencha todos os campos',
+    'sum.hours':'Horas','sum.days':'Dias trab.','sum.gross':'Bruto','sum.net':'Líquido',
+    'sum.avg':'Med/dia','sum.night':'🌙 Noturno','sum.weekend':'🌴 Fim de semana','sum.holiday':'🎉 Feriado',
+    'period.week':'Semana','period.month':'Mês','period.today':'Hoje',
+    'list.empty':'Sem registros neste período.\nPressione + para adicionar.',
+    'type.normal':'Normal','type.night':'Noturno','type.weekend':'Fim de semana','type.holiday':'Feriado',
+    'entry.title':'Novo registro','entry.date':'Data','entry.notes':'Notas (opcional)','entry.save':'Salvar',
+    'entry.edit':'Editar registro',
+    'settings.title':'Configurações','settings.rates':'Tarifas por hora',
+    'settings.deductions':'Descontos (%)','settings.ss':'Prev. social %',
+    'settings.defaults':'Padrões','settings.defHours':'Horas/dia',
+    'settings.minHours':'Mín. dia completo','settings.autoday':'Detectar fim de semana auto.',
+    'settings.theme':'Tema','settings.save':'Salvar configurações',
+    'theme.light':'☀️ Claro','theme.system':'🌓 Sistema','theme.dark':'🌙 Escuro',
+    'report.title':'Relatório do período','report.csv':'⬇ CSV','report.html':'⬇ HTML',
+    'ot.msg':'Limite de horas/semana ultrapassado:','days.label':'dias de',
+    'dup':'Duplicar','del':'Excluir',
+    'period.stats':'📊','settings.weekGoal':'Meta h/semana',
+    'punch.in':'▶ ENTRAR','punch.out':'⏹ SAIR','punch.elapsed':'Duração:',
+    'stats.heatmap':'Mapa de atividade mensal','stats.topdays':'Top 3 dias por horas',
+    'stats.streak':'Sequências','stats.curstreak':'Sequência atual','stats.beststreak':'Melhor sequência',
+    'stats.monthdays':'Dias neste mês','stats.annual':'Resumo anual','stats.goal':'META',
+    'stats.nodata':'Dados insuficientes',
+    'months':['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    'weekdays':['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+    'weekdaysFull':['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+    'settings.colorTheme':'Cor de destaque','settings.logout':'Sair',
+    'type_labels':{'normal':'Turno normal','noche':'Turno noturno','finde':'Fim de semana','feriado':'Feriado'},
+    'report.print':'🖨️ Imprimir PDF','report.pdf':'📄 PDF Formal','report.xlsx':'📊 Excel','report.jpg':'🖼️ Imagem JPG',
+    'notif.toggle':'Lembrete diário','notif.time':'Hora do lembrete',
+    'notif.msg':'Você já registrou a jornada de hoje?','entries.count':'registros',
+    'type.vacaciones':'Férias','type.baja':'Atestado','type.festivo0':'Feriado não remunerado',
+    'worker.section':'Dados do funcionário','worker.name':'Nome completo','worker.employer':'Empresa / Empregador','worker.contract':'N. contrato','worker.role':'Cargo / Função',
+    'compare.title':'Esta semana vs. anterior',
+    'settings.country':'País / Legislação','settings.currency':'Moeda',
+  },
+  ar: {
+    'auth.subtitle':'تتبع ساعات عملك',
+    'auth.login':'تسجيل الدخول','auth.register':'إنشاء حساب',
+    'auth.email':'البريد الإلكتروني','auth.password':'كلمة المرور','auth.name':'الاسم',
+    'auth.loginBtn':'دخول','auth.registerBtn':'إنشاء حساب',
+    'auth.demo':'👀 تجربة بدون تسجيل',
+    'auth.err.nouser':'المستخدم غير موجود','auth.err.wrongpass':'كلمة المرور غير صحيحة',
+    'auth.err.exists':'البريد الإلكتروني مسجل مسبقاً','auth.err.fill':'يرجى ملء جميع الحقول',
+    'sum.hours':'ساعات','sum.days':'أيام العمل','sum.gross':'إجمالي','sum.net':'صافي',
+    'sum.avg':'متوسط/يوم','sum.night':'🌙 ليلي','sum.weekend':'🌴 نهاية الأسبوع','sum.holiday':'🎉 عطلة',
+    'period.week':'الأسبوع','period.month':'الشهر','period.today':'اليوم',
+    'list.empty':'لا توجد إدخالات لهذه الفترة.\nاضغط + للإضافة.',
+    'type.normal':'عادي','type.night':'ليلي','type.weekend':'نهاية الأسبوع','type.holiday':'عطلة رسمية',
+    'entry.title':'إدخال جديد','entry.date':'التاريخ','entry.notes':'ملاحظات (اختياري)','entry.save':'حفظ',
+    'entry.edit':'تعديل الإدخال',
+    'settings.title':'الإعدادات','settings.rates':'معدلات الساعة',
+    'settings.deductions':'الخصومات (%)','settings.ss':'التأمين الاجتماعي %',
+    'settings.defaults':'الافتراضيات','settings.defHours':'ساعات/يوم',
+    'settings.minHours':'الحد الأدنى ليوم كامل','settings.autoday':'اكتشاف نهاية الأسبوع تلقائياً',
+    'settings.theme':'السمة','settings.save':'حفظ الإعدادات',
+    'theme.light':'☀️ فاتح','theme.system':'🌓 النظام','theme.dark':'🌙 داكن',
+    'report.title':'تقرير الفترة','report.csv':'⬇ CSV','report.html':'⬇ HTML',
+    'ot.msg':'تجاوز حد الساعات الأسبوعية:','days.label':'يوم من',
+    'dup':'تكرار','del':'حذف',
+    'period.stats':'📊','settings.weekGoal':'هدف ساعات/أسبوع',
+    'punch.in':'▶ دخول','punch.out':'⏹ خروج','punch.elapsed':'الوقت:',
+    'stats.heatmap':'خريطة النشاط الشهري','stats.topdays':'أفضل 3 أيام بالساعات',
+    'stats.streak':'السلاسل','stats.curstreak':'السلسلة الحالية','stats.beststreak':'أفضل سلسلة',
+    'stats.monthdays':'أيام هذا الشهر','stats.annual':'الملخص السنوي','stats.goal':'الهدف',
+    'stats.nodata':'بيانات غير كافية',
+    'months':['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'],
+    'weekdays':['أحد','اثن','ثلا','أرب','خمي','جمع','سبت'],
+    'weekdaysFull':['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],
+    'settings.colorTheme':'لون التمييز','settings.logout':'تسجيل الخروج',
+    'type_labels':{'normal':'وردية عادية','noche':'وردية ليلية','finde':'نهاية الأسبوع','feriado':'عطلة رسمية'},
+    'report.print':'🖨️ طباعة PDF','report.pdf':'📄 PDF رسمي','report.xlsx':'📊 Excel','report.jpg':'🖼️ صورة JPG',
+    'notif.toggle':'تذكير يومي','notif.time':'وقت التذكير',
+    'notif.msg':'هل سجلت جدولك اليوم؟','entries.count':'إدخالات',
+    'type.vacaciones':'إجازة','type.baja':'إجازة مرضية','type.festivo0':'عطلة غير مدفوعة',
+    'worker.section':'بيانات الموظف','worker.name':'الاسم الكامل','worker.employer':'الشركة / صاحب العمل','worker.contract':'رقم العقد','worker.role':'المنصب / الوظيفة',
+    'compare.title':'هذا الأسبوع مقابل السابق',
+    'settings.country':'الدولة / التشريع','settings.currency':'العملة',
   }
 };
 
@@ -1051,14 +1277,89 @@ function t(key){ return (LANG[curLang]||LANG.es)[key] || (LANG.es[key]||key); }
 function setLang(code){
   curLang = code;
   try{ localStorage.setItem('ch_lang', code); } catch(e){}
+  const isRTL = code === 'ar';
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.documentElement.lang = code;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.dataset.i18n;
     const val = t(key);
     if(el.tagName==='INPUT') el.placeholder = val;
     else el.textContent = val;
   });
-  // update dynamic content
   if(curUser) renderPeriod();
+}
+
+function cur(){
+  try{return DB.settings[curUser.email].currency||'€';}catch(e){return'€';}
+}
+
+const COUNTRY_PRESETS={
+  /* Europa */
+  'ESP':{label:'🇪🇸 España',currency:'€',irpf:15,ss:6.35,maxWeekHours:40,overtimeRate:1.75},
+  'FRA':{label:'🇫🇷 France',currency:'€',irpf:20,ss:7.3,maxWeekHours:35,overtimeRate:1.5},
+  'DEU':{label:'🇩🇪 Deutschland',currency:'€',irpf:19,ss:9.3,maxWeekHours:40,overtimeRate:1.25},
+  'ITA':{label:'🇮🇹 Italia',currency:'€',irpf:23,ss:9.19,maxWeekHours:40,overtimeRate:1.25},
+  'PRT':{label:'🇵🇹 Portugal',currency:'€',irpf:14.5,ss:11,maxWeekHours:40,overtimeRate:1.25},
+  'NLD':{label:'🇳🇱 Nederland',currency:'€',irpf:37,ss:17.9,maxWeekHours:40,overtimeRate:1.5},
+  'BEL':{label:'🇧🇪 Belgique',currency:'€',irpf:25,ss:13.07,maxWeekHours:38,overtimeRate:1.5},
+  'AUT':{label:'🇦🇹 Österreich',currency:'€',irpf:20,ss:18.12,maxWeekHours:40,overtimeRate:1.5},
+  'CHE':{label:'🇨🇭 Schweiz',currency:'CHF',irpf:11.5,ss:6.35,maxWeekHours:45,overtimeRate:1.25},
+  'SWE':{label:'🇸🇪 Sverige',currency:'kr',irpf:32,ss:7,maxWeekHours:40,overtimeRate:1.5},
+  'NOR':{label:'🇳🇴 Norge',currency:'kr',irpf:22,ss:8.2,maxWeekHours:40,overtimeRate:1.5},
+  'DNK':{label:'🇩🇰 Danmark',currency:'kr',irpf:36,ss:1,maxWeekHours:37,overtimeRate:1.5},
+  'FIN':{label:'🇫🇮 Suomi',currency:'€',irpf:30,ss:7.15,maxWeekHours:40,overtimeRate:1.5},
+  'GBR':{label:'🇬🇧 United Kingdom',currency:'£',irpf:20,ss:8,maxWeekHours:48,overtimeRate:1.5},
+  'IRL':{label:'🇮🇪 Ireland',currency:'€',irpf:20,ss:4,maxWeekHours:48,overtimeRate:1.5},
+  'POL':{label:'🇵🇱 Polska',currency:'zł',irpf:17,ss:13.71,maxWeekHours:40,overtimeRate:1.5},
+  'CZE':{label:'🇨🇿 Česko',currency:'Kč',irpf:15,ss:6.5,maxWeekHours:40,overtimeRate:1.25},
+  'SVK':{label:'🇸🇰 Slovensko',currency:'€',irpf:19,ss:9.4,maxWeekHours:40,overtimeRate:1.25},
+  'HUN':{label:'🇭🇺 Magyarország',currency:'Ft',irpf:15,ss:18.5,maxWeekHours:40,overtimeRate:1.5},
+  'ROU':{label:'🇷🇴 România',currency:'lei',irpf:10,ss:25,maxWeekHours:40,overtimeRate:1.75},
+  'BGR':{label:'🇧🇬 България',currency:'лв',irpf:10,ss:12.9,maxWeekHours:40,overtimeRate:1.5},
+  'HRV':{label:'🇭🇷 Hrvatska',currency:'€',irpf:20,ss:20,maxWeekHours:40,overtimeRate:1.5},
+  'SVN':{label:'🇸🇮 Slovenija',currency:'€',irpf:16,ss:22.1,maxWeekHours:40,overtimeRate:1.5},
+  'EST':{label:'🇪🇪 Eesti',currency:'€',irpf:20,ss:2,maxWeekHours:40,overtimeRate:1.5},
+  'LVA':{label:'🇱🇻 Latvija',currency:'€',irpf:20,ss:11,maxWeekHours:40,overtimeRate:1.5},
+  'LTU':{label:'🇱🇹 Lietuva',currency:'€',irpf:15,ss:12.52,maxWeekHours:40,overtimeRate:1.5},
+  'LUX':{label:'🇱🇺 Luxembourg',currency:'€',irpf:15,ss:12.45,maxWeekHours:40,overtimeRate:1.5},
+  'GRC':{label:'🇬🇷 Ελλάδα',currency:'€',irpf:22,ss:13.33,maxWeekHours:40,overtimeRate:1.75},
+  'MLT':{label:'🇲🇹 Malta',currency:'€',irpf:15,ss:10,maxWeekHours:48,overtimeRate:1.5},
+  'CYP':{label:'🇨🇾 Κύπρος',currency:'€',irpf:20,ss:8.3,maxWeekHours:48,overtimeRate:1.5},
+  'UKR':{label:'🇺🇦 Україна',currency:'₴',irpf:18,ss:22,maxWeekHours:40,overtimeRate:2.0},
+  'SRB':{label:'🇷🇸 Srbija',currency:'din',irpf:10,ss:19.9,maxWeekHours:40,overtimeRate:1.26},
+  'TUR':{label:'🇹🇷 Türkiye',currency:'₺',irpf:15,ss:14,maxWeekHours:45,overtimeRate:1.5},
+  /* América */
+  'USA':{label:'🇺🇸 United States',currency:'$',irpf:22,ss:7.65,maxWeekHours:40,overtimeRate:1.5},
+  'CAN':{label:'🇨🇦 Canada',currency:'$',irpf:20.5,ss:5.95,maxWeekHours:44,overtimeRate:1.5},
+  'MEX':{label:'🇲🇽 México',currency:'$',irpf:32,ss:2.025,maxWeekHours:48,overtimeRate:2.0},
+  'BRA':{label:'🇧🇷 Brasil',currency:'R$',irpf:15,ss:7.5,maxWeekHours:44,overtimeRate:1.5},
+  'ARG':{label:'🇦🇷 Argentina',currency:'$',irpf:9,ss:11,maxWeekHours:48,overtimeRate:1.5},
+  'CHL':{label:'🇨🇱 Chile',currency:'$',irpf:0,ss:10,maxWeekHours:45,overtimeRate:1.5},
+  'COL':{label:'🇨🇴 Colombia',currency:'$',irpf:19,ss:4,maxWeekHours:46,overtimeRate:1.75},
+  'PER':{label:'🇵🇪 Perú',currency:'S/',irpf:8,ss:9,maxWeekHours:48,overtimeRate:1.25},
+  'VEN':{label:'🇻🇪 Venezuela',currency:'Bs',irpf:6,ss:4,maxWeekHours:44,overtimeRate:2.0},
+  'ECU':{label:'🇪🇨 Ecuador',currency:'$',irpf:5,ss:9.45,maxWeekHours:40,overtimeRate:1.5},
+  'BOL':{label:'🇧🇴 Bolivia',currency:'Bs',irpf:13,ss:10,maxWeekHours:48,overtimeRate:2.0},
+  'PRY':{label:'🇵🇾 Paraguay',currency:'₲',irpf:8,ss:9,maxWeekHours:48,overtimeRate:2.0},
+  'URY':{label:'🇺🇾 Uruguay',currency:'$',irpf:10,ss:15,maxWeekHours:44,overtimeRate:2.0},
+  'CRI':{label:'🇨🇷 Costa Rica',currency:'₡',irpf:10,ss:9.17,maxWeekHours:48,overtimeRate:1.5},
+  'GTM':{label:'🇬🇹 Guatemala',currency:'Q',irpf:7,ss:4.83,maxWeekHours:44,overtimeRate:1.5},
+  'HND':{label:'🇭🇳 Honduras',currency:'L',irpf:15,ss:2.5,maxWeekHours:44,overtimeRate:2.0},
+  'SLV':{label:'🇸🇻 El Salvador',currency:'$',irpf:20,ss:3,maxWeekHours:44,overtimeRate:2.0},
+  'NIC':{label:'🇳🇮 Nicaragua',currency:'C$',irpf:15,ss:6.25,maxWeekHours:48,overtimeRate:2.0},
+  'PAN':{label:'🇵🇦 Panamá',currency:'B/.',irpf:15,ss:9,maxWeekHours:48,overtimeRate:2.0},
+  'CUB':{label:'🇨🇺 Cuba',currency:'$',irpf:0,ss:5,maxWeekHours:44,overtimeRate:1.5},
+  'DOM':{label:'🇩🇴 Rep. Dominicana',currency:'$',irpf:15,ss:2.87,maxWeekHours:44,overtimeRate:1.35},
+  'PRI':{label:'🇵🇷 Puerto Rico',currency:'$',irpf:7,ss:7.65,maxWeekHours:40,overtimeRate:1.5},
+};
+
+function applyCountryPreset(code){
+  if(!code||!COUNTRY_PRESETS[code])return;
+  const p=COUNTRY_PRESETS[code];
+  const irpf=document.getElementById('cfg-irpf');if(irpf)irpf.value=p.irpf;
+  const ss=document.getElementById('cfg-ss');if(ss)ss.value=p.ss;
+  const wg=document.getElementById('cfg-wg');if(wg)wg.value=p.maxWeekHours;
+  const ccy=document.getElementById('cfg-currency');if(ccy)ccy.value=p.currency;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1097,7 +1398,10 @@ function getSettings(uid){
     minHours:   s.minHours??4,
     weekGoal:   s.weekGoal??40,
     autoday:    s.autoday!==undefined?s.autoday:true,
-    theme:      s.theme||'system'
+    theme:      s.theme||'system',
+    country:    s.country||'ESP',
+    currency:   s.currency||'€',
+    maxWeekHours: s.maxWeekHours??40
   };
 }
 
@@ -1263,8 +1567,8 @@ function renderSummary(entries,start,end){
   }
 
   animNum('s-total', fmtH(total));
-  animNum('s-pay', '€'+pay.toFixed(0));
-  animNum('s-net', '€'+net.toFixed(0));
+  animNum('s-pay', cur()+'pay.toFixed(0));
+  animNum('s-net', cur()+'net.toFixed(0));
   animNum('s-avg', fmtH(avg));
   animNum('s-noche', noche);
   animNum('s-finde', finde);
@@ -1274,14 +1578,14 @@ function renderSummary(entries,start,end){
   // overtime alert
   const ot=document.getElementById('ot-alert');
   const otMsg=document.getElementById('ot-msg');
-  if(periodMode==='semana'&&total>40){
-    otMsg.textContent=`${t('ot.msg')} ${fmtH(total)} (${fmtH(total-40)} extra)`;
+  if(periodMode==='semana'&&total>cfg.maxWeekHours){
+    otMsg.textContent=`${t('ot.msg')} ${fmtH(total)} (${fmtH(total-cfg.maxWeekHours)} extra)`;
     ot.classList.add('show');
   } else { ot.classList.remove('show'); }
 
   // float summary
   document.getElementById('fs-hours').textContent=fmtH(total);
-  document.getElementById('fs-net').textContent='€'+net.toFixed(0);
+  document.getElementById('fs-net').textContent=cur()+'net.toFixed(0);
 
   // week goal ring (only in week mode)
   const gc=document.getElementById('goal-ring-card');
@@ -1491,7 +1795,7 @@ function renderStats(){
   const retT=(cfg.irpf+cfg.ss)/100;
   const annNet=annPay*(1-retT);
   const ah=document.getElementById('ann-hours');const ag=document.getElementById('ann-gross');const an=document.getElementById('ann-net');const ad=document.getElementById('ann-days');
-  if(ah)ah.textContent=fmtH(annH);if(ag)ag.textContent='€'+annPay.toFixed(0);if(an)an.textContent='€'+annNet.toFixed(0);if(ad)ad.textContent=annDays;
+  if(ah)ah.textContent=fmtH(annH);if(ag)ag.textContent=cur()+'annPay.toFixed(0);if(an)an.textContent=cur()+'annNet.toFixed(0);if(ad)ad.textContent=annDays;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1577,7 +1881,7 @@ function renderList(entries){
       const wd=wdFull[d.getDay()]||'';
       const emoji=isAbs?(absenceEmoji[e.type]||'📅'):(workEmoji[e.type]||'🏢');
       const label=isAbs?(absenceLabels[e.type]||e.type):(typeLabels[e.type]||e.type);
-      const payStr=isAbs?`<span style="color:var(--muted);font-size:11px">Sin remunerar</span>`:`€${pay.toFixed(2)} / €${net.toFixed(2)}`;
+      const payStr=isAbs?`<span style="color:var(--muted);font-size:11px">Sin remunerar</span>`:`${cur()}${pay.toFixed(2)} / ${cur()}${net.toFixed(2)}`;
       const hourStr=isAbs?`<span style="font-size:11px;color:var(--muted)">${emoji}</span>`:fmtH(e.hours);
       card.innerHTML=`
         <div class="swipe-hint">🗑</div>
@@ -1702,7 +2006,7 @@ function updatePayPreview(){
     const labels={vacaciones:'🏖️ Vacaciones — 0h · €0',baja:'🤒 Baja/Enfermedad — 0h · €0',festivo0:'📅 Festivo sin remunerar — 0h · €0'};
     pp.innerHTML=`<span style="color:var(--muted)">${labels[curType]}</span>`;
   } else {
-    pp.innerHTML=`${fmtH(h)} × €${rate}/h = <strong>€${pay.toFixed(2)}</strong> · <span class="net-prev">Neto: €${net.toFixed(2)}</span>`;
+    pp.innerHTML=`${fmtH(h)} × ${cur()}${rate}/h = <strong>${cur()}${pay.toFixed(2)}</strong> · <span class="net-prev">Neto: ${cur()}${net.toFixed(2)}</span>`;
   }
 }
 function saveEntry(){
@@ -1830,7 +2134,7 @@ function renderWeekCompare(){
     return `<span class="wc-val ${cls}">${fmt(cv)} ${arrow}${Math.abs(pct)}%</span>`;
   }
   document.getElementById('wc-hours').innerHTML=delta(c.h,p.h,fmtH);
-  document.getElementById('wc-pay').innerHTML=delta(c.pay,p.pay,v=>'€'+v.toFixed(0));
+  document.getElementById('wc-pay').innerHTML=delta(c.pay,p.pay,v=>cur()+'v.toFixed(0));
   document.getElementById('wc-days').innerHTML=delta(c.days,p.days,v=>v+'d');
   wc.classList.add('show');
 }
@@ -1862,6 +2166,9 @@ function openSettings(){
   // mark color theme
   try{const ct=localStorage.getItem('ch_color_theme')||'blue';
     document.querySelectorAll('.ctbtn').forEach(b=>b.classList.toggle('active',b.dataset.color===ct));}catch(e){}
+  // country & currency
+  const cfgCntry=document.getElementById('cfg-country');if(cfgCntry)cfgCntry.value=cfg.country||'ESP';
+  const cfgCcy=document.getElementById('cfg-currency');if(cfgCcy)cfgCcy.value=cfg.currency||'€';
   // worker info
   const wi=getWorkerInfo();
   const wn=document.getElementById('cfg-wname'); if(wn)wn.value=wi.name||'';
@@ -1886,6 +2193,9 @@ function saveSettings(){
   s.autoday=document.getElementById('cfg-autoday').checked;
   s.notifEnabled=document.getElementById('cfg-notif').checked;
   s.notifTime=document.getElementById('cfg-notif-time').value||'09:00';
+  const cfgCntry=document.getElementById('cfg-country');if(cfgCntry)s.country=cfgCntry.value||'ESP';
+  const cfgCcy=document.getElementById('cfg-currency');if(cfgCcy)s.currency=cfgCcy.value||'€';
+  const cp=COUNTRY_PRESETS[s.country];if(cp)s.maxWeekHours=cp.maxWeekHours;
   if(s.notifEnabled&&Notification.permission==='default')Notification.requestPermission();
   // worker info
   saveWorkerInfo({
@@ -1984,12 +2294,12 @@ function openReport(){
     if(lastDate){const diff=(d-lastDate)/(86400000);if(diff<=1)streak++;else streak=1;}else streak=1;
     if(streak>maxStreak)maxStreak=streak;
     lastDate=d;
-    txt+=`${e.date} | ${typeLabels[e.type]||e.type} | ${h}h | €${pay.toFixed(2)}\n`;
+    txt+=`${e.date} | ${typeLabels[e.type]||e.type} | ${h}h | ${cur()}${pay.toFixed(2)}\n`;
   });
   const net=payTotal*(1-retTotal);
   const avg=sorted.length?total/sorted.length:0;
   const otPct=sorted.length?Math.round(otDays/sorted.length*100):0;
-  txt+=`\n── TOTAL: ${fmtH(total)} | Bruto: €${payTotal.toFixed(2)} | Neto: €${net.toFixed(2)}`;
+  txt+=`\n── TOTAL: ${fmtH(total)} | Bruto: ${cur()}${payTotal.toFixed(2)} | Neto: ${cur()}${net.toFixed(2)}`;
   document.getElementById('report-preview').textContent=txt;
 
   // donut chart
@@ -2114,7 +2424,7 @@ function _formalHTMLReport(d){
   const contract=d.wi.contract||'—'; const role=d.wi.role||'—';
   const rows=d.rows.map((r,i)=>`<tr style="background:${i%2===0?'#fff':colT}">
     <td>${r.date}</td><td>${r.type}</td><td style="text-align:right">${r.hours}h</td>
-    <td style="text-align:right">€${r.gross.toFixed(2)}</td><td style="text-align:right">€${r.net.toFixed(2)}</td>
+    <td style="text-align:right">${cur()}${r.gross.toFixed(2)}</td><td style="text-align:right">${cur()}${r.net.toFixed(2)}</td>
     <td style="color:#666;font-size:12px">${r.notes}</td></tr>`).join('');
   return `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
 <title>Informe ControlHoras – ${d.period}</title>
@@ -2180,13 +2490,13 @@ tbody td:nth-child(3),tbody td:nth-child(4),tbody td:nth-child(5){text-align:rig
   </div>
   <div class="summary-boxes">
     <div class="sum-box sb-hours"><div class="sv">${fmtH(d.total)}</div><div class="sl">Total horas</div></div>
-    <div class="sum-box sb-gross"><div class="sv">€${d.payTotal.toFixed(2)}</div><div class="sl">Bruto</div></div>
-    <div class="sum-box sb-net"><div class="sv">€${d.netTotal.toFixed(2)}</div><div class="sl">Neto</div></div>
+    <div class="sum-box sb-gross"><div class="sv">${cur()}${d.payTotal.toFixed(2)}</div><div class="sl">Bruto</div></div>
+    <div class="sum-box sb-net"><div class="sv">${cur()}${d.netTotal.toFixed(2)}</div><div class="sl">Neto</div></div>
     <div class="sum-box sb-days"><div class="sv">${d.rows.length}</div><div class="sl">Entradas</div></div>
   </div>
   <table>
     <thead><tr><th>Fecha</th><th>Tipo</th><th>Horas</th><th>Bruto</th><th>Neto</th><th>Notas</th></tr></thead>
-    <tbody>${rows}<tr class="totals-row"><td colspan="2"><strong>TOTAL</strong></td><td>${fmtH(d.total)}</td><td>€${d.payTotal.toFixed(2)}</td><td>€${d.netTotal.toFixed(2)}</td><td></td></tr></tbody>
+    <tbody>${rows}<tr class="totals-row"><td colspan="2"><strong>TOTAL</strong></td><td>${fmtH(d.total)}</td><td>${cur()}${d.payTotal.toFixed(2)}</td><td>${cur()}${d.netTotal.toFixed(2)}</td><td></td></tr></tbody>
   </table>
   <div class="signature-row">
     <div class="sig-block">
@@ -2309,7 +2619,7 @@ async function exportJPG(){
   ctx.fillText(name.slice(0,24), 24, 125); ctx.fillText(employer.slice(0,22), 230, 125);
   ctx.fillText(role.slice(0,22), 460, 125); ctx.fillText(contract.slice(0,16), 680, 125);
   // summary boxes
-  const boxes=[{v:fmtH(d.total),l:'TOTAL HORAS',bg:'#e8eaf6',tc:'#1a237e'},{v:'€'+d.payTotal.toFixed(0),l:'BRUTO',bg:'#e8f5e9',tc:'#2e7d32'},{v:'€'+d.netTotal.toFixed(0),l:'NETO',bg:'#e3f2fd',tc:'#1565c0'},{v:''+d.rows.length,l:'ENTRADAS',bg:'#f3e5f5',tc:'#6a1b9a'}];
+  const boxes=[{v:fmtH(d.total),l:'TOTAL HORAS',bg:'#e8eaf6',tc:'#1a237e'},{v:cur()+'d.payTotal.toFixed(0),l:'BRUTO',bg:'#e8f5e9',tc:'#2e7d32'},{v:cur()+'d.netTotal.toFixed(0),l:'NETO',bg:'#e3f2fd',tc:'#1565c0'},{v:''+d.rows.length,l:'ENTRADAS',bg:'#f3e5f5',tc:'#6a1b9a'}];
   boxes.forEach((b,i)=>{
     const x=24+i*(W-48)/4+2; const w=(W-48)/4-4;
     ctx.fillStyle=b.bg; ctx.beginPath(); ctx.roundRect(x,148,w,44,6); ctx.fill();
@@ -2329,8 +2639,8 @@ async function exportJPG(){
     ctx.fillStyle=i%2===0?'#fff':'#f5f7ff'; ctx.fillRect(0,y,W,ROW_H);
     ctx.fillStyle='#333'; ctx.font='12px system-ui,sans-serif';
     ctx.fillText(r.date,24,y+18); ctx.fillText(r.type,160,y+18);
-    ctx.fillText(r.hours+'h',290,y+18); ctx.fillText('€'+r.gross.toFixed(2),370,y+18);
-    ctx.fillText('€'+r.net.toFixed(2),460,y+18);
+    ctx.fillText(r.hours+'h',290,y+18); ctx.fillText(cur()+'r.gross.toFixed(2),370,y+18);
+    ctx.fillText(cur()+'r.net.toFixed(2),460,y+18);
     ctx.fillText(r.notes.slice(0,22),560,y+18);
     y+=ROW_H;
   });
@@ -2338,7 +2648,7 @@ async function exportJPG(){
   ctx.fillStyle='#e8eaf6'; ctx.fillRect(0,y,W,ROW_H);
   ctx.fillStyle='#1a237e'; ctx.font='bold 13px system-ui,sans-serif';
   ctx.fillText('TOTAL',24,y+18); ctx.fillText(fmtH(d.total),290,y+18);
-  ctx.fillText('€'+d.payTotal.toFixed(2),370,y+18); ctx.fillText('€'+d.netTotal.toFixed(2),460,y+18);
+  ctx.fillText(cur()+'d.payTotal.toFixed(2),370,y+18); ctx.fillText(cur()+'d.netTotal.toFixed(2),460,y+18);
   y+=ROW_H+20;
   // footer
   ctx.fillStyle='#aaa'; ctx.font='11px system-ui,sans-serif';
