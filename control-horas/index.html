@@ -527,6 +527,7 @@ body.app-active #fab{bottom:70px!important}
       <div class="field"><label data-i18n="auth.password">Contraseña</label><input id="l-pass" type="password" placeholder="••••••••"></div>
       <button class="btn-primary" onclick="doLogin()"><span data-i18n="auth.loginBtn">Entrar</span></button>
       <div id="auth-err-login" class="auth-err"></div>
+      <button class="btn-demo" onclick="showForgotPwd()" style="margin-top:4px;font-size:12px;opacity:.8">🔐 ¿Olvidaste tu contraseña?</button>
     </div>
     <div id="form-register" style="display:none">
       <div class="field"><label data-i18n="auth.name">Nombre</label><input id="r-name" type="text" placeholder="Tu nombre"></div>
@@ -911,6 +912,17 @@ body.app-active #fab{bottom:70px!important}
       </div>
     </div>
 
+    <div class="settings-section">
+      <h3>🔑 Cambiar contraseña</h3>
+      <div class="rate-grid">
+        <div class="rate-item" style="grid-column:1/-1"><label>Contraseña actual</label><input type="password" id="cfg-pwd-cur" placeholder="••••••••" autocomplete="current-password"></div>
+        <div class="rate-item" style="grid-column:1/-1"><label>Nueva contraseña</label><input type="password" id="cfg-pwd-new" placeholder="••••••••" autocomplete="new-password"></div>
+        <div class="rate-item" style="grid-column:1/-1"><label>Confirmar nueva contraseña</label><input type="password" id="cfg-pwd-con" placeholder="••••••••" autocomplete="new-password"></div>
+      </div>
+      <button class="btn-save" style="width:100%;margin-top:8px;background:#2e7d32" onclick="changeUserPassword()">Cambiar contraseña</button>
+      <p id="cfg-pwd-msg" style="text-align:center;font-size:12px;margin-top:6px;display:none"></p>
+    </div>
+
     <button class="btn-save" style="width:100%" onclick="saveSettings()" data-i18n="settings.save">Guardar ajustes</button>
 
     <!-- Admin trigger: tap version 7 times -->
@@ -955,6 +967,23 @@ body.app-active #fab{bottom:70px!important}
         <h3>Texto del aviso de estimación</h3>
         <textarea id="adm-disclaimer" rows="3" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink);font-size:12px;resize:vertical"></textarea>
       </div>
+      <div class="settings-section">
+        <h3>🔐 Cambiar contraseña de propietario</h3>
+        <div class="rate-grid">
+          <div class="rate-item" style="grid-column:1/-1"><label>Nueva contraseña propietario</label><input type="password" id="adm-new-pwd" placeholder="Nueva clave secreta" autocomplete="new-password"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>Confirmar nueva contraseña</label><input type="password" id="adm-con-pwd" placeholder="Repite la nueva clave" autocomplete="new-password"></div>
+        </div>
+        <button class="btn-save" style="width:100%;margin-top:8px;background:#e65100" onclick="changeAdminPwd()">Cambiar contraseña propietario</button>
+        <p id="adm-pwd-msg" style="text-align:center;font-size:12px;margin-top:6px;display:none"></p>
+      </div>
+      <div class="settings-section">
+        <h3>☁️ Integración con la nube</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Permite a los usuarios exportar sus datos a Google Drive y Dropbox. Introduce las claves de tu cuenta de desarrollador.</p>
+        <div class="rate-grid">
+          <div class="rate-item" style="grid-column:1/-1"><label>Google Drive Client ID</label><input type="text" id="adm-gdrive-id" placeholder="xxxx.apps.googleusercontent.com"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>Dropbox App Key</label><input type="text" id="adm-dropbox-key" placeholder="tu_app_key_de_dropbox"></div>
+        </div>
+      </div>
       <button class="btn-save" style="width:100%;background:var(--primary)" onclick="saveAdminSettings()">Guardar configuración</button>
       <button class="btn-save" style="width:100%;background:var(--muted);margin-top:8px" onclick="closeAdmin()">Cerrar</button>
     </div>
@@ -972,6 +1001,8 @@ body.app-active #fab{bottom:70px!important}
       <button class="btn-save" style="background:#7b1fa2" onclick="exportJPG()" data-i18n="report.jpg">🖼️ JPG</button>
       <button class="btn-save" style="background:var(--muted)" onclick="exportCSV()" data-i18n="report.csv">⬇ CSV</button>
       <button class="btn-save" style="background:var(--ok)" onclick="exportHTMLReport()" data-i18n="report.html">⬇ HTML</button>
+      <button class="btn-save" style="background:#1565c0" onclick="exportToGoogleDrive()" title="Guardar en Google Drive">📁 Drive</button>
+      <button class="btn-save" style="background:#0062ff" onclick="exportToDropbox()" title="Guardar en Dropbox">📦 Dropbox</button>
       <button class="btn-save" style="min-width:40px;padding:12px 8px" onclick="copyHours()" title="Copiar horas">📋</button>
     </div>
   </div>
@@ -3347,9 +3378,12 @@ function _periodFilename(){
 /* ═══════════════════════════════════════════════
    ADMIN PANEL
 ════════════════════════════════════════════════ */
-const _ADM_HASH='6d918d0f4c690c95b22f50f98214710ba2c26689b224e5005a2fe3ea0dfce542';
+const _ADM_HASH_DEFAULT='6d918d0f4c690c95b22f50f98214710ba2c26689b224e5005a2fe3ea0dfce542';
 const _ADM_SALT='ch_adm_salt_2026';
 const _ADM_KEY='ch_adm_cfg';
+function _getAdmHash(){
+  try{ const c=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); return c.customAdminHash||_ADM_HASH_DEFAULT; }catch(e){ return _ADM_HASH_DEFAULT; }
+}
 let _adminTapCount=0,_adminTapTimer=null;
 
 async function _sha256(str){
@@ -3375,7 +3409,7 @@ function adminTap(){
 async function verifyAdminPwd(){
   const pwd=document.getElementById('admin-pwd-input').value;
   const hash=await _sha256(pwd+_ADM_SALT);
-  if(hash===_ADM_HASH){
+  if(hash===_getAdmHash()){
     document.getElementById('admin-pwd-err').style.display='none';
     document.getElementById('admin-auth-section').style.display='none';
     document.getElementById('admin-panel-section').style.display='';
@@ -3404,6 +3438,8 @@ function _loadAdminFields(){
   if(f('adm-invoice-concept')) f('adm-invoice-concept').value=cfg.invoiceConcept||'';
   if(f('adm-fiscal')) f('adm-fiscal').value=cfg.fiscal||'';
   if(f('adm-disclaimer')) f('adm-disclaimer').value=cfg.disclaimerText||'Estimación orientativa. El bruto real depende de tu contrato firmado y convenio colectivo. No sustituye la nómina oficial.';
+  if(f('adm-gdrive-id')) f('adm-gdrive-id').value=cfg.gdriveClientId||'';
+  if(f('adm-dropbox-key')) f('adm-dropbox-key').value=cfg.dropboxAppKey||'';
 }
 
 function saveAdminSettings(){
@@ -3412,8 +3448,11 @@ function saveAdminSettings(){
     email:f('adm-email'), phone:f('adm-phone'), url:f('adm-url'), name:f('adm-name'),
     price:f('adm-price'), iban:f('adm-iban'), bizum:f('adm-bizum'), paypal:f('adm-paypal'),
     invoiceConcept:f('adm-invoice-concept'), fiscal:f('adm-fiscal'),
-    disclaimerText:f('adm-disclaimer')
+    disclaimerText:f('adm-disclaimer'),
+    gdriveClientId:f('adm-gdrive-id'), dropboxAppKey:f('adm-dropbox-key')
   };
+  // Preserve custom admin hash if it exists
+  try{ const prev=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); if(prev.customAdminHash) cfg.customAdminHash=prev.customAdminHash; }catch(e){}
   localStorage.setItem(_ADM_KEY, JSON.stringify(cfg));
   _applyAdminConfig();
   showToast('Configuración guardada');
@@ -3423,6 +3462,145 @@ function saveAdminSettings(){
 function closeAdmin(e){
   if(e&&e.target!==document.getElementById('overlay-admin'))return;
   document.getElementById('overlay-admin').classList.remove('open');
+}
+
+/* ── CHANGE ADMIN PASSWORD ── */
+async function changeAdminPwd(){
+  const np=(document.getElementById('adm-new-pwd')||{}).value||'';
+  const cp=(document.getElementById('adm-con-pwd')||{}).value||'';
+  const msg=document.getElementById('adm-pwd-msg');
+  const show=(t,ok)=>{ if(msg){msg.style.display='';msg.style.color=ok?'var(--ok)':'var(--err)';msg.textContent=t;} };
+  if(!np||np.length<4){show('La contraseña debe tener al menos 4 caracteres.',false);return;}
+  if(np!==cp){show('Las contraseñas no coinciden.',false);return;}
+  const newHash=await _sha256(np+_ADM_SALT);
+  let cfg={};
+  try{ cfg=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); }catch(e){}
+  cfg.customAdminHash=newHash;
+  localStorage.setItem(_ADM_KEY,JSON.stringify(cfg));
+  document.getElementById('adm-new-pwd').value='';
+  document.getElementById('adm-con-pwd').value='';
+  show('✅ Contraseña de propietario actualizada correctamente.',true);
+}
+
+/* ── CHANGE USER PASSWORD ── */
+function changeUserPassword(){
+  const cur=(document.getElementById('cfg-pwd-cur')||{}).value||'';
+  const np=(document.getElementById('cfg-pwd-new')||{}).value||'';
+  const cp=(document.getElementById('cfg-pwd-con')||{}).value||'';
+  const msg=document.getElementById('cfg-pwd-msg');
+  const show=(t,ok)=>{ if(msg){msg.style.display='';msg.style.color=ok?'var(--ok)':'var(--err)';msg.textContent=t;} };
+  if(!cur||!np){show('Rellena todos los campos.',false);return;}
+  if(np.length<4){show('La nueva contraseña debe tener al menos 4 caracteres.',false);return;}
+  if(np!==cp){show('Las contraseñas no coinciden.',false);return;}
+  function hashPW(p){let h=0;for(let i=0;i<p.length;i++){h=Math.imul(31,h)+p.charCodeAt(i)|0;}return h.toString(36);}
+  let db={};
+  try{ db=JSON.parse(localStorage.getItem('ch_db')||'{}'); }catch(e){}
+  const uid=localStorage.getItem('ch_uid')||(db.users&&Object.keys(db.users)[0])||'';
+  if(!uid||!db.users||!db.users[uid]){show('No se encontró el usuario activo.',false);return;}
+  const curHash=hashPW(cur);
+  if(db.users[uid].pw!==curHash){show('La contraseña actual no es correcta.',false);return;}
+  db.users[uid].pw=hashPW(np);
+  localStorage.setItem('ch_db',JSON.stringify(db));
+  document.getElementById('cfg-pwd-cur').value='';
+  document.getElementById('cfg-pwd-new').value='';
+  document.getElementById('cfg-pwd-con').value='';
+  show('✅ Contraseña cambiada correctamente.',true);
+}
+
+/* ── FORGOT PASSWORD ── */
+function showForgotPwd(){
+  const em=(document.getElementById('l-email')||{}).value||'';
+  if(!em){
+    alert('Escribe primero tu correo en el campo "Email" y luego pulsa "¿Olvidaste tu contraseña?".');
+    return;
+  }
+  let db={};
+  try{ db=JSON.parse(localStorage.getItem('ch_db')||'{}'); }catch(e){}
+  if(!db.users||!db.users[em]){alert('No existe ninguna cuenta con ese correo.');return;}
+  // We can't decrypt the hash, so offer a reset
+  const ok=confirm('¿Deseas restablecer la contraseña de '+em+'?\n\nSe te pedirá una nueva contraseña. Esta acción no se puede deshacer.');
+  if(!ok)return;
+  const np=prompt('Introduce tu nueva contraseña (mínimo 4 caracteres):');
+  if(!np||np.length<4){alert('Contraseña demasiado corta. Cancelado.');return;}
+  const np2=prompt('Confirma tu nueva contraseña:');
+  if(np!==np2){alert('Las contraseñas no coinciden. Cancelado.');return;}
+  function hashPW(p){let h=0;for(let i=0;i<p.length;i++){h=Math.imul(31,h)+p.charCodeAt(i)|0;}return h.toString(36);}
+  db.users[em].pw=hashPW(np);
+  localStorage.setItem('ch_db',JSON.stringify(db));
+  alert('✅ Contraseña restablecida correctamente. Ahora puedes iniciar sesión con la nueva contraseña.');
+}
+
+/* ── EXPORT TO GOOGLE DRIVE ── */
+function exportToGoogleDrive(){
+  let cfg={};
+  try{ cfg=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); }catch(e){}
+  const clientId=cfg.gdriveClientId||'';
+  if(!clientId){
+    alert('Para usar Google Drive, el propietario de la app debe configurar el Google Drive Client ID en el panel de administración.');
+    return;
+  }
+  // Build CSV data for upload
+  const csv=_buildExportCSV();
+  const fileName='ControlHorarioIQ_'+new Date().toISOString().slice(0,10)+'.csv';
+  // OAuth2 implicit flow
+  const scope='https://www.googleapis.com/auth/drive.file';
+  const redirectUri=location.origin+location.pathname;
+  const authUrl='https://accounts.google.com/o/oauth2/auth?client_id='+encodeURIComponent(clientId)+'&redirect_uri='+encodeURIComponent(redirectUri)+'&scope='+encodeURIComponent(scope)+'&response_type=token&prompt=select_account';
+  // Store pending upload
+  try{ sessionStorage.setItem('_gdrive_pending',JSON.stringify({csv,fileName})); }catch(e){}
+  window.open(authUrl,'_blank','width=500,height=600');
+  showToast('Se abrirá Google para autorizar. Vuelve a la app para completar la subida.');
+}
+
+function _buildExportCSV(){
+  let db={};
+  try{ db=JSON.parse(localStorage.getItem('ch_db')||'{}'); }catch(e){}
+  const uid=localStorage.getItem('ch_uid')||(db.users&&Object.keys(db.users)[0])||'';
+  if(!uid)return '';
+  const entries=(db.entries||[]).filter(e=>e.uid===uid).sort((a,b)=>a.date<b.date?1:-1);
+  const cfg=(db.settings||{})[uid]||{};
+  const rows=[['Fecha','Tipo','Horas','Tarifa','Bruto','IRPF','S.Social','Neto','Notas']];
+  entries.forEach(e=>{
+    const rate={'normal':cfg.rateNormal,'noche':cfg.rateNoche,'finde':cfg.rateFinde,'feriado':cfg.rateFeriado,'vacaciones':0}[e.type]||0;
+    const br=e.hours*rate; const irpf=br*(cfg.irpf||0)/100; const ss=br*(cfg.ss||0)/100;
+    rows.push([e.date,e.type,e.hours,rate.toFixed(2),br.toFixed(2),irpf.toFixed(2),ss.toFixed(2),(br-irpf-ss).toFixed(2),e.notes||'']);
+  });
+  return rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+}
+
+/* ── EXPORT TO DROPBOX ── */
+function exportToDropbox(){
+  let cfg={};
+  try{ cfg=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); }catch(e){}
+  const appKey=cfg.dropboxAppKey||'';
+  // Build the data file first (CSV download)
+  const csv=_buildExportCSV();
+  if(!csv){showToast('No hay datos para exportar.');return;}
+  const fileName='ControlHorarioIQ_'+new Date().toISOString().slice(0,10)+'.csv';
+  // Create blob URL and use Dropbox Saver if key available, else download
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  if(appKey){
+    // Load Dropbox SDK and use Saver
+    if(!window.Dropbox){
+      const s=document.createElement('script');
+      s.src='https://www.dropbox.com/static/api/2/dropins.js';
+      s.id='dropboxjs'; s.setAttribute('data-app-key',appKey);
+      s.onload=()=>_doDropboxSave(url,fileName);
+      document.head.appendChild(s);
+    } else { _doDropboxSave(url,fileName); }
+  } else {
+    // No app key: download locally + inform
+    const a=document.createElement('a'); a.href=url; a.download=fileName; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    showToast('Archivo descargado. Súbelo manualmente a Dropbox.');
+  }
+}
+
+function _doDropboxSave(url,fileName){
+  if(window.Dropbox&&window.Dropbox.save){
+    window.Dropbox.save({files:[{url,filename:fileName}],success:()=>showToast('✅ Guardado en Dropbox'),error:(e)=>showToast('Error Dropbox: '+e)});
+  } else { showToast('Dropbox no disponible en este navegador.'); }
 }
 
 function _applyAdminConfig(){
