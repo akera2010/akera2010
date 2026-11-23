@@ -43,9 +43,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .pick-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
 .pick-match{font-weight:700;font-size:.95rem}
 .pick-league{font-size:.75rem;color:var(--muted);margin-top:2px}
-.pick-badge{background:#dbeafe;color:#c00000;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;border:1px solid #93c5fd}
-.pick-badge.high{background:#dcfce7;color:#c00000;border-color:#86efac}
-.pick-badge.med{background:#fef9c3;color:#c00000;border-color:#fde047}
+.pick-badge{background:#dbeafe;color:#1d4ed8;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;border:1px solid #93c5fd}
+.pick-badge.high{background:#dcfce7;color:#15803d;border-color:#86efac}
+.pick-badge.med{background:#fef9c3;color:#a16207;border-color:#fde047}
+.demo-banner{background:#fef3c7;border:2px solid #f59e0b;border-radius:10px;padding:10px 16px;margin-bottom:14px;font-size:.82rem;color:#92400e;font-weight:600;display:none}
+.demo-banner.visible{display:block}
 .markets-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
 .mkt{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
 .ring-wrap{position:relative;width:40px;height:40px}
@@ -104,6 +106,26 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .time-dual .tz-name{font-size:.64rem;opacity:.7;margin:0 3px}
 .venue-info{display:block;font-size:.7rem;color:var(--muted);opacity:.85;margin-top:2px}
 .site-footer{text-align:center;padding:14px 0 8px;margin-top:28px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
+/* ===== ADMIN PANEL ===== */
+#admOverlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+#admBox{background:var(--card);border-radius:16px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,.35);border:2px solid var(--acc)}
+#admBox h2{font-size:1.1rem;font-weight:800;color:var(--acc);margin-bottom:4px}
+#admBox p{font-size:.8rem;color:var(--muted);margin-bottom:18px}
+.adm-field{margin-bottom:14px}
+.adm-field label{display:block;font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:5px}
+.adm-field input,.adm-field textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;color:var(--text);background:var(--s1);outline:none;transition:border .2s}
+.adm-field input:focus,.adm-field textarea:focus{border-color:var(--acc)}
+.adm-field textarea{resize:vertical;min-height:70px;font-family:inherit}
+.adm-btns{display:flex;gap:10px;margin-top:16px}
+.adm-save{flex:1;background:var(--acc);color:#fff;border:none;padding:10px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem}
+.adm-close{background:var(--s2);color:var(--muted);border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:.9rem}
+.adm-pwd{display:flex;gap:8px;margin-bottom:14px}
+.adm-pwd input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;color:var(--text);background:var(--s1);outline:none}
+.adm-pwd button{background:var(--acc);color:#fff;border:none;padding:9px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem}
+.adm-err{color:var(--red);font-size:.78rem;margin-top:-8px;margin-bottom:8px}
+.adm-section{background:var(--s1);border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid var(--border)}
+.adm-section-title{font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -131,10 +153,62 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
   </div>
 
   <div id="statsStrip" class="stats-strip"></div>
-  <div id="tabPicks"><div id="picksGrid" class="picks-grid"></div></div>
+  <div id="tabPicks"><div id="demoBanner" class="demo-banner">⚠️ Modo demo — no hay partidos cargados para hoy. Mostrando análisis de muestra.</div><div id="picksGrid" class="picks-grid"></div></div>
   <div id="tabCombos" class="hidden"><div id="combosContainer"></div></div>
   <div id="tabRecord" class="hidden"><div id="recordContainer"></div></div>
-  <footer class="site-footer">Por Data Science Sandra Blanco | akera2011@protonmail.com</footer>
+  <footer class="site-footer" id="footerEl">Por Data Science Sandra Blanco | <span id="footerEmail">akera2011@protonmail.com</span></footer>
+</div>
+
+<!-- ADMIN OVERLAY -->
+<div id="admOverlay" class="hidden">
+  <div id="admBox">
+    <h2>🔐 Panel de Propietaria</h2>
+    <p>Acceso exclusivo — Sandra Blanco</p>
+    <div id="admPwdSection">
+      <div class="adm-pwd">
+        <input type="password" id="admPwdInput" placeholder="Contraseña de propietaria" autocomplete="off"/>
+        <button onclick="admCheckPwd()">Entrar</button>
+      </div>
+      <div id="admPwdErr" class="adm-err hidden">Contraseña incorrecta</div>
+    </div>
+    <div id="admSettings" class="hidden">
+      <div class="adm-section">
+        <div class="adm-section-title">📧 Contacto &amp; Soporte</div>
+        <div class="adm-field">
+          <label>Email de contacto / quejas</label>
+          <input type="email" id="admEmail" placeholder="ejemplo@correo.com"/>
+        </div>
+        <div class="adm-field">
+          <label>Texto de soporte (pie de página)</label>
+          <input type="text" id="admSupportText" placeholder="Texto que ven los usuarios"/>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-title">🔑 Cambiar contraseña de propietaria</div>
+        <div class="adm-field">
+          <label>Nueva contraseña</label>
+          <input type="password" id="admNewPwd" placeholder="Nueva contraseña (mín. 8 caracteres)"/>
+        </div>
+        <div class="adm-field">
+          <label>Confirmar nueva contraseña</label>
+          <input type="password" id="admNewPwd2" placeholder="Repetir nueva contraseña"/>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-title">ℹ️ Información del sistema</div>
+        <div style="font-size:.8rem;color:var(--muted);line-height:1.8">
+          <div>Versión: <strong id="admVerEl">v5.0</strong></div>
+          <div>Almacenamiento: <strong>localStorage (fiq4-)</strong></div>
+          <div>Simulaciones: <strong>100.000 Monte Carlo</strong></div>
+          <div>Ligas monitorizadas: <strong>24</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="adm-btns">
+      <button class="adm-save hidden" id="admSaveBtn" onclick="admSave()">Guardar cambios</button>
+      <button class="adm-close" onclick="closeAdm()">Cerrar</button>
+    </div>
+  </div>
 </div>
 
 <div id="loadingOverlay">
@@ -591,6 +665,24 @@ async function boot(){
   }
   STATE.lastFetch=Date.now();
   if(!STATE.combos.length&&STATE.picks.length)STATE.combos=buildCombos(STATE.picks);
+  // Si aún sin picks → intentar ESPN API (refresco diario automático)
+  if(!STATE.picks.length){
+    try{
+      lm.textContent='Consultando API de partidos de hoy…';
+      const espnPicks=await computeFromESPN();
+      if(espnPicks.length){
+        STATE.picks=espnPicks;
+        STATE.combos=buildCombos(STATE.picks);
+        document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ESPN · ${STATE.date} · v${PRM.VERSION}`;
+      }
+    }catch(e){console.warn('[FútbolIQ] ESPN picks error:',e);}
+  }
+  // Último recurso: demo con picks del día anterior marcados como demo
+  if(!STATE.picks.length){
+    STATE.picks=BAKED_PICKS_F.map(p=>({...p,_demo:true}));
+    STATE.combos=BAKED_COMBOS_F.length?BAKED_COMBOS_F:buildCombos(STATE.picks);
+    const db=document.getElementById('demoBanner');if(db)db.classList.add('visible');
+  }
   saveRecord();
   document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ${STATE.date} · v${PRM.VERSION}`;
   STATE.loading=false;
@@ -961,6 +1053,99 @@ function scheduleRefresh(){
   const mad=new Date(now.toLocaleString('en-US',{timeZone:'Europe/Madrid'}));
   const next=new Date(mad);next.setDate(next.getDate()+1);next.setHours(5,0,0,0);
   setTimeout(()=>{boot();scheduleRefresh();},next-mad);
+}
+
+/* ===== ADMIN PANEL ===== */
+const ADM_LS='fiq4-adm';
+const ADM_DEFAULT_HASH='sb_sandra2027_fiq'; // hash conceptual; real check abajo
+let _admTaps=0,_admTimer=null;
+function _admHash(pwd){let h=0x9e3779b9;for(let i=0;i<pwd.length;i++){h=Math.imul(h^pwd.charCodeAt(i),0x9e3779b9);h^=h>>>16;}return(h>>>0).toString(16);}
+function getAdmCfg(){try{return JSON.parse(localStorage.getItem(ADM_LS)||'{}')}catch(e){return{}}}
+function saveAdmCfg(cfg){try{localStorage.setItem(ADM_LS,JSON.stringify(cfg));}catch(e){}}
+function applyAdmCfg(){
+  const cfg=getAdmCfg();
+  if(cfg.email){const el=document.getElementById('footerEmail');if(el)el.textContent=cfg.email;}
+  if(cfg.supportText){const f=document.getElementById('footerEl');if(f)f.textContent='Por Data Science Sandra Blanco | '+cfg.email;}
+}
+function openAdm(){
+  const ov=document.getElementById('admOverlay');if(!ov)return;
+  ov.classList.remove('hidden');
+  document.getElementById('admPwdSection').classList.remove('hidden');
+  document.getElementById('admSettings').classList.add('hidden');
+  document.getElementById('admSaveBtn').classList.add('hidden');
+  document.getElementById('admPwdErr').classList.add('hidden');
+  document.getElementById('admPwdInput').value='';
+  setTimeout(()=>document.getElementById('admPwdInput').focus(),100);
+}
+window.closeAdm=function(){document.getElementById('admOverlay').classList.add('hidden');};
+window.admCheckPwd=function(){
+  const pwd=document.getElementById('admPwdInput').value;
+  const cfg=getAdmCfg();
+  const storedHash=cfg.pwdHash||_admHash('Sandra2027');
+  if(_admHash(pwd)===storedHash){
+    document.getElementById('admPwdSection').classList.add('hidden');
+    document.getElementById('admPwdErr').classList.add('hidden');
+    document.getElementById('admSettings').classList.remove('hidden');
+    document.getElementById('admSaveBtn').classList.remove('hidden');
+    // Rellenar campos actuales
+    document.getElementById('admEmail').value=cfg.email||'akera2011@protonmail.com';
+    document.getElementById('admSupportText').value=cfg.supportText||'Por Data Science Sandra Blanco';
+    document.getElementById('admNewPwd').value='';
+    document.getElementById('admNewPwd2').value='';
+    const ve=document.getElementById('admVerEl');if(ve)ve.textContent='v'+PRM.VERSION;
+  }else{
+    document.getElementById('admPwdErr').classList.remove('hidden');
+  }
+};
+window.admSave=function(){
+  const cfg=getAdmCfg();
+  const email=document.getElementById('admEmail').value.trim();
+  const supportText=document.getElementById('admSupportText').value.trim();
+  const np1=document.getElementById('admNewPwd').value;
+  const np2=document.getElementById('admNewPwd2').value;
+  if(email)cfg.email=email;
+  if(supportText)cfg.supportText=supportText;
+  if(np1||np2){
+    if(np1!==np2){alert('Las contraseñas no coinciden');return;}
+    if(np1.length<8){alert('La contraseña debe tener al menos 8 caracteres');return;}
+    cfg.pwdHash=_admHash(np1);
+  }
+  saveAdmCfg(cfg);
+  applyAdmCfg();
+  closeAdm();
+  alert('✅ Cambios guardados correctamente');
+};
+// Acceso: 5 toques rápidos en el logo ⚽
+document.addEventListener('DOMContentLoaded',()=>{
+  const logoIcon=document.querySelector('.logo-icon');
+  if(logoIcon){
+    logoIcon.style.cursor='pointer';
+    logoIcon.addEventListener('click',()=>{
+      _admTaps++;
+      clearTimeout(_admTimer);
+      _admTimer=setTimeout(()=>{_admTaps=0;},1500);
+      if(_admTaps>=5){_admTaps=0;openAdm();}
+    });
+  }
+  applyAdmCfg();
+});
+
+/* ===== ESPN FALLBACK (refresco diario automático) ===== */
+async function computeFromESPN(){
+  try{
+    const games=await fetchGames();
+    if(!games.length)return[];
+    const results=[];
+    // Procesar hasta 20 partidos en paralelo con límite
+    const batches=[];for(let i=0;i<games.length;i+=5)batches.push(games.slice(i,i+5));
+    for(const batch of batches){
+      const computed=await Promise.allSettled(batch.map((g,i)=>computeGame(g,i)));
+      computed.forEach(r=>{if(r.status==='fulfilled'&&r.value)results.push(r.value);});
+      if(results.length>=PRM.TOP)break;
+    }
+    results.sort((a,b)=>b.score-a.score);
+    return results.slice(0,PRM.TOP);
+  }catch(e){console.warn('[FútbolIQ] ESPN fallback error:',e.message);return[];}
 }
 
 /* ===== INIT ===== */
