@@ -516,7 +516,7 @@ async function fetchHist(lgId,teamId){
 }
 
 /* ===== MOTOR ===== */
-async function computeGame(g,idx){
+async function computeGame(g,idx,umbralOvr){
   const[hH,hA]=await Promise.all([fetchHist(g.leagueId,g.homeId),fetchHist(g.leagueId,g.awayId)]);
   const{lh,la}=calcLambdas(hH,hA,g.leagueId);
   const seed=(+g.homeId||idx+1)*31+(+g.awayId||idx+1);
@@ -552,7 +552,8 @@ async function computeGame(g,idx){
   const mkts=allMkts(R);if(!mkts.length)return null;
   mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
   const best=mkts[0],sc=pscore(best,R);
-  if(sc<PRM.UMBRAL)return null;
+  const umbral=umbralOvr??PRM.UMBRAL;
+  if(sc<umbral)return null;
   return{...g,R,markets:mkts,bestMkt:best,score:sc,dataQ:hH.length+hA.length,statz:!!sd};
 }
 
@@ -653,18 +654,30 @@ async function boot(){
     saveRecord();
     STATE.loading=true;
   }
-  // Fetch en segundo plano para actualizar con datos frescos
+  // Lanzar statz_data.json Y ESPN API en paralelo — lo que llegue primero y sea mejor
   try{
-    lm.textContent='Verificando datos frescos…';
+    lm.textContent='Consultando partidos de hoy…';
     STATE.bakedPicks=null;STATE.bakedCombos=null;
-    await fetchStatzData();
+    const[,espnPicks]=await Promise.all([
+      fetchStatzData().catch(()=>{}),
+      computeFromESPN().catch(()=>[])
+    ]);
     if(STATE.bakedPicks&&STATE.bakedPicks.length){
+      // statz_data.json actualizado hoy → mejor calidad, prioridad
       STATE.picks=STATE.bakedPicks;
       STATE.combos=STATE.bakedCombos&&STATE.bakedCombos.length?STATE.bakedCombos:buildCombos(STATE.picks);
-    }else if(!STATE.picks.length){
+      document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · Statz AI · ${STATE.date} · v${PRM.VERSION}`;
+    }else{
+      // statz_data.json desactualizado → combinar ESPN con picks locales
       lm.textContent='Calculando picks del día…';
-      STATE.picks=computePicksFromStatz();
+      const statzLocal=computePicksFromStatz();
+      const all=[...(espnPicks||[]),...statzLocal];
+      all.sort((a,b)=>b.score-a.score);
+      const seen=new Set();
+      STATE.picks=all.filter(p=>{const k=statzKey(p.home,p.away);if(seen.has(k))return false;seen.add(k);return true;}).slice(0,PRM.TOP);
       STATE.combos=buildCombos(STATE.picks);
+      if(STATE.picks.length)
+        document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ESPN Live · ${STATE.date} · v${PRM.VERSION}`;
     }
   }catch(err){
     console.error('[FútbolIQ] boot error:',err);
@@ -672,18 +685,6 @@ async function boot(){
   }
   STATE.lastFetch=Date.now();
   if(!STATE.combos.length&&STATE.picks.length)STATE.combos=buildCombos(STATE.picks);
-  // Si aún sin picks → intentar ESPN API (refresco diario automático)
-  if(!STATE.picks.length){
-    try{
-      lm.textContent='Consultando API de partidos de hoy…';
-      const espnPicks=await computeFromESPN();
-      if(espnPicks.length){
-        STATE.picks=espnPicks;
-        STATE.combos=buildCombos(STATE.picks);
-        document.getElementById('statusBar').textContent=`${STATE.picks.length} picks · ESPN · ${STATE.date} · v${PRM.VERSION}`;
-      }
-    }catch(e){console.warn('[FútbolIQ] ESPN picks error:',e);}
-  }
   // Último recurso: demo con picks del día anterior marcados como demo
   if(!STATE.picks.length){
     STATE.picks=BAKED_PICKS_F.map(p=>({...p,_demo:true}));
@@ -1137,22 +1138,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyAdmCfg();
 });
 
-/* ===== ESPN FALLBACK (refresco diario automático) ===== */
+/* ===== ESPN (refresco diario automático desde el navegador) ===== */
 async function computeFromESPN(){
   try{
     const games=await fetchGames();
     if(!games.length)return[];
     const results=[];
-    // Procesar hasta 20 partidos en paralelo con límite
+    // Umbral más permisivo cuando no hay datos Statz cache (ESPN puro)
+    const hasStatz=(g)=>{const sk=statzKey(g.home,g.away);return!!(STATZ_CACHE[sk]||STATZ_CACHE[statzKey(g.away,g.home)]);};
     const batches=[];for(let i=0;i<games.length;i+=5)batches.push(games.slice(i,i+5));
     for(const batch of batches){
-      const computed=await Promise.allSettled(batch.map((g,i)=>computeGame(g,i)));
+      const computed=await Promise.allSettled(batch.map((g,i)=>computeGame(g,i,hasStatz(g)?PRM.UMBRAL:0.72)));
       computed.forEach(r=>{if(r.status==='fulfilled'&&r.value)results.push(r.value);});
       if(results.length>=PRM.TOP)break;
     }
     results.sort((a,b)=>b.score-a.score);
     return results.slice(0,PRM.TOP);
-  }catch(e){console.warn('[FútbolIQ] ESPN fallback error:',e.message);return[];}
+  }catch(e){console.warn('[FútbolIQ] ESPN error:',e.message);return[];}
 }
 
 /* ===== INIT ===== */
