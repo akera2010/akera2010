@@ -811,6 +811,52 @@ input,select,textarea{font-family:inherit;font-size:14px}
     </div>
 
     <button class="btn-save" style="width:100%" onclick="saveSettings()" data-i18n="settings.save">Guardar ajustes</button>
+
+    <!-- Admin trigger: tap version 7 times -->
+    <div style="text-align:center;margin-top:18px">
+      <span id="admin-version-tap" style="font-size:10px;color:var(--border);cursor:default;user-select:none" onclick="adminTap()">v1</span>
+    </div>
+  </div>
+</div>
+
+<!-- Admin modal -->
+<div id="overlay-admin" class="overlay" onclick="closeAdmin(event)">
+  <div class="sheet" style="border-top:3px solid var(--primary)">
+    <div class="sheet-title" style="color:var(--primary)">Panel de administración</div>
+    <div id="admin-auth-section">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Introduce el código de acceso</p>
+      <input type="password" id="admin-pwd-input" placeholder="Código" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink);font-size:15px;outline:none;margin-bottom:10px" onkeydown="if(event.key==='Enter')verifyAdminPwd()">
+      <button class="btn-save" style="width:100%" onclick="verifyAdminPwd()">Acceder</button>
+      <p id="admin-pwd-err" style="color:var(--err);font-size:12px;text-align:center;margin-top:8px;display:none">Código incorrecto</p>
+    </div>
+    <div id="admin-panel-section" style="display:none">
+      <div class="settings-section">
+        <h3>Contacto de soporte</h3>
+        <div class="rate-grid">
+          <div class="rate-item" style="grid-column:1/-1"><label>Email de soporte</label><input type="email" id="adm-email" placeholder="soporte@controlhoras.app"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>WhatsApp / Teléfono</label><input type="tel" id="adm-phone" placeholder="+34 600 000 000"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>URL de soporte</label><input type="url" id="adm-url" placeholder="https://..."></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>Nombre de contacto</label><input type="text" id="adm-name" placeholder="Manuel González"></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Datos de cobro</h3>
+        <div class="rate-grid">
+          <div class="rate-item" style="grid-column:1/-1"><label>Precio app (tienda)</label><input type="text" id="adm-price" placeholder="2,99 €"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>IBAN / Cuenta bancaria</label><input type="text" id="adm-iban" placeholder="ES00 0000 0000 00 0000000000"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>Bizum</label><input type="tel" id="adm-bizum" placeholder="+34 600 000 000"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>PayPal / Link de pago</label><input type="url" id="adm-paypal" placeholder="https://paypal.me/..."></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>Concepto de factura</label><input type="text" id="adm-invoice-concept" placeholder="Control Horas v1 — Licencia"></div>
+          <div class="rate-item" style="grid-column:1/-1"><label>NIF / Datos fiscales</label><input type="text" id="adm-fiscal" placeholder="Manuel González · NIF: ..."></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Texto del aviso de estimación</h3>
+        <textarea id="adm-disclaimer" rows="3" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink);font-size:12px;resize:vertical"></textarea>
+      </div>
+      <button class="btn-save" style="width:100%;background:var(--primary)" onclick="saveAdminSettings()">Guardar configuración</button>
+      <button class="btn-save" style="width:100%;background:var(--muted);margin-top:8px" onclick="closeAdmin()">Cerrar</button>
+    </div>
   </div>
 </div>
 
@@ -835,6 +881,19 @@ input,select,textarea{font-family:inherit;font-size:14px}
   <div class="sheet" style="max-height:85vh;overflow-y:auto">
     <div class="sheet-title" id="help-title">ℹ️ ControlHoras</div>
     <div id="help-content"></div>
+    <div id="support-contact-block" style="display:none;margin:16px 0 4px;padding:14px;border-radius:12px;background:var(--surface2);border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);letter-spacing:.06em;margin-bottom:8px">CONTACTO DE SOPORTE</div>
+      <div id="support-name-row" style="display:none;font-size:13px;color:var(--ink);margin-bottom:4px"></div>
+      <div id="support-email-row" style="display:none;margin-bottom:6px">
+        <a id="support-email-link" href="#" style="color:var(--primary);font-size:13px;text-decoration:none"></a>
+      </div>
+      <div id="support-phone-row" style="display:none;margin-bottom:6px">
+        <a id="support-phone-link" href="#" style="color:var(--ok);font-size:13px;text-decoration:none;font-weight:600"></a>
+      </div>
+      <div id="support-url-row" style="display:none">
+        <a id="support-url-link" href="#" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:underline"></a>
+      </div>
+    </div>
     <button class="btn-save" style="width:100%;margin-top:12px" id="help-close-btn" onclick="closeHelp()">Cerrar</button>
   </div>
 </div>
@@ -3151,6 +3210,158 @@ function _periodFilename(){
   return (document.getElementById('period-label').textContent||'informe').replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
 }
 // NOTA: funciones exportPDF, exportJPG, exportXLSX usan versiones offline (ver arriba)
+
+/* ═══════════════════════════════════════════════
+   SEGURIDAD
+════════════════════════════════════════════════ */
+(function(){
+  // Anti-iframe: evitar embedding en otros sitios
+  try{ if(window.self!==window.top){ document.body.innerHTML=''; window.top.location=window.self.location; } }catch(e){}
+
+  // Limpiar consola y suprimir logs internos en producción
+  const _noop=()=>{};
+  if(!window._chDebug){
+    ['log','info','debug','dir','dirxml','group','groupEnd','table','trace'].forEach(m=>{ try{ console[m]=_noop; }catch(e){} });
+  }
+
+  // Anti-inspectar: detectar DevTools por tamaño de ventana
+  let _dtOpen=false;
+  function _checkDT(){
+    const t=120;
+    if(window.outerWidth-window.innerWidth>t||window.outerHeight-window.innerHeight>t){
+      if(!_dtOpen){ _dtOpen=true; }
+    } else { _dtOpen=false; }
+  }
+  setInterval(_checkDT,2000);
+
+  // Anti-clic derecho en la app (excepto inputs)
+  document.addEventListener('contextmenu',function(e){
+    if(!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) e.preventDefault();
+  });
+})();
+
+/* ═══════════════════════════════════════════════
+   ADMIN PANEL
+════════════════════════════════════════════════ */
+const _ADM_HASH='6d918d0f4c690c95b22f50f98214710ba2c26689b224e5005a2fe3ea0dfce542';
+const _ADM_SALT='ch_adm_salt_2026';
+const _ADM_KEY='ch_adm_cfg';
+let _adminTapCount=0,_adminTapTimer=null;
+
+async function _sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function adminTap(){
+  _adminTapCount++;
+  clearTimeout(_adminTapTimer);
+  _adminTapTimer=setTimeout(()=>{ _adminTapCount=0; },3000);
+  if(_adminTapCount>=7){
+    _adminTapCount=0;
+    document.getElementById('admin-pwd-input').value='';
+    document.getElementById('admin-pwd-err').style.display='none';
+    document.getElementById('admin-auth-section').style.display='';
+    document.getElementById('admin-panel-section').style.display='none';
+    document.getElementById('overlay-admin').classList.add('open');
+    setTimeout(()=>document.getElementById('admin-pwd-input').focus(),300);
+  }
+}
+
+async function verifyAdminPwd(){
+  const pwd=document.getElementById('admin-pwd-input').value;
+  const hash=await _sha256(pwd+_ADM_SALT);
+  if(hash===_ADM_HASH){
+    document.getElementById('admin-pwd-err').style.display='none';
+    document.getElementById('admin-auth-section').style.display='none';
+    document.getElementById('admin-panel-section').style.display='';
+    _loadAdminFields();
+  } else {
+    const err=document.getElementById('admin-pwd-err');
+    err.style.display='';
+    err.textContent='Código incorrecto';
+    document.getElementById('admin-pwd-input').value='';
+    document.getElementById('admin-pwd-input').focus();
+  }
+}
+
+function _loadAdminFields(){
+  let cfg={};
+  try{ cfg=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); }catch(e){}
+  const f=id=>document.getElementById(id);
+  if(f('adm-email')) f('adm-email').value=cfg.email||'';
+  if(f('adm-phone')) f('adm-phone').value=cfg.phone||'';
+  if(f('adm-url'))   f('adm-url').value=cfg.url||'';
+  if(f('adm-name'))  f('adm-name').value=cfg.name||'';
+  if(f('adm-price')) f('adm-price').value=cfg.price||'';
+  if(f('adm-iban'))  f('adm-iban').value=cfg.iban||'';
+  if(f('adm-bizum')) f('adm-bizum').value=cfg.bizum||'';
+  if(f('adm-paypal'))f('adm-paypal').value=cfg.paypal||'';
+  if(f('adm-invoice-concept')) f('adm-invoice-concept').value=cfg.invoiceConcept||'';
+  if(f('adm-fiscal')) f('adm-fiscal').value=cfg.fiscal||'';
+  if(f('adm-disclaimer')) f('adm-disclaimer').value=cfg.disclaimerText||'Estimación orientativa. El bruto real depende de tu contrato firmado y convenio colectivo. No sustituye la nómina oficial.';
+}
+
+function saveAdminSettings(){
+  const f=id=>(document.getElementById(id)||{}).value||'';
+  const cfg={
+    email:f('adm-email'), phone:f('adm-phone'), url:f('adm-url'), name:f('adm-name'),
+    price:f('adm-price'), iban:f('adm-iban'), bizum:f('adm-bizum'), paypal:f('adm-paypal'),
+    invoiceConcept:f('adm-invoice-concept'), fiscal:f('adm-fiscal'),
+    disclaimerText:f('adm-disclaimer')
+  };
+  localStorage.setItem(_ADM_KEY, JSON.stringify(cfg));
+  _applyAdminConfig();
+  showToast('Configuración guardada');
+  setTimeout(closeAdmin,800);
+}
+
+function closeAdmin(e){
+  if(e&&e.target!==document.getElementById('overlay-admin'))return;
+  document.getElementById('overlay-admin').classList.remove('open');
+}
+
+function _applyAdminConfig(){
+  let cfg={};
+  try{ cfg=JSON.parse(localStorage.getItem(_ADM_KEY)||'{}'); }catch(e){}
+
+  // Update disclaimer text if set
+  if(cfg.disclaimerText){
+    const disc=document.getElementById('calc-disclaimer');
+    if(disc){
+      const strong=disc.querySelector('strong');
+      if(strong) strong.nextSibling.textContent=' — '+cfg.disclaimerText;
+    }
+  }
+
+  // Update support block in help
+  const block=document.getElementById('support-contact-block');
+  if(!block)return;
+  const hasAny=cfg.email||cfg.phone||cfg.url||cfg.name;
+  block.style.display=hasAny?'':'none';
+  const show=(id,visible,html)=>{ const el=document.getElementById(id); if(el){el.style.display=visible?'':'none'; if(html!=null)el.innerHTML=html;} };
+  show('support-name-row',!!cfg.name, cfg.name?`<strong>${cfg.name}</strong>`:'');
+  if(cfg.email){
+    const el=document.getElementById('support-email-link');
+    if(el){el.href='mailto:'+cfg.email;el.textContent=cfg.email;}
+    show('support-email-row',true);
+  } else { show('support-email-row',false); }
+  if(cfg.phone){
+    const el=document.getElementById('support-phone-link');
+    const wa=cfg.phone.replace(/\D/g,'');
+    if(el){el.href='https://wa.me/'+wa;el.textContent='WhatsApp: '+cfg.phone;}
+    show('support-phone-row',true);
+  } else { show('support-phone-row',false); }
+  if(cfg.url){
+    const el=document.getElementById('support-url-link');
+    if(el){el.href=cfg.url;el.textContent=cfg.url;}
+    show('support-url-row',true);
+  } else { show('support-url-row',false); }
+}
+
+// Apply on load
+document.addEventListener('DOMContentLoaded',_applyAdminConfig);
+setTimeout(_applyAdminConfig,500);
 </script>
 </body>
 </html>
