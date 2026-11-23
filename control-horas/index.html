@@ -354,6 +354,25 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .worker-field input{width:100%;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--surface2);color:var(--ink);padding:8px 10px;font-size:13px;font-weight:500}
 .worker-field input:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(63,81,181,.12)}
 
+/* ═══════════ HELP MODAL ═══════════ */
+.help-section{margin-bottom:20px}
+.help-sec-title{font-size:14px;font-weight:800;color:var(--primary);margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid var(--primary)}
+.help-p{font-size:13px;color:var(--ink);line-height:1.6}
+.help-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hf{display:flex;align-items:flex-start;gap:8px;background:var(--surface2);border-radius:10px;padding:10px}
+.hf-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.hf b{font-size:12px;display:block;margin-bottom:2px}
+.hf span{font-size:11px;color:var(--muted);line-height:1.4}
+.help-steps{display:flex;flex-direction:column;gap:8px}
+.help-step{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5}
+.hs-num{background:var(--primary);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px}
+.help-table{width:100%;border-collapse:collapse;font-size:12px}
+.help-table th{background:var(--primary);color:#fff;padding:6px 8px;text-align:left}
+.help-table td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.help-table tr:nth-child(even) td{background:var(--surface2)}
+.help-footer{text-align:center;font-size:11px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+@media(max-width:420px){.help-feat-grid{grid-template-columns:1fr}}
+
 /* ═══════════ PRINT / PDF ═══════════ */
 @media print{
   #topbar,#period-bar,#chart-wrap,#ot-alert,.icon-btn,.btn-primary,.btn-save,
@@ -440,6 +459,7 @@ input,select,textarea{font-family:inherit;font-size:14px}
       <div id="topbar-actions-spacer"></div>
       <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
       <button class="icon-btn" title="Ajustes" aria-label="Ajustes" onclick="openSettings()">⚙️</button>
+      <button class="icon-btn" title="Ayuda / Info" aria-label="Ayuda" onclick="openHelp()">ℹ️</button>
       <button class="icon-btn" id="btn-fs" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
     </div>
   </div>
@@ -680,6 +700,69 @@ input,select,textarea{font-family:inherit;font-size:14px}
       <button class="btn-save" style="background:var(--ok)" onclick="exportHTMLReport()" data-i18n="report.html">⬇ HTML</button>
       <button class="btn-save" style="min-width:40px;padding:12px 8px" onclick="copyHours()" title="Copiar horas">📋</button>
     </div>
+  </div>
+</div>
+
+<!-- Help / Info modal -->
+<div id="overlay-help" class="overlay" onclick="closeHelp(event)">
+  <div class="sheet" style="max-height:85vh;overflow-y:auto">
+    <div class="sheet-title">ℹ️ ControlHoras — Guía de uso</div>
+    <div id="help-content">
+
+      <div class="help-section">
+        <div class="help-sec-title">🚀 ¿Qué es ControlHoras?</div>
+        <p class="help-p">Aplicación de registro de jornada laboral. Registra tus horas de trabajo, calcula salario bruto/neto y genera informes oficiales en PDF, Excel y JPG.</p>
+      </div>
+
+      <div class="help-section">
+        <div class="help-sec-title">📋 Funcionalidades principales</div>
+        <div class="help-feat-grid">
+          <div class="hf"><span class="hf-icon">⏱</span><div><b>Registro de horas</b><br><span>Pulsa + para añadir una jornada. Elige fecha, tipo de día, horas trabajadas y notas.</span></div></div>
+          <div class="hf"><span class="hf-icon">💰</span><div><b>Cálculo salarial</b><br><span>Configura tu tarifa por hora y la app calcula bruto/neto aplicando IRPF y Seguridad Social.</span></div></div>
+          <div class="hf"><span class="hf-icon">📊</span><div><b>Informes exportables</b><br><span>Exporta en PDF (imprimible), Excel (.xls) y JPG con encabezado profesional.</span></div></div>
+          <div class="hf"><span class="hf-icon">🌍</span><div><b>10 idiomas</b><br><span>ES · EN · UA · RO · RU · FR · DE · IT · PT · AR. Cambia el idioma desde la barra superior.</span></div></div>
+          <div class="hf"><span class="hf-icon">🏳️</span><div><b>55 países</b><br><span>Preajustes de legislación laboral: moneda, IRPF, SS y horas máximas. Ve a ⚙️ → País.</span></div></div>
+          <div class="hf"><span class="hf-icon">🌙</span><div><b>Tipos de jornada</b><br><span>Normal, Nocturna, Fin de semana, Festivo, Vacaciones, Baja médica, Libre.</span></div></div>
+          <div class="hf"><span class="hf-icon">📈</span><div><b>Estadísticas</b><br><span>Heatmap mensual, racha actual, top días, resumen anual. Pulsa 📊 en las pestañas.</span></div></div>
+          <div class="hf"><span class="hf-icon">🔔</span><div><b>Recordatorio diario</b><br><span>Activa la notificación diaria en ⚙️ → Valores por defecto para no olvidar fichar.</span></div></div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-sec-title">⚙️ Cómo configurar la aplicación</div>
+        <div class="help-steps">
+          <div class="help-step"><span class="hs-num">1</span><div><b>Datos del trabajador</b> — En ⚙️ introduce tu nombre, empresa, puesto y número de contrato. Aparecerán en todos los informes.</div></div>
+          <div class="help-step"><span class="hs-num">2</span><div><b>Selecciona tu país</b> — En ⚙️ → Legislación por país elige tu país. Se rellenan automáticamente la moneda, IRPF % y SS %. Puedes ajustarlos manualmente.</div></div>
+          <div class="help-step"><span class="hs-num">3</span><div><b>Tarifa por hora</b> — Introduce tu salario bruto por hora en ⚙️ → Tarifa. La app calculará bruto y neto en cada entrada.</div></div>
+          <div class="help-step"><span class="hs-num">4</span><div><b>Periodo de visualización</b> — Alterna entre Semana / Mes / Estadísticas con los botones de la barra de período. Navega con ‹ › entre períodos.</div></div>
+          <div class="help-step"><span class="hs-num">5</span><div><b>Generar informe</b> — Pulsa 📊 en la barra superior, revisa el resumen y exporta en el formato deseado.</div></div>
+          <div class="help-step"><span class="hs-num">6</span><div><b>Tema y color</b> — En ⚙️ → Tema elige Claro / Sistema / Oscuro y personaliza el color de acento.</div></div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-sec-title">📤 Exportación de informes</div>
+        <table class="help-table">
+          <tr><th>Formato</th><th>Contenido</th><th>Uso recomendado</th></tr>
+          <tr><td>📄 PDF</td><td>Informe formal imprimible</td><td>Entregar a empresa / inspector</td></tr>
+          <tr><td>📊 Excel</td><td>Hoja de cálculo .xls con todos los registros</td><td>Contabilidad / análisis</td></tr>
+          <tr><td>🖼️ JPG</td><td>Imagen del informe con encabezado</td><td>Compartir por WhatsApp / email</td></tr>
+          <tr><td>⬇ CSV</td><td>Datos en texto plano separados por comas</td><td>Importar en otras apps</td></tr>
+          <tr><td>⬇ HTML</td><td>Informe completo en formato web</td><td>Archivar / imprimir con estilo</td></tr>
+        </table>
+      </div>
+
+      <div class="help-section">
+        <div class="help-sec-title">🔐 Acceso y datos</div>
+        <p class="help-p">Los datos se guardan localmente en tu dispositivo (localStorage). Crea una cuenta para identificarte o usa el <b>modo demo</b> para explorar la aplicación sin registro.</p>
+        <p class="help-p" style="margin-top:6px"><b>Cuenta demo:</b> demo@controlhoras.app / demo123</p>
+      </div>
+
+      <div class="help-footer">
+        <span>Sarah Hernández · +34641216429 · akera7827@gmail.com</span>
+      </div>
+    </div>
+    <button class="btn-save" style="width:100%;margin-top:12px" onclick="closeHelp()">Cerrar</button>
   </div>
 </div>
 
@@ -1074,6 +1157,10 @@ function startApp(){
   document.getElementById('scr-auth').classList.remove('active');
   document.getElementById('scr-app').classList.add('active');
   applyTheme(getSettings(curUser.email).theme);
+  // Init downloads capability (artifact viewer)
+  if(window.claude&&typeof window.claude.use==='function'){
+    window.claude.use('downloads').then(d=>{window._downloads=d||null;}).catch(()=>{window._downloads=null;});
+  }
   // restore lang
   try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;document.getElementById('lang-sel').value=l;setLang(l);}}catch(e){}
   // avatar initials
@@ -1977,6 +2064,13 @@ function openReport(){
 }
 function closeReport(e){ if(e.target===document.getElementById('overlay-report')) document.getElementById('overlay-report').classList.remove('open'); }
 
+/* ══════════ HELP MODAL ══════════ */
+function openHelp(){document.getElementById('overlay-help').classList.add('open');}
+function closeHelp(e){
+  const ov=document.getElementById('overlay-help');
+  if(!e||e.target===ov) ov.classList.remove('open');
+}
+
 function exportCSV(){
   const cfg=getSettings(curUser.email);
   const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
@@ -2128,7 +2222,7 @@ function exportPDF(){
   toast('🖨️ PDF preparado');
 }
 
-function exportXLSX(){
+async function exportXLSX(){
   const d=_buildReportData();
   const name=d.wi.name||d.curUser.name||'—'; const employer=d.wi.employer||'—';
   const contract=d.wi.contract||'—'; const role=d.wi.role||'—';
@@ -2180,13 +2274,18 @@ ${rows}
 <Row><Cell ss:MergeAcross="5"><Data ss:Type="String">por @MauGonzalez · ControlHoras · ${d.today}</Data></Cell></Row>
 </Table></Worksheet></Workbook>`;
   const blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const filename='ControlHoras-'+d.period.replace(/\s/g,'-')+'.xls';
+  if(window._downloads){
+    try{await window._downloads.save({filename,data:blob});toast('📊 Excel descargado');return;}
+    catch(e){if(e.code==='declined'){toast('⚠️ Descarga cancelada');return;}}
+  }
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='ControlHoras-'+d.period.replace(/\s/g,'-')+'.xls';
+  const a=document.createElement('a'); a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   toast('📊 Excel exportado');
 }
 
-function exportJPG(){
+async function exportJPG(){
   const d=_buildReportData();
   const name=d.wi.name||d.curUser.name||'—'; const employer=d.wi.employer||'—';
   const role=d.wi.role||'—'; const contract=d.wi.contract||'—';
@@ -2245,12 +2344,17 @@ function exportJPG(){
   ctx.fillStyle='#aaa'; ctx.font='11px system-ui,sans-serif';
   ctx.fillText('por @MauGonzalez · ControlHoras · '+d.today,24,y);
   // download
-  cv.toBlob(blob=>{
+  cv.toBlob(async blob=>{
+    const filename='ControlHoras-'+d.period.replace(/\s/g,'-')+'.jpg';
+    if(window._downloads){
+      try{await window._downloads.save({filename,data:blob});toast('🖼️ JPG descargado');return;}
+      catch(e){if(e.code==='declined'){toast('⚠️ Descarga cancelada');return;}}
+    }
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='ControlHoras-'+d.period.replace(/\s/g,'-')+'.jpg';
+    const a=document.createElement('a'); a.href=url; a.download=filename;
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast('🖼️ JPG exportado');
   },'image/jpeg',0.95);
-  toast('🖼️ JPG exportado');
 }
 
 function copyHours(){
@@ -2261,7 +2365,14 @@ function copyHours(){
   });
 }
 
-function download(name,data,mime){
+async function download(name,data,mime){
+  if(window._downloads){
+    try{
+      const blob=(data instanceof Blob)?data:new Blob([data],{type:mime});
+      await window._downloads.save({filename:name,data:blob});
+      return;
+    }catch(e){if(e.code==='declined'){toast('⚠️ Descarga cancelada');return;}}
+  }
   const a=document.createElement('a');
   a.href='data:'+mime+';charset=utf-8,'+encodeURIComponent(data);
   a.download=name; document.body.appendChild(a); a.click(); a.remove();
