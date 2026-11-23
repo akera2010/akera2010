@@ -413,9 +413,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
   </div>
 
   <div id="period-bar">
-    <button class="period-nav" onclick="navPeriod(-1)">‹</button>
-    <span id="period-label"></span><span id="entry-count" hidden></span>
-    <button class="period-nav" onclick="navPeriod(1)">›</button>
+    <button class="period-nav" onclick="navPeriod(-1)" aria-label="Periodo anterior">‹</button>
+    <span id="period-label" aria-live="polite"></span><span id="entry-count" hidden></span>
+    <button class="period-nav" onclick="navPeriod(1)" aria-label="Periodo siguiente">›</button>
     <div class="period-mode-btns">
       <button class="pmb active" onclick="setPeriodMode('semana')" data-i18n="period.week">Semana</button>
       <button class="pmb" onclick="setPeriodMode('mes')" data-i18n="period.month">Mes</button>
@@ -484,7 +484,7 @@ input,select,textarea{font-family:inherit;font-size:14px}
     <button class="punch-btn out" onclick="punchOut()" data-i18n="punch.out">⏹ SALIR</button>
   </div>
 
-  <div id="entries-wrap">
+  <div id="entries-wrap" role="main" aria-live="polite" aria-label="Lista de entradas">
     <div id="empty">
       <span class="icon">📋</span>
       <p data-i18n="list.empty">No hay registros en este período.<br>Pulsa + para añadir.</p>
@@ -731,7 +731,7 @@ const LANG = {
     'weekdaysFull':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     'settings.colorTheme':'Accent color','settings.logout':'Sign out',
     'type_labels':{'normal':'Regular shift','noche':'Night shift','finde':'Weekend','feriado':'Holiday'},
-    'report.print':'🖨️ Print PDF','notif.toggle':'Daily reminder','notif.time':'Reminder time',
+    'report.print':'🖨️ Print PDF','report.pdf':'📄 Formal PDF','report.xlsx':'📊 Excel','report.jpg':'🖼️ Image JPG','notif.toggle':'Daily reminder','notif.time':'Reminder time',
     'notif.msg':'Have you logged your shift for today?','entries.count':'entries',
   },
   uk: {
@@ -769,7 +769,7 @@ const LANG = {
     'weekdaysFull':['Неділя','Понеділок','Вівторок','Середа','Четвер','Пятниця','Субота'],
     'settings.colorTheme':'Колір акценту','settings.logout':'Вийти',
     'type_labels':{'normal':'Звичайна зміна','noche':'Нічна зміна','finde':'Вихідний','feriado':'Свято'},
-    'report.print':'🖨️ Друк PDF','notif.toggle':'Щоденне нагадування','notif.time':'Час нагадування',
+    'report.print':'🖨️ Друк PDF','report.pdf':'📄 Формальний PDF','report.xlsx':'📊 Excel','report.jpg':'🖼️ Зображення JPG','notif.toggle':'Щоденне нагадування','notif.time':'Час нагадування',
     'notif.msg':'Ви вже записали свою зміну сьогодні?','entries.count':'записів',
   },
   ro: {
@@ -807,7 +807,7 @@ const LANG = {
     'weekdaysFull':['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'],
     'settings.colorTheme':'Culoare accent','settings.logout':'Deconectare',
     'type_labels':{'normal':'Schimb normal','noche':'Schimb de noapte','finde':'Weekend','feriado':'Sărbătoare'},
-    'report.print':'🖨️ Tipărire PDF','notif.toggle':'Memento zilnic','notif.time':'Ora memento-ului',
+    'report.print':'🖨️ Tipărire PDF','report.pdf':'📄 PDF Formal','report.xlsx':'📊 Excel','report.jpg':'🖼️ Imagine JPG','notif.toggle':'Memento zilnic','notif.time':'Ora memento-ului',
     'notif.msg':'Ai înregistrat tura de azi?','entries.count':'înregistrări',
   },
   ru: {
@@ -1077,8 +1077,13 @@ function getPeriodRange(){
     return {start,end,label};
   }
 }
-function navPeriod(dir){ periodOffset+=dir; renderPeriod(); }
-function goToday(){ periodOffset=0; renderPeriod(); }
+function navPeriod(dir){
+  periodOffset+=dir;
+  renderPeriod();
+  window.scrollTo({top:0,behavior:'smooth'});
+  navigator.vibrate&&navigator.vibrate(8);
+}
+function goToday(){ periodOffset=0; renderPeriod(); window.scrollTo({top:0,behavior:'smooth'}); }
 function setPeriodMode(m){
   periodMode=m; periodOffset=0;
   document.querySelectorAll('.pmb').forEach((b,i)=>b.classList.toggle('active',(m==='semana'&&i===0)||(m==='mes'&&i===1)||(m==='stats'&&i===2)));
@@ -1108,6 +1113,8 @@ function renderPeriod(){
   renderSummary(entries,start,end);
   renderChart(entries,start,end);
   renderList(entries);
+  renderWeekCompare();
+  updateTopbarBadge();
   setTimeout(observeEntries,50);
 }
 
@@ -1599,6 +1606,99 @@ function dupEntry(id){
 }
 
 /* ═══════════════════════════════════════════════
+   WORKER INFO
+════════════════════════════════════════════════ */
+function getWorkerInfo(){
+  try{const raw=localStorage.getItem('ch_worker_info');return raw?JSON.parse(raw):{};}catch(e){return{};}
+}
+function saveWorkerInfo(info){
+  try{localStorage.setItem('ch_worker_info',JSON.stringify(info));}catch(e){}
+}
+
+/* ═══════════════════════════════════════════════
+   TOPBAR BADGE
+════════════════════════════════════════════════ */
+function updateTopbarBadge(){
+  if(!curUser)return;
+  const all=DB.entries.filter(e=>e.uid===curUser.email);
+  const now=new Date();
+  const y=now.getFullYear(), m=now.getMonth();
+  // week
+  const dow=now.getDay(); const mon=dow===0?6:dow-1;
+  const wStart=new Date(now); wStart.setDate(now.getDate()-mon); wStart.setHours(0,0,0,0);
+  const wEnd=new Date(wStart); wEnd.setDate(wStart.getDate()+6); wEnd.setHours(23,59,59,999);
+  // month
+  const mStart=new Date(y,m,1); const mEnd=new Date(y,m+1,0,23,59,59,999);
+  // year
+  const yStart=new Date(y,0,1); const yEnd=new Date(y,11,31,23,59,59,999);
+  let hw=0,hm=0,hy=0;
+  all.forEach(e=>{
+    const d=new Date(e.date+'T12:00:00');
+    const h=e.hours||0;
+    if(d>=wStart&&d<=wEnd)hw+=h;
+    if(d>=mStart&&d<=mEnd)hm+=h;
+    if(d>=yStart&&d<=yEnd)hy+=h;
+  });
+  const mb=document.getElementById('mb-val'); if(mb)mb.textContent=fmtH(hm);
+  const bw=document.getElementById('bp-week'); if(bw)bw.textContent=fmtH(hw);
+  const bm=document.getElementById('bp-month'); if(bm)bm.textContent=fmtH(hm);
+  const by=document.getElementById('bp-year'); if(by)by.textContent=fmtH(hy);
+}
+function toggleBadgePanel(){
+  const panel=document.getElementById('badge-panel');
+  if(!panel)return;
+  panel.hidden=!panel.hidden;
+  if(!panel.hidden)updateTopbarBadge();
+}
+document.addEventListener('click',function(e){
+  const badge=document.getElementById('month-badge');
+  if(badge&&!badge.contains(e.target)){const p=document.getElementById('badge-panel');if(p)p.hidden=true;}
+});
+
+/* ═══════════════════════════════════════════════
+   WEEK COMPARE
+════════════════════════════════════════════════ */
+function renderWeekCompare(){
+  const wc=document.getElementById('week-compare');
+  if(!wc||!curUser)return;
+  if(periodMode!=='semana'){wc.classList.remove('show');return;}
+  const cfg=getSettings(curUser.email);
+  const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado,vacaciones:0,baja:0,festivo0:0};
+  const now=new Date();
+  function weekRange(offset){
+    const d=new Date(now); d.setDate(d.getDate()+offset*7);
+    const dow=d.getDay(); const mon=dow===0?6:dow-1;
+    const start=new Date(d); start.setDate(d.getDate()-mon); start.setHours(0,0,0,0);
+    const end=new Date(start); end.setDate(start.getDate()+6); end.setHours(23,59,59,999);
+    return {start,end};
+  }
+  const cur=weekRange(periodOffset);
+  const prev=weekRange(periodOffset-1);
+  function calc(range){
+    const es=DB.entries.filter(e=>{
+      if(e.uid!==curUser.email)return false;
+      const d=new Date(e.date+'T12:00:00');
+      return d>=range.start&&d<=range.end;
+    });
+    let h=0,pay=0,days=0;
+    es.forEach(e=>{h+=e.hours||0;pay+=(e.hours||0)*(rateMap[e.type]??cfg.rateNormal);if((e.hours||0)>=cfg.minHours)days++;});
+    return {h,pay,days};
+  }
+  const c=calc(cur), p=calc(prev);
+  function delta(cv,pv,fmt){
+    if(pv===0)return `<span class="wc-val wc-eq">${fmt(cv)}</span>`;
+    const d=cv-pv; const pct=Math.round(d/pv*100);
+    const cls=d>0?'wc-up':d<0?'wc-down':'wc-eq';
+    const arrow=d>0?'↑':d<0?'↓':'—';
+    return `<span class="wc-val ${cls}">${fmt(cv)} ${arrow}${Math.abs(pct)}%</span>`;
+  }
+  document.getElementById('wc-hours').innerHTML=delta(c.h,p.h,fmtH);
+  document.getElementById('wc-pay').innerHTML=delta(c.pay,p.pay,v=>'€'+v.toFixed(0));
+  document.getElementById('wc-days').innerHTML=delta(c.days,p.days,v=>v+'d');
+  wc.classList.add('show');
+}
+
+/* ═══════════════════════════════════════════════
    SETTINGS
 ════════════════════════════════════════════════ */
 function openSettings(){
@@ -1625,6 +1725,12 @@ function openSettings(){
   // mark color theme
   try{const ct=localStorage.getItem('ch_color_theme')||'blue';
     document.querySelectorAll('.ctbtn').forEach(b=>b.classList.toggle('active',b.dataset.color===ct));}catch(e){}
+  // worker info
+  const wi=getWorkerInfo();
+  const wn=document.getElementById('cfg-wname'); if(wn)wn.value=wi.name||'';
+  const we=document.getElementById('cfg-employer'); if(we)we.value=wi.employer||'';
+  const wc=document.getElementById('cfg-contract'); if(wc)wc.value=wi.contract||'';
+  const wr=document.getElementById('cfg-role'); if(wr)wr.value=wi.role||'';
   document.getElementById('overlay-settings').classList.add('open');
 }
 function closeSettings(e){ if(e.target===document.getElementById('overlay-settings')) document.getElementById('overlay-settings').classList.remove('open'); }
@@ -1644,6 +1750,13 @@ function saveSettings(){
   s.notifEnabled=document.getElementById('cfg-notif').checked;
   s.notifTime=document.getElementById('cfg-notif-time').value||'09:00';
   if(s.notifEnabled&&Notification.permission==='default')Notification.requestPermission();
+  // worker info
+  saveWorkerInfo({
+    name:(document.getElementById('cfg-wname')||{}).value||'',
+    employer:(document.getElementById('cfg-employer')||{}).value||'',
+    contract:(document.getElementById('cfg-contract')||{}).value||'',
+    role:(document.getElementById('cfg-role')||{}).value||''
+  });
   saveDB();
   document.getElementById('overlay-settings').classList.remove('open');
   renderPeriod(); toast('⚙️ '+t('settings.save'));
@@ -1719,18 +1832,97 @@ function openReport(){
   const rateMap={normal:cfg.rateNormal,noche:cfg.rateNoche,finde:cfg.rateFinde,feriado:cfg.rateFeriado};
   const retTotal=(cfg.irpf+cfg.ss)/100;
   const typeLabels=t('type_labels');
-  const months=t('months');
   const sorted=[..._curEntries].sort((a,b)=>a.date.localeCompare(b.date));
   let total=0,payTotal=0;
-  let txt='';
+  const typeTotals={normal:0,noche:0,finde:0,feriado:0};
+  let txt='',maxH=0,maxDate='',streak=0,maxStreak=0,lastDate=null,otDays=0;
   sorted.forEach(e=>{
     const h=e.hours||0; total+=h;
     const pay=h*(rateMap[e.type]||cfg.rateNormal); payTotal+=pay;
+    typeTotals[e.type]=(typeTotals[e.type]||0)+h;
+    if(h>maxH){maxH=h;maxDate=e.date;}
+    if(h>8)otDays++;
+    // streak
+    const d=new Date(e.date+'T12:00:00');
+    if(lastDate){const diff=(d-lastDate)/(86400000);if(diff<=1)streak++;else streak=1;}else streak=1;
+    if(streak>maxStreak)maxStreak=streak;
+    lastDate=d;
     txt+=`${e.date} | ${typeLabels[e.type]||e.type} | ${h}h | €${pay.toFixed(2)}\n`;
   });
   const net=payTotal*(1-retTotal);
+  const avg=sorted.length?total/sorted.length:0;
+  const otPct=sorted.length?Math.round(otDays/sorted.length*100):0;
   txt+=`\n── TOTAL: ${fmtH(total)} | Bruto: €${payTotal.toFixed(2)} | Neto: €${net.toFixed(2)}`;
   document.getElementById('report-preview').textContent=txt;
+
+  // donut chart
+  const canvas=document.getElementById('report-donut');
+  if(canvas){
+    const ctx=canvas.getContext('2d');
+    const W=110,CX=55,CY=55,R=42,RI=26;
+    ctx.clearRect(0,0,W,W);
+    const typeColors={normal:getComputedStyle(document.documentElement).getPropertyValue('--normal').trim()||'#1565c0',noche:getComputedStyle(document.documentElement).getPropertyValue('--noche').trim()||'#4a148c',finde:getComputedStyle(document.documentElement).getPropertyValue('--finde').trim()||'#1b5e20',feriado:getComputedStyle(document.documentElement).getPropertyValue('--feriado').trim()||'#bf360c'};
+    const slices=Object.entries(typeTotals).filter(([,v])=>v>0);
+    if(total>0){
+      let angle=-Math.PI/2;
+      slices.forEach(([type,h])=>{
+        const sweep=(h/total)*Math.PI*2;
+        ctx.beginPath();ctx.moveTo(CX,CY);
+        ctx.arc(CX,CY,R,angle,angle+sweep);
+        ctx.closePath();ctx.fillStyle=typeColors[type]||'#999';ctx.fill();
+        angle+=sweep;
+      });
+      // hole
+      ctx.beginPath();ctx.arc(CX,CY,RI,0,Math.PI*2);
+      ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff';ctx.fill();
+      // center label
+      ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()||'#1a1a2e';
+      ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(fmtH(total),CX,CY);
+    } else {
+      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.fillStyle='var(--border)';ctx.fill();
+      ctx.beginPath();ctx.arc(CX,CY,RI,0,Math.PI*2);ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff';ctx.fill();
+    }
+    const legend=document.getElementById('report-donut-legend');
+    if(legend){
+      legend.innerHTML=slices.map(([type,h])=>`<div class="donut-legend-item"><span class="donut-legend-dot" style="background:${typeColors[type]}"></span>${typeLabels[type]||type}<span class="donut-legend-val">${fmtH(h)}</span></div>`).join('');
+    }
+  }
+
+  // stats avanzadas
+  const statsGrid=document.getElementById('report-stats-grid');
+  if(statsGrid){
+    const fmtDt=d=>d?new Date(d+'T12:00:00').toLocaleDateString([],{day:'2-digit',month:'short'}):'—';
+    statsGrid.innerHTML=`
+      <div class="rst-card"><div class="rv">${fmtDt(maxDate)} ${maxH?fmtH(maxH):''}</div><div class="rl">🏆 Mejor día</div></div>
+      <div class="rst-card"><div class="rv">${fmtH(avg)}</div><div class="rl">📐 Promedio/día</div></div>
+      <div class="rst-card"><div class="rv">${maxStreak} días</div><div class="rl">🔥 Racha máxima</div></div>
+      <div class="rst-card"><div class="rv">${otPct}%</div><div class="rl">⏰ Días +8h</div></div>`;
+  }
+
+  // trend vs periodo anterior
+  const trend=document.getElementById('report-trend');
+  if(trend&&periodOffset!==undefined){
+    const prevOffset=periodOffset-1;
+    const prevEntries=DB.entries.filter(e=>{
+      if(e.uid!==curUser.email)return false;
+      const tmpOffset=periodOffset;
+      periodOffset=prevOffset;
+      const {start:ps,end:pe}=getPeriodRange();
+      periodOffset=tmpOffset;
+      const d=new Date(e.date+'T12:00:00');
+      return d>=ps&&d<=pe;
+    });
+    const prevTotal=prevEntries.reduce((s,e)=>s+(e.hours||0),0);
+    if(prevTotal>0){
+      const delta=total-prevTotal;
+      const deltaPct=Math.round(delta/prevTotal*100);
+      const icon=delta>0?'▲':delta<0?'▼':'→';
+      const col=delta>0?'var(--ok)':delta<0?'var(--err)':'var(--muted)';
+      trend.innerHTML=`<span style="color:${col};font-size:16px">${icon}</span> ${Math.abs(deltaPct)}% vs período anterior (${fmtH(prevTotal)})`;
+    } else { trend.innerHTML=''; }
+  }
+
   document.getElementById('overlay-report').classList.add('open');
 }
 function closeReport(e){ if(e.target===document.getElementById('overlay-report')) document.getElementById('overlay-report').classList.remove('open'); }
@@ -1824,6 +2016,25 @@ function setupScrollFloat(){
     else fs.classList.remove('show');
   });
 }
+
+/* ═══════════════════════════════════════════════
+   SWIPE PERIOD NAVIGATION
+════════════════════════════════════════════════ */
+(function setupSwipe(){
+  let sx=0,sy=0;
+  document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!curUser)return;
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.5){
+      // only on main view, not inside a modal/sheet
+      const openOverlay=document.querySelector('.overlay.open');
+      if(openOverlay)return;
+      navPeriod(dx<0?1:-1);
+    }
+  },{passive:true});
+})();
 
 /* ═══════════════════════════════════════════════
    INIT
