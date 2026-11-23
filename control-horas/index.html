@@ -367,7 +367,13 @@ input,select,textarea{font-family:inherit;font-size:14px}
     </select>
     <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
     <button class="icon-btn" title="Ajustes" aria-label="Ajustes" onclick="openSettings()">⚙️</button>
-    <button class="icon-btn" title="Salir" aria-label="Cerrar sesión" onclick="doLogout()">🚪</button>
+    <button class="icon-btn" id="btn-fs" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+    <div id="user-avatar-wrap" style="position:relative;display:flex;align-items:center">
+      <button id="user-avatar" onclick="toggleUserMenu()" aria-label="Menú usuario">?</button>
+      <div id="user-menu" hidden>
+        <button onclick="doLogout()">🚪 <span data-i18n="settings.logout">Cerrar sesión</span></button>
+      </div>
+    </div>
   </div>
 
   <div id="period-bar">
@@ -578,6 +584,17 @@ input,select,textarea{font-family:inherit;font-size:14px}
       </div>
     </div>
 
+    <div class="settings-section">
+      <h3 data-i18n="settings.colorTheme">Color de acento</h3>
+      <div class="color-theme-btns">
+        <button class="ctbtn" data-color="blue" onclick="setColorTheme('blue')" title="Azul">🔵</button>
+        <button class="ctbtn" data-color="green" onclick="setColorTheme('green')" title="Verde">🟢</button>
+        <button class="ctbtn" data-color="purple" onclick="setColorTheme('purple')" title="Morado">🟣</button>
+        <button class="ctbtn" data-color="red" onclick="setColorTheme('red')" title="Rojo">🔴</button>
+        <button class="ctbtn" data-color="cyan" onclick="setColorTheme('cyan')" title="Cian">🩵</button>
+      </div>
+    </div>
+
     <button class="btn-save" style="width:100%" onclick="saveSettings()" data-i18n="settings.save">Guardar ajustes</button>
   </div>
 </div>
@@ -636,6 +653,7 @@ const LANG = {
     'months':['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
     'weekdays':['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
     'weekdaysFull':['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+    'settings.colorTheme':'Color de acento','settings.logout':'Cerrar sesión',
     'type_labels':{'normal':'Jornada Normal','noche':'Turno Nocturno','finde':'Fin de Semana','feriado':'Feriado/Festivo'},
     'report.print':'🖨️ Imprimir PDF','notif.toggle':'Recordatorio diario','notif.time':'Hora del recordatorio',
     'notif.msg':'¿Ya registraste tu jornada de hoy?','entries.count':'entradas',
@@ -673,6 +691,7 @@ const LANG = {
     'months':['January','February','March','April','May','June','July','August','September','October','November','December'],
     'weekdays':['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
     'weekdaysFull':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+    'settings.colorTheme':'Accent color','settings.logout':'Sign out',
     'type_labels':{'normal':'Regular shift','noche':'Night shift','finde':'Weekend','feriado':'Holiday'},
     'report.print':'🖨️ Print PDF','notif.toggle':'Daily reminder','notif.time':'Reminder time',
     'notif.msg':'Have you logged your shift for today?','entries.count':'entries',
@@ -710,6 +729,7 @@ const LANG = {
     'months':['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'],
     'weekdays':['Нд','Пн','Вт','Ср','Чт','Пт','Сб'],
     'weekdaysFull':['Неділя','Понеділок','Вівторок','Середа','Четвер','Пятниця','Субота'],
+    'settings.colorTheme':'Колір акценту','settings.logout':'Вийти',
     'type_labels':{'normal':'Звичайна зміна','noche':'Нічна зміна','finde':'Вихідний','feriado':'Свято'},
     'report.print':'🖨️ Друк PDF','notif.toggle':'Щоденне нагадування','notif.time':'Час нагадування',
     'notif.msg':'Ви вже записали свою зміну сьогодні?','entries.count':'записів',
@@ -747,6 +767,7 @@ const LANG = {
     'months':['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'],
     'weekdays':['Du','Lu','Ma','Mi','Jo','Vi','Sâ'],
     'weekdaysFull':['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'],
+    'settings.colorTheme':'Culoare accent','settings.logout':'Deconectare',
     'type_labels':{'normal':'Schimb normal','noche':'Schimb de noapte','finde':'Weekend','feriado':'Sărbătoare'},
     'report.print':'🖨️ Tipărire PDF','notif.toggle':'Memento zilnic','notif.time':'Ora memento-ului',
     'notif.msg':'Ai înregistrat tura de azi?','entries.count':'înregistrări',
@@ -784,6 +805,7 @@ const LANG = {
     'months':['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
     'weekdays':['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
     'weekdaysFull':['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
+    'settings.colorTheme':'Цвет акцента','settings.logout':'Выйти',
     'type_labels':{'normal':'Обычная смена','noche':'Ночная смена','finde':'Выходной','feriado':'Праздник'},
     'report.print':'🖨️ Печать PDF','notif.toggle':'Ежедневное напоминание','notif.time':'Время напоминания',
     'notif.msg':'Вы уже записали свою смену сегодня?','entries.count':'записей',
@@ -821,6 +843,7 @@ const LANG = {
     'months':['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
     'weekdays':['Di','Lu','Ma','Me','Je','Ve','Sa'],
     'weekdaysFull':['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+    'settings.colorTheme':'Couleur accent','settings.logout':'Se déconnecter',
     'type_labels':{'normal':'Horaire normal','noche':'Nuit','finde':'Weekend','feriado':'Jour férié'},
     'report.print':'🖨️ Imprimer PDF','notif.toggle':'Rappel quotidien','notif.time':'Heure du rappel',
     'notif.msg':'Avez-vous enregistré votre journée aujourd\'hui?','entries.count':'entrées',
@@ -858,6 +881,7 @@ const LANG = {
     'months':['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
     'weekdays':['So','Mo','Di','Mi','Do','Fr','Sa'],
     'weekdaysFull':['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+    'settings.colorTheme':'Akzentfarbe','settings.logout':'Abmelden',
     'type_labels':{'normal':'Normalschicht','noche':'Nachtschicht','finde':'Wochenende','feriado':'Feiertag'},
     'report.print':'🖨️ PDF drucken','notif.toggle':'Tägliche Erinnerung','notif.time':'Erinnerungszeit',
     'notif.msg':'Haben Sie Ihre heutige Schicht bereits eingetragen?','entries.count':'Einträge',
@@ -1085,6 +1109,24 @@ function renderSummary(entries,start,end){
   // float summary
   document.getElementById('fs-hours').textContent=fmtH(total);
   document.getElementById('fs-net').textContent='€'+net.toFixed(0);
+
+  // week goal ring (only in week mode)
+  const gc=document.getElementById('goal-ring-card');
+  const arc=document.getElementById('goal-arc');
+  const pctTxt=document.getElementById('goal-pct-text');
+  if(gc&&arc&&pctTxt){
+    const goalVisible=periodMode==='semana';
+    gc.style.display=goalVisible?'':'none';
+    if(goalVisible){
+      const goal=cfg.weekGoal||40;
+      const pct=Math.min(total/goal,1);
+      const circumference=2*Math.PI*20;
+      arc.setAttribute('stroke-dasharray',circumference.toFixed(1));
+      arc.setAttribute('stroke-dashoffset',((1-pct)*circumference).toFixed(1));
+      arc.setAttribute('stroke',pct>=1?'#2e7d32':'var(--primary)');
+      pctTxt.textContent=Math.round(pct*100)+'%';
+    }
+  }
 }
 
 function animNum(id,val){
@@ -1163,6 +1205,157 @@ function renderChart(entries,start,end){
 }
 function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+
+/* ═══════════════════════════════════════════════
+   STATS PANEL
+════════════════════════════════════════════════ */
+function renderStats(){
+  if(!curUser)return;
+  const cfg=getSettings(curUser.email);
+  const allEntries=DB.entries.filter(e=>e.uid===curUser.email);
+  const now=new Date();
+  const thisYear=now.getFullYear();
+  const thisMonth=now.getMonth();
+
+  // ── Heatmap: current month ──
+  const daysInMonth=new Date(thisYear,thisMonth+1,0).getDate();
+  const firstDow=new Date(thisYear,thisMonth,1).getDay();
+  const monthEntries={};
+  allEntries.forEach(e=>{
+    const d=new Date(e.date+'T12:00:00');
+    if(d.getFullYear()===thisYear&&d.getMonth()===thisMonth){
+      const day=d.getDate();
+      monthEntries[day]=(monthEntries[day]||0)+(e.hours||0);
+    }
+  });
+  const wd=t('weekdays');
+  const hmLabels=document.getElementById('hm-labels');
+  if(hmLabels){
+    hmLabels.innerHTML='';
+    wd.forEach(d=>{const s=document.createElement('span');s.textContent=d;hmLabels.appendChild(s);});
+  }
+  const hmGrid=document.getElementById('hm-grid');
+  if(hmGrid){
+    hmGrid.innerHTML='';
+    const offset=(firstDow+6)%7; // Mon=0
+    for(let i=0;i<offset;i++){const ph=document.createElement('div');ph.className='heatmap-day hm-0';ph.style.opacity='.1';hmGrid.appendChild(ph);}
+    for(let d=1;d<=daysInMonth;d++){
+      const h=monthEntries[d]||0;
+      let cls='hm-0';
+      if(h>0&&h<=4)cls='hm-1';
+      else if(h>4&&h<=7)cls='hm-2';
+      else if(h>7&&h<=9)cls='hm-3';
+      else if(h>9)cls='hm-4';
+      const cell=document.createElement('div');
+      cell.className='heatmap-day '+cls;
+      cell.title=`${d}: ${h?fmtH(h):'—'}`;
+      hmGrid.appendChild(cell);
+    }
+  }
+
+  // ── Top 3 days ──
+  const dayTotals=[];
+  const dayMap={};
+  allEntries.forEach(e=>{
+    const h=e.hours||0;
+    if(!dayMap[e.date])dayMap[e.date]={date:e.date,hours:0,type:e.type};
+    dayMap[e.date].hours+=h;
+    if(h>dayMap[e.date].hours||!dayMap[e.date].type)dayMap[e.date].type=e.type;
+  });
+  Object.values(dayMap).forEach(d=>dayTotals.push(d));
+  dayTotals.sort((a,b)=>b.hours-a.hours);
+  const top3=dayTotals.slice(0,3);
+  const medals=['🥇','🥈','🥉'];
+  const tl=document.getElementById('top-days-list');
+  if(tl){
+    tl.innerHTML='';
+    if(!top3.length){tl.innerHTML='<div style="color:var(--muted);font-size:13px">'+t('stats.nodata')+'</div>';return;}
+    top3.forEach((d,i)=>{
+      const typeLabels=t('type_labels');
+      const row=document.createElement('div');row.className='top-day-row';
+      row.innerHTML=`<div class="top-day-rank">${medals[i]}</div><div class="top-day-info"><div class="td-date">${d.date}</div><div class="td-type">${typeLabels[d.type]||d.type}</div></div><div class="top-day-hours">${fmtH(d.hours)}</div>`;
+      tl.appendChild(row);
+    });
+  }
+
+  // ── Streaks ──
+  const allDates=new Set(allEntries.map(e=>e.date));
+  const sortedDates=[...allDates].sort();
+  let curStreak=0,bestStreak=0,runStreak=0;
+  for(let i=0;i<sortedDates.length;i++){
+    if(i===0){runStreak=1;}
+    else{
+      const prev=new Date(sortedDates[i-1]+'T12:00:00');
+      const cur=new Date(sortedDates[i]+'T12:00:00');
+      const diff=(cur-prev)/(1000*60*60*24);
+      runStreak=diff===1?runStreak+1:1;
+    }
+    if(runStreak>bestStreak)bestStreak=runStreak;
+  }
+  // current streak
+  const todayStr=now.toISOString().slice(0,10);
+  if(allDates.has(todayStr)){
+    curStreak=1;
+    for(let i=1;i<365;i++){const d=new Date(now);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);if(allDates.has(ds))curStreak++;else break;}
+  }
+  // days this month
+  const monthDays=Object.keys(monthEntries).length;
+  const sc=document.getElementById('st-current');const sb=document.getElementById('st-best');const sm=document.getElementById('st-month');
+  if(sc)sc.textContent=curStreak;if(sb)sb.textContent=bestStreak;if(sm)sm.textContent=monthDays;
+
+  // ── Annual ──
+  const annYear=document.getElementById('annual-year');if(annYear)annYear.textContent=thisYear;
+  const annEntries=allEntries.filter(e=>new Date(e.date+'T12:00:00').getFullYear()===thisYear);
+  let annH=0,annPay=0,annDays=0;
+  const annSet=new Set();
+  annEntries.forEach(e=>{
+    const h=e.hours||0; annH+=h;
+    annPay+=h*(cfg['rate'+capitalize(e.type)]||cfg.rateNormal);
+    if(h>=cfg.minHours)annDays++;
+    annSet.add(e.date);
+  });
+  const retT=(cfg.irpf+cfg.ss)/100;
+  const annNet=annPay*(1-retT);
+  const ah=document.getElementById('ann-hours');const ag=document.getElementById('ann-gross');const an=document.getElementById('ann-net');const ad=document.getElementById('ann-days');
+  if(ah)ah.textContent=fmtH(annH);if(ag)ag.textContent='€'+annPay.toFixed(0);if(an)an.textContent='€'+annNet.toFixed(0);if(ad)ad.textContent=annDays;
+}
+
+/* ═══════════════════════════════════════════════
+   QUICK PUNCH (clock-in / clock-out)
+════════════════════════════════════════════════ */
+let punchInTime=null;
+let punchTickInterval=null;
+
+function punchIn(){
+  punchInTime=new Date();
+  toast('▶ '+punchInTime.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  updatePunchDisplay();
+  if(!punchTickInterval) punchTickInterval=setInterval(updatePunchDisplay,1000);
+}
+function punchOut(){
+  if(!punchInTime){toast('⚠️ Primero pulsa ENTRAR');return;}
+  const now=new Date();
+  const diffMs=now-punchInTime;
+  const diffH=diffMs/3600000;
+  clearInterval(punchTickInterval); punchTickInterval=null;
+  document.getElementById('punch-time-display').textContent='';
+  punchInTime=null;
+  // pre-fill entry form
+  const hours=Math.round(diffH*4)/4; // round to .25
+  const today=now.toISOString().slice(0,10);
+  openEntry(null);
+  document.getElementById('eDate').value=today;
+  document.getElementById('eHours').value=Math.max(0.5,hours);
+  updatePayPreview();
+  toast('⏹ '+fmtH(Math.max(0.5,hours)));
+}
+function updatePunchDisplay(){
+  const el=document.getElementById('punch-time-display');
+  if(!el||!punchInTime)return;
+  const diff=Math.floor((Date.now()-punchInTime)/1000);
+  const h=Math.floor(diff/3600),m=Math.floor((diff%3600)/60),s=diff%60;
+  el.textContent=`${t('punch.elapsed')} ${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1371,6 +1564,7 @@ function openSettings(){
   document.getElementById('cfg-ss').value=cfg.ss;
   document.getElementById('cfg-dh').value=cfg.defHours;
   document.getElementById('cfg-mh').value=cfg.minHours;
+  document.getElementById('cfg-wg').value=cfg.weekGoal;
   document.getElementById('cfg-autoday').checked=cfg.autoday;
   document.getElementById('cfg-notif').checked=cfg.notifEnabled||false;
   document.getElementById('cfg-notif-time').value=cfg.notifTime||'09:00';
@@ -1395,6 +1589,7 @@ function saveSettings(){
   s.ss=parseFloat(document.getElementById('cfg-ss').value)||6.35;
   s.defHours=parseFloat(document.getElementById('cfg-dh').value)||8;
   s.minHours=parseFloat(document.getElementById('cfg-mh').value)||4;
+  s.weekGoal=parseFloat(document.getElementById('cfg-wg').value)||40;
   s.autoday=document.getElementById('cfg-autoday').checked;
   s.notifEnabled=document.getElementById('cfg-notif').checked;
   s.notifTime=document.getElementById('cfg-notif-time').value||'09:00';
@@ -1417,6 +1612,53 @@ function applyTheme(t){
   if(t==='dark') root.setAttribute('data-theme','dark');
   else if(t==='light') root.setAttribute('data-theme','light');
   else root.removeAttribute('data-theme');
+}
+
+/* color themes */
+const COLOR_THEMES={
+  blue:{p:'#3f51b5',pd:'#303f9f',pl:'#e8eaf6'},
+  green:{p:'#2e7d32',pd:'#1b5e20',pl:'#e8f5e9'},
+  purple:{p:'#6a1b9a',pd:'#4a148c',pl:'#f3e5f5'},
+  red:{p:'#c62828',pd:'#b71c1c',pl:'#ffebee'},
+  cyan:{p:'#00838f',pd:'#006064',pl:'#e0f7fa'}
+};
+function setColorTheme(name){
+  const c=COLOR_THEMES[name]||COLOR_THEMES.blue;
+  const r=document.documentElement;
+  r.style.setProperty('--primary',c.p);
+  r.style.setProperty('--primary-d',c.pd);
+  r.style.setProperty('--primary-l',c.pl);
+  document.querySelectorAll('.ctbtn').forEach(b=>b.classList.toggle('active',b.dataset.color===name));
+  try{localStorage.setItem('ch_color_theme',name);}catch(e){}
+}
+function openSettingsWithColor(){
+  const saved=localStorage.getItem('ch_color_theme')||'blue';
+  document.querySelectorAll('.ctbtn').forEach(b=>b.classList.toggle('active',b.dataset.color===saved));
+}
+
+/* fullscreen */
+function toggleFS(){
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});
+  else document.exitFullscreen&&document.exitFullscreen().catch(()=>{});
+}
+
+/* user menu */
+function toggleUserMenu(){
+  const m=document.getElementById('user-menu');
+  if(m)m.hidden=!m.hidden;
+}
+document.addEventListener('click',function(e){
+  const w=document.getElementById('user-avatar-wrap');
+  if(w&&!w.contains(e.target)){const m=document.getElementById('user-menu');if(m)m.hidden=true;}
+});
+
+/* IntersectionObserver for entry cards */
+const _entryIO=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('io-visible');_entryIO.unobserve(e.target);}});
+},{threshold:0.05,rootMargin:'0px 0px -10px 0px'}):null;
+function observeEntries(){
+  if(!_entryIO)return document.querySelectorAll('.entry-card').forEach(c=>c.classList.add('io-visible'));
+  document.querySelectorAll('.entry-card:not(.io-visible)').forEach(c=>_entryIO.observe(c));
 }
 
 /* ═══════════════════════════════════════════════
