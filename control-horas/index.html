@@ -1865,8 +1865,8 @@ function renderSummary(entries,start,end){
   }
 
   animNum('s-total', fmtH(total));
-  animNum('s-pay', cur()+'pay.toFixed(0));
-  animNum('s-net', cur()+'net.toFixed(0));
+  animNum('s-pay', cur()+pay.toFixed(0));
+  animNum('s-net', cur()+net.toFixed(0));
   animNum('s-avg', fmtH(avg));
   animNum('s-noche', noche);
   animNum('s-finde', finde);
@@ -1883,7 +1883,7 @@ function renderSummary(entries,start,end){
 
   // float summary
   document.getElementById('fs-hours').textContent=fmtH(total);
-  document.getElementById('fs-net').textContent=cur()+'net.toFixed(0);
+  document.getElementById('fs-net').textContent=cur()+net.toFixed(0);
 
   // week goal ring (only in week mode)
   const gc=document.getElementById('goal-ring-card');
@@ -2093,7 +2093,7 @@ function renderStats(){
   const retT=(cfg.irpf+cfg.ss)/100;
   const annNet=annPay*(1-retT);
   const ah=document.getElementById('ann-hours');const ag=document.getElementById('ann-gross');const an=document.getElementById('ann-net');const ad=document.getElementById('ann-days');
-  if(ah)ah.textContent=fmtH(annH);if(ag)ag.textContent=cur()+'annPay.toFixed(0);if(an)an.textContent=cur()+'annNet.toFixed(0);if(ad)ad.textContent=annDays;
+  if(ah)ah.textContent=fmtH(annH);if(ag)ag.textContent=cur()+annPay.toFixed(0);if(an)an.textContent=cur()+annNet.toFixed(0);if(ad)ad.textContent=annDays;
 }
 
 /* ═══════════════════════════════════════════════
@@ -2432,7 +2432,7 @@ function renderWeekCompare(){
     return `<span class="wc-val ${cls}">${fmt(cv)} ${arrow}${Math.abs(pct)}%</span>`;
   }
   document.getElementById('wc-hours').innerHTML=delta(c.h,p.h,fmtH);
-  document.getElementById('wc-pay').innerHTML=delta(c.pay,p.pay,v=>cur()+'v.toFixed(0));
+  document.getElementById('wc-pay').innerHTML=delta(c.pay,p.pay,v=>cur()+v.toFixed(0));
   document.getElementById('wc-days').innerHTML=delta(c.days,p.days,v=>v+'d');
   wc.classList.add('show');
 }
@@ -2917,7 +2917,7 @@ async function exportJPG(){
   ctx.fillText(name.slice(0,24), 24, 125); ctx.fillText(employer.slice(0,22), 230, 125);
   ctx.fillText(role.slice(0,22), 460, 125); ctx.fillText(contract.slice(0,16), 680, 125);
   // summary boxes
-  const boxes=[{v:fmtH(d.total),l:'TOTAL HORAS',bg:'#e8eaf6',tc:'#1a237e'},{v:cur()+'d.payTotal.toFixed(0),l:'BRUTO',bg:'#e8f5e9',tc:'#2e7d32'},{v:cur()+'d.netTotal.toFixed(0),l:'NETO',bg:'#e3f2fd',tc:'#1565c0'},{v:''+d.rows.length,l:'ENTRADAS',bg:'#f3e5f5',tc:'#6a1b9a'}];
+  const boxes=[{v:fmtH(d.total),l:'TOTAL HORAS',bg:'#e8eaf6',tc:'#1a237e'},{v:cur()+d.payTotal.toFixed(0),l:'BRUTO',bg:'#e8f5e9',tc:'#2e7d32'},{v:cur()+d.netTotal.toFixed(0),l:'NETO',bg:'#e3f2fd',tc:'#1565c0'},{v:''+d.rows.length,l:'ENTRADAS',bg:'#f3e5f5',tc:'#6a1b9a'}];
   boxes.forEach((b,i)=>{
     const x=24+i*(W-48)/4+2; const w=(W-48)/4-4;
     ctx.fillStyle=b.bg; ctx.beginPath(); ctx.roundRect(x,148,w,44,6); ctx.fill();
@@ -2937,8 +2937,8 @@ async function exportJPG(){
     ctx.fillStyle=i%2===0?'#fff':'#f5f7ff'; ctx.fillRect(0,y,W,ROW_H);
     ctx.fillStyle='#333'; ctx.font='12px system-ui,sans-serif';
     ctx.fillText(r.date,24,y+18); ctx.fillText(r.type,160,y+18);
-    ctx.fillText(r.hours+'h',290,y+18); ctx.fillText(cur()+'r.gross.toFixed(2),370,y+18);
-    ctx.fillText(cur()+'r.net.toFixed(2),460,y+18);
+    ctx.fillText(r.hours+'h',290,y+18); ctx.fillText(cur()+r.gross.toFixed(2),370,y+18);
+    ctx.fillText(cur()+r.net.toFixed(2),460,y+18);
     ctx.fillText(r.notes.slice(0,22),560,y+18);
     y+=ROW_H;
   });
@@ -2946,7 +2946,7 @@ async function exportJPG(){
   ctx.fillStyle='#e8eaf6'; ctx.fillRect(0,y,W,ROW_H);
   ctx.fillStyle='#1a237e'; ctx.font='bold 13px system-ui,sans-serif';
   ctx.fillText('TOTAL',24,y+18); ctx.fillText(fmtH(d.total),290,y+18);
-  ctx.fillText(cur()+'d.payTotal.toFixed(2),370,y+18); ctx.fillText(cur()+'d.netTotal.toFixed(2),460,y+18);
+  ctx.fillText(cur()+d.payTotal.toFixed(2),370,y+18); ctx.fillText(cur()+d.netTotal.toFixed(2),460,y+18);
   y+=ROW_H+20;
   // footer
   ctx.fillStyle='#aaa'; ctx.font='11px system-ui,sans-serif';
