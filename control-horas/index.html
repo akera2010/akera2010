@@ -293,6 +293,21 @@ input,select,textarea{font-family:inherit;font-size:14px}
 /* focus visible enhanced */
 :focus-visible{outline:2px solid var(--primary)!important;outline-offset:2px!important}
 
+/* ── formal print styles ── */
+@media print{
+  #scr-auth,#topbar,#period-bar,#punch-bar,#fab,#float-summary,
+  #week-compare,.entry-actions,.swipe-hint,#stats-panel,
+  #overlay-entry,#overlay-settings,#overlay-report,#toast-stack{display:none!important}
+  body{background:#fff!important;font-family:system-ui,sans-serif}
+  #scr-app{padding:0}
+  #entries-wrap{overflow:visible;max-height:none}
+  .entry-card{break-inside:avoid;border:1px solid #e0e0e0;border-radius:4px;margin-bottom:4px}
+  #summary-bar{flex-wrap:wrap;gap:8px;margin:8px 0}
+  .sum-card{border:1px solid #ccc;border-radius:4px;padding:6px 10px}
+  #chart-wrap{page-break-after:always}
+  @page{margin:1.5cm}
+}
+
 /* reduced-motion: disable animations */
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -1449,23 +1464,28 @@ function renderList(entries){
     list.appendChild(hdr);
     g.entries.forEach(e=>{
       const d=new Date(e.date+'T12:00:00');
-      const pay=(e.hours*(rateMap[e.type]||cfg.rateNormal));
-      const net=pay*(1-retTotal);
+      const isAbs=['vacaciones','baja','festivo0'].includes(e.type);
+      const pay=isAbs?0:(e.hours*(rateMap[e.type]||cfg.rateNormal));
+      const net=isAbs?0:pay*(1-retTotal);
       const card=document.createElement('div');
       card.className=`entry-card type-${e.type}`;
       card.dataset.id=e.id;
       const wd=wdFull[d.getDay()]||'';
+      const emoji=isAbs?(absenceEmoji[e.type]||'📅'):(workEmoji[e.type]||'🏢');
+      const label=isAbs?(absenceLabels[e.type]||e.type):(typeLabels[e.type]||e.type);
+      const payStr=isAbs?`<span style="color:var(--muted);font-size:11px">Sin remunerar</span>`:`€${pay.toFixed(2)} / €${net.toFixed(2)}`;
+      const hourStr=isAbs?`<span style="font-size:11px;color:var(--muted)">${emoji}</span>`:fmtH(e.hours);
       card.innerHTML=`
         <div class="swipe-hint">🗑</div>
         <div class="entry-row">
           <div class="day-badge"><div class="wd">${wd.slice(0,3)}</div>${d.getDate()}</div>
           <div class="entry-info">
-            <div class="title">${typeLabels[e.type]||e.type} ${e.type==='normal'?'🏢':e.type==='noche'?'🌙':e.type==='finde'?'🌴':'🎉'}</div>
-            <div class="sub">${e.hours}h${e.notes?' · '+e.notes:''}</div>
+            <div class="title">${label} ${emoji}</div>
+            <div class="sub">${isAbs?'0h':e.hours+'h'}${e.notes?' · '+e.notes:''}</div>
           </div>
           <div>
-            <div class="entry-hours">${fmtH(e.hours)}</div>
-            <div class="entry-pay">€${pay.toFixed(2)} / €${net.toFixed(2)}</div>
+            <div class="entry-hours">${hourStr}</div>
+            <div class="entry-pay">${payStr}</div>
           </div>
         </div>
         <div class="entry-actions">
