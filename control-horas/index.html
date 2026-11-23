@@ -71,11 +71,15 @@ input,select,textarea{font-family:inherit;font-size:14px}
 
 /* ═══════════ APP SHELL ═══════════ */
 #scr-app{flex-direction:column}
-#topbar{background:var(--primary);color:#fff;display:flex;align-items:center;gap:8px;padding:0 12px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-#topbar h1{font-size:17px;font-weight:800;margin-right:4px}
-#live-clock{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;flex:1;min-width:0}
-#live-clock .lc-time{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap}
-#live-clock .lc-date{font-size:10px;font-weight:500;opacity:.8;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:160px}
+#topbar{background:var(--primary);color:#fff;display:flex;flex-direction:column;padding:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#topbar-main{display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-bottom:1px solid rgba(255,255,255,.12)}
+#topbar-actions{display:flex;align-items:center;gap:4px;padding:0 10px;height:36px}
+#topbar h1{font-size:17px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;flex-shrink:0;margin:0}
+#topbar-actions-spacer{flex:1}
+#live-clock{display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;min-width:0}
+#live-clock .lc-time{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap}
+#live-clock .lc-sep{opacity:.4;font-size:13px}
+#live-clock .lc-date{font-size:11px;font-weight:500;opacity:.75;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:170px}
 .icon-btn{background:none;border:none;color:inherit;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
 .icon-btn:hover{background:rgba(255,255,255,.18)}
 
@@ -97,8 +101,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .entry-hours,.lc-time{font-family:var(--font-mono)}
 
 /* lang selector */
-#lang-sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:3px 6px;font-size:13px;font-weight:600;cursor:pointer;min-width:60px}
+#lang-sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:2px 6px;font-size:12px;font-weight:600;cursor:pointer;min-width:62px;height:28px}
 #lang-sel option{background:#3f51b5;color:#fff}
+#topbar-actions .icon-btn{width:32px;height:28px;font-size:16px;border-radius:6px}
 
 /* period bar */
 #period-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 14px;gap:8px}
@@ -405,25 +410,37 @@ input,select,textarea{font-family:inherit;font-size:14px}
 <div id="scr-app" class="screen">
 
   <div id="topbar">
-    <h1>⏱ ControlHoras</h1>
-    <div id="live-clock"><span class="lc-time" id="lc-t"></span><span class="lc-date" id="lc-d"></span></div>
-    <select id="lang-sel" onchange="setLang(this.value)" title="Idioma / Language">
-      <option value="es">🇪🇸 ES</option>
-      <option value="en">🇬🇧 EN</option>
-      <option value="uk">🇺🇦 UK</option>
-      <option value="ro">🇷🇴 RO</option>
-      <option value="ru">🇷🇺 RU</option>
-      <option value="fr">🇫🇷 FR</option>
-      <option value="de">🇩🇪 DE</option>
-    </select>
-    <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
-    <button class="icon-btn" title="Ajustes" aria-label="Ajustes" onclick="openSettings()">⚙️</button>
-    <button class="icon-btn" id="btn-fs" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
-    <div id="user-avatar-wrap" style="position:relative;display:flex;align-items:center">
-      <button id="user-avatar" onclick="toggleUserMenu()" aria-label="Menú usuario">?</button>
-      <div id="user-menu" hidden>
-        <button onclick="doLogout()">🚪 <span data-i18n="settings.logout">Cerrar sesión</span></button>
+    <!-- Fila 1: nombre + reloj -->
+    <div id="topbar-main">
+      <h1>⏱ ControlHoras</h1>
+      <div id="live-clock">
+        <span class="lc-sep">|</span>
+        <span class="lc-date" id="lc-d"></span>
+        <span class="lc-sep">·</span>
+        <span class="lc-time" id="lc-t"></span>
       </div>
+      <div id="user-avatar-wrap" style="position:relative;display:flex;align-items:center;flex-shrink:0">
+        <button id="user-avatar" onclick="toggleUserMenu()" aria-label="Menú usuario">?</button>
+        <div id="user-menu" hidden>
+          <button onclick="doLogout()">🚪 <span data-i18n="settings.logout">Cerrar sesión</span></button>
+        </div>
+      </div>
+    </div>
+    <!-- Fila 2: acciones -->
+    <div id="topbar-actions">
+      <select id="lang-sel" onchange="setLang(this.value)" title="Idioma / Language">
+        <option value="es">🇪🇸 ES</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="uk">🇺🇦 UK</option>
+        <option value="ro">🇷🇴 RO</option>
+        <option value="ru">🇷🇺 RU</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="de">🇩🇪 DE</option>
+      </select>
+      <div id="topbar-actions-spacer"></div>
+      <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
+      <button class="icon-btn" title="Ajustes" aria-label="Ajustes" onclick="openSettings()">⚙️</button>
+      <button class="icon-btn" id="btn-fs" onclick="toggleFS()" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
     </div>
   </div>
 
