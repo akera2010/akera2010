@@ -298,6 +298,42 @@ input,select,textarea{font-family:inherit;font-size:14px}
   *{animation:none!important;transition:none!important}
 }
 
+/* ── week compare ── */
+#week-compare{margin:0 14px 8px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);overflow:hidden;display:none}
+#week-compare.show{display:block}
+.wc-title{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:8px 12px 4px}
+.wc-rows{display:flex;gap:0}
+.wc-cell{flex:1;padding:8px 12px;border-right:1px solid var(--border);text-align:center}
+.wc-cell:last-child{border:none}
+.wc-cell .wc-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.wc-cell .wc-val{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.wc-up{color:#2e7d32}.wc-down{color:#c62828}.wc-eq{color:var(--muted)}
+
+/* ── absence types ── */
+.type-btn.active-vacaciones{border-color:#f9a825;background:rgba(249,168,37,.1);color:#f9a825}
+.type-btn.active-baja{border-color:#ef6c00;background:rgba(239,108,0,.1);color:#ef6c00}
+.type-btn.active-festivo0{border-color:#7b1fa2;background:rgba(123,31,162,.1);color:#7b1fa2}
+.type-vacaciones .day-badge{background:#f9a825}
+.type-baja .day-badge{background:#ef6c00}
+.type-festivo0 .day-badge{background:#7b1fa2}
+
+/* ── topbar month badge ── */
+#month-badge{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:3px 9px;cursor:pointer;min-width:52px;flex-shrink:0}
+#month-badge:hover{background:rgba(255,255,255,.28)}
+#month-badge .mb-val{font-size:14px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+#month-badge .mb-lbl{font-size:9px;opacity:.8;font-weight:600;letter-spacing:.04em}
+#badge-panel{position:absolute;top:52px;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);min-width:160px;z-index:999;padding:12px;animation:popIn .15s ease}
+#badge-panel .bp-row{display:flex;justify-content:space-between;gap:16px;padding:4px 0;font-size:13px;border-bottom:1px solid var(--border)}
+#badge-panel .bp-row:last-child{border:none}
+#badge-panel .bp-lbl{color:var(--muted);font-weight:600}
+#badge-panel .bp-val{font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+
+/* ── worker info in settings ── */
+.worker-field{margin-bottom:10px}
+.worker-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.worker-field input{width:100%;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--surface2);color:var(--ink);padding:8px 10px;font-size:13px;font-weight:500}
+.worker-field input:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(63,81,181,.12)}
+
 /* ═══════════ PRINT / PDF ═══════════ */
 @media print{
   #topbar,#period-bar,#chart-wrap,#ot-alert,.icon-btn,.btn-primary,.btn-save,
@@ -604,11 +640,13 @@ input,select,textarea{font-family:inherit;font-size:14px}
   <div class="sheet">
     <div class="sheet-title" data-i18n="report.title">Informe del período</div>
     <div id="report-preview"></div>
-    <div class="modal-row">
-      <button class="btn-save" onclick="exportCSV()" data-i18n="report.csv">⬇ CSV</button>
+    <div class="modal-row" style="flex-wrap:wrap">
+      <button class="btn-save" onclick="exportPDF()" data-i18n="report.pdf">📄 PDF</button>
+      <button class="btn-save" style="background:#43a047" onclick="exportXLSX()" data-i18n="report.xlsx">📊 Excel</button>
+      <button class="btn-save" style="background:#7b1fa2" onclick="exportJPG()" data-i18n="report.jpg">🖼️ JPG</button>
+      <button class="btn-save" style="background:var(--muted)" onclick="exportCSV()" data-i18n="report.csv">⬇ CSV</button>
       <button class="btn-save" style="background:var(--ok)" onclick="exportHTMLReport()" data-i18n="report.html">⬇ HTML</button>
-      <button class="btn-save" style="background:#7b1fa2" onclick="window.print()" data-i18n="report.print">🖨️ PDF</button>
-      <button class="btn-save" style="background:var(--muted);display:flex;align-items:center;gap:6px;min-width:auto" onclick="copyHours()">📋</button>
+      <button class="btn-save" style="min-width:40px;padding:12px 8px" onclick="copyHours()" title="Copiar horas">📋</button>
     </div>
   </div>
 </div>
@@ -655,7 +693,7 @@ const LANG = {
     'weekdaysFull':['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
     'settings.colorTheme':'Color de acento','settings.logout':'Cerrar sesión',
     'type_labels':{'normal':'Jornada Normal','noche':'Turno Nocturno','finde':'Fin de Semana','feriado':'Feriado/Festivo'},
-    'report.print':'🖨️ Imprimir PDF','notif.toggle':'Recordatorio diario','notif.time':'Hora del recordatorio',
+    'report.print':'🖨️ Imprimir PDF','report.pdf':'📄 PDF Formal','report.xlsx':'📊 Excel','report.jpg':'🖼️ Imagen JPG','notif.toggle':'Recordatorio diario','notif.time':'Hora del recordatorio',
     'notif.msg':'¿Ya registraste tu jornada de hoy?','entries.count':'entradas',
   },
   en: {
