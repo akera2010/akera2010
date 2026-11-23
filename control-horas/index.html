@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Control Horas</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* ═══════════ DESIGN TOKENS ═══════════ */
 :root{
@@ -16,6 +16,7 @@
   --normal:#1565c0;--noche:#4a148c;--finde:#1b5e20;--feriado:#bf360c;
   --r:12px;--r-sm:8px;--r-xs:4px;
   --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
   --shadow:0 2px 8px rgba(0,0,0,.12);
   --shadow-lg:0 8px 32px rgba(0,0,0,.18);
 }
@@ -78,6 +79,23 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .icon-btn{background:none;border:none;color:inherit;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
 .icon-btn:hover{background:rgba(255,255,255,.18)}
 
+/* user avatar + dropdown */
+#user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);color:#fff;font-size:13px;font-weight:800;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
+#user-avatar:hover{background:rgba(255,255,255,.35)}
+#user-menu{position:absolute;right:0;top:44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);min-width:170px;z-index:999;overflow:hidden}
+#user-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:11px 16px;background:none;border:none;color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:background .15s}
+#user-menu button:hover{background:var(--surface2)}
+#btn-fs{font-size:16px}
+
+/* color theme picker */
+.color-theme-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ctbtn{width:38px;height:38px;border-radius:50%;border:3px solid transparent;font-size:20px;background:none;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;display:grid;place-items:center;padding:0}
+.ctbtn:hover{transform:scale(1.12)}
+.ctbtn.active{border-color:var(--primary);transform:scale(1.18);box-shadow:0 0 0 2px var(--primary-l)}
+
+/* JetBrains Mono for all numbers */
+.entry-hours,.lc-time{font-family:var(--font-mono)}
+
 /* lang selector */
 #lang-sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:3px 6px;font-size:13px;font-weight:600;cursor:pointer;min-width:60px}
 #lang-sel option{background:#3f51b5;color:#fff}
@@ -91,12 +109,65 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .pmb{padding:5px 11px;font-size:12px;font-weight:700;background:none;border:none;color:var(--muted);cursor:pointer;transition:all .15s}
 .pmb.active{background:var(--primary);color:#fff}
 
+/* ═══ STATS PANEL ═══ */
+#stats-panel{display:none;flex:1;overflow-y:auto;padding:0 14px 100px}
+#stats-panel.active{display:block;animation:fadeIn .25s ease}
+.stats-section{background:var(--surface);border-radius:var(--r);border:1.5px solid var(--border);padding:16px;margin-bottom:12px}
+.stats-section h3{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+/* Heatmap */
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
+.heatmap-day{aspect-ratio:1;border-radius:4px;background:var(--border);cursor:default;position:relative;transition:transform .15s}
+.heatmap-day:hover{transform:scale(1.15);z-index:1}
+.hm-0{background:var(--border)}
+.hm-1{background:#bbdefb}
+.hm-2{background:#64b5f6}
+.hm-3{background:#1976d2}
+.hm-4{background:#0d47a1}
+:root[data-theme=dark] .hm-1{background:#1a3a5f}
+:root[data-theme=dark] .hm-2{background:#1565c0}
+:root[data-theme=dark] .hm-3{background:#1e88e5}
+:root[data-theme=dark] .hm-4{background:#42a5f5}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .hm-1{background:#1a3a5f}:root:not([data-theme=light]) .hm-2{background:#1565c0}:root:not([data-theme=light]) .hm-3{background:#1e88e5}:root:not([data-theme=light]) .hm-4{background:#42a5f5}}
+.heatmap-labels{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.heatmap-labels span{font-size:9px;text-align:center;color:var(--muted);font-weight:700}
+/* Top days */
+.top-day-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)}
+.top-day-row:last-child{border:none}
+.top-day-rank{font-size:18px;min-width:28px;text-align:center}
+.top-day-info{flex:1;min-width:0}
+.top-day-info .td-date{font-weight:700;font-size:14px}
+.top-day-info .td-type{font-size:11px;color:var(--muted)}
+.top-day-hours{font-size:20px;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+/* Streak */
+.streak-row{display:flex;gap:16px;flex-wrap:wrap}
+.streak-box{flex:1;min-width:100px;background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center}
+.streak-box .sv{font-size:28px;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+.streak-box .sl{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+/* Annual */
+.annual-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.annual-cell{background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center}
+.annual-cell .av{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.annual-cell .al{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+/* Week goal ring */
+#goal-ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px;cursor:default}
+#goal-ring-wrap svg{overflow:visible}
+#goal-ring-wrap .gr-pct{font-size:11px;font-weight:800;color:#fff;dominant-baseline:central;text-anchor:middle;font-family:inherit}
+#goal-ring-wrap .gr-lbl{font-size:9px;color:rgba(255,255,255,.75);text-align:center;margin-top:2px;font-weight:600;letter-spacing:.04em}
+/* Quick punch */
+#punch-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;gap:8px;align-items:center}
+#punch-bar.hidden-punch{display:none}
+.punch-btn{flex:1;padding:12px 8px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:800;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.punch-btn.in{background:#e8f5e9;color:#2e7d32;border:2px solid #4caf50}
+.punch-btn.out{background:#fce4e4;color:#c62828;border:2px solid #ef5350}
+.punch-btn.in:active,.punch-btn.out:active{transform:scale(.97)}
+.punch-time{font-size:12px;font-weight:600;color:var(--muted);min-width:80px;text-align:center;font-variant-numeric:tabular-nums}
+
 /* summary */
 #summary-bar{display:flex;gap:10px;overflow-x:auto;padding:12px 14px;background:var(--bg);scrollbar-width:none}
 #summary-bar::-webkit-scrollbar{display:none}
 .sum-card{flex:none;min-width:112px;background:var(--surface);border-radius:var(--r);padding:12px 14px;border:1.5px solid var(--border);text-align:center;transition:box-shadow .2s,transform .2s;cursor:default}
 .sum-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.sum-card .val{font-size:21px;font-weight:800;line-height:1}
+.sum-card .val{font-size:21px;font-weight:800;line-height:1;font-family:var(--font-mono)}
 .sum-card .lbl{font-size:10px;color:var(--muted);margin-top:4px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .sum-card.total .val{color:var(--primary)}
 .sum-card.pay .val{color:var(--ok)}
@@ -119,7 +190,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
 /* entries */
 #entries-wrap{flex:1;overflow-y:auto;padding:0 14px 100px}
 .month-header{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:16px 0 6px}
-.entry-card{background:var(--surface);border-radius:var(--r);border:1.5px solid var(--border);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .15s;animation:fadeIn .2s ease;position:relative}
+.entry-card{background:var(--surface);border-radius:var(--r);border:1.5px solid var(--border);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .15s;position:relative;opacity:0;transform:translateY(12px)}
+.entry-card.io-visible{animation:fadeInUp .3s ease forwards}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .entry-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
 .entry-row{display:flex;align-items:center;gap:10px;padding:11px 13px}
 .day-badge{width:44px;height:44px;border-radius:var(--r-sm);display:grid;place-items:center;flex:none;font-weight:800;font-size:13px;text-align:center;line-height:1.2;color:#fff}
@@ -213,6 +286,36 @@ input,select,textarea{font-family:inherit;font-size:14px}
 /* copy btn */
 .copy-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;transition:color .15s}
 .copy-btn:hover{color:var(--primary)}
+
+/* entry count badge */
+#entry-count{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+
+/* focus visible enhanced */
+:focus-visible{outline:2px solid var(--primary)!important;outline-offset:2px!important}
+
+/* reduced-motion: disable animations */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+
+/* ═══════════ PRINT / PDF ═══════════ */
+@media print{
+  #topbar,#period-bar,#chart-wrap,#ot-alert,.icon-btn,.btn-primary,.btn-save,
+  #float-summary,.swipe-delete,.entry-actions,.period-mode-btns,#toast-stack,
+  .overlay{display:none!important}
+  body,html{background:#fff!important;color:#000!important;font-size:12pt}
+  #scr-app{display:block!important}
+  .screen{display:block!important;min-height:auto}
+  #summary-bar{display:flex!important;flex-wrap:wrap;gap:8pt;margin:12pt 0;border-bottom:1pt solid #ccc;padding-bottom:10pt}
+  .sum-card{border:1pt solid #ccc;padding:8pt 10pt;min-width:80pt;page-break-inside:avoid}
+  .sum-card .val{font-size:16pt;font-weight:700}
+  .sum-card .lbl{font-size:8pt;color:#555}
+  #entries-wrap{overflow:visible!important;padding:0}
+  .entry-card{border:none!important;border-bottom:0.5pt solid #ddd!important;border-radius:0!important;padding:5pt 0;page-break-inside:avoid}
+  .entry-card::before{content:'';display:none}
+  @page{margin:1.5cm;size:A4}
+  body::before{content:'ControlHoras — Informe de jornadas  ·  @MauGonzalez';display:block;font-size:9pt;color:#888;border-bottom:1pt solid #ccc;padding-bottom:6pt;margin-bottom:12pt}
+}
 </style>
 </head>
 <body>
@@ -262,23 +365,24 @@ input,select,textarea{font-family:inherit;font-size:14px}
       <option value="fr">🇫🇷 FR</option>
       <option value="de">🇩🇪 DE</option>
     </select>
-    <button class="icon-btn" title="Informe" onclick="openReport()">📊</button>
-    <button class="icon-btn" title="Ajustes" onclick="openSettings()">⚙️</button>
-    <button class="icon-btn" title="Salir" onclick="doLogout()">🚪</button>
+    <button class="icon-btn" title="Informe" aria-label="Informe" onclick="openReport()">📊</button>
+    <button class="icon-btn" title="Ajustes" aria-label="Ajustes" onclick="openSettings()">⚙️</button>
+    <button class="icon-btn" title="Salir" aria-label="Cerrar sesión" onclick="doLogout()">🚪</button>
   </div>
 
   <div id="period-bar">
     <button class="period-nav" onclick="navPeriod(-1)">‹</button>
-    <span id="period-label"></span>
+    <span id="period-label"></span><span id="entry-count" hidden></span>
     <button class="period-nav" onclick="navPeriod(1)">›</button>
     <div class="period-mode-btns">
       <button class="pmb active" onclick="setPeriodMode('semana')" data-i18n="period.week">Semana</button>
       <button class="pmb" onclick="setPeriodMode('mes')" data-i18n="period.month">Mes</button>
+      <button class="pmb" onclick="setPeriodMode('stats')" data-i18n="period.stats">📊</button>
     </div>
     <button class="period-nav" style="font-size:13px;padding:5px 8px" onclick="goToday()" data-i18n="period.today">Hoy</button>
   </div>
 
-  <div id="summary-bar">
+  <div id="summary-bar" role="region" aria-live="polite" aria-label="Resumen del período">
     <div class="sum-card total">
       <div class="val" id="s-total">0h</div>
       <div class="lbl" data-i18n="sum.hours">Horas</div>
@@ -311,6 +415,18 @@ input,select,textarea{font-family:inherit;font-size:14px}
       <div class="val" id="s-feriado">0</div>
       <div class="lbl" data-i18n="sum.holiday">🎉 Festivo</div>
     </div>
+    <div class="sum-card" id="goal-ring-card" style="padding:8px 10px">
+      <div id="goal-ring-wrap">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="var(--border)" stroke-width="5"/>
+          <circle id="goal-arc" cx="24" cy="24" r="20" fill="none" stroke="var(--primary)" stroke-width="5"
+            stroke-dasharray="125.6" stroke-dashoffset="125.6" stroke-linecap="round"
+            transform="rotate(-90 24 24)" style="transition:stroke-dashoffset .6s ease"/>
+          <text x="24" y="24" class="gr-pct" id="goal-pct-text" style="font-size:11px;fill:var(--ink);font-weight:800;dominant-baseline:central;text-anchor:middle">0%</text>
+        </svg>
+        <div class="gr-lbl" data-i18n="stats.goal" style="font-size:9px;color:var(--muted);text-align:center;font-weight:700;letter-spacing:.04em;margin-top:1px">META</div>
+      </div>
+    </div>
   </div>
 
   <div id="ot-alert">⚠️ <span id="ot-msg"></span></div>
@@ -319,12 +435,56 @@ input,select,textarea{font-family:inherit;font-size:14px}
     <canvas id="chart-canvas"></canvas>
   </div>
 
+  <!-- punch bar: quick clock-in/out -->
+  <div id="punch-bar" class="hidden-punch">
+    <button class="punch-btn in" onclick="punchIn()" data-i18n="punch.in">▶ ENTRAR</button>
+    <span class="punch-time" id="punch-time-display"></span>
+    <button class="punch-btn out" onclick="punchOut()" data-i18n="punch.out">⏹ SALIR</button>
+  </div>
+
   <div id="entries-wrap">
     <div id="empty">
       <span class="icon">📋</span>
       <p data-i18n="list.empty">No hay registros en este período.<br>Pulsa + para añadir.</p>
     </div>
     <div id="entries-list"></div>
+  </div>
+
+  <!-- stats panel -->
+  <div id="stats-panel">
+    <div class="stats-section">
+      <h3 data-i18n="stats.heatmap">Mapa de actividad del mes</h3>
+      <div class="heatmap-labels" id="hm-labels"></div>
+      <div class="heatmap-grid" id="hm-grid"></div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:6px;font-size:11px;color:var(--muted)">
+        <div class="heatmap-day hm-0" style="width:12px;height:12px;border-radius:2px"></div> 0h
+        <div class="heatmap-day hm-1" style="width:12px;height:12px;border-radius:2px"></div> 1–4h
+        <div class="heatmap-day hm-2" style="width:12px;height:12px;border-radius:2px"></div> 4–7h
+        <div class="heatmap-day hm-3" style="width:12px;height:12px;border-radius:2px"></div> 7–9h
+        <div class="heatmap-day hm-4" style="width:12px;height:12px;border-radius:2px"></div> 9h+
+      </div>
+    </div>
+    <div class="stats-section">
+      <h3 data-i18n="stats.topdays">Top 3 días con más horas</h3>
+      <div id="top-days-list"></div>
+    </div>
+    <div class="stats-section">
+      <h3 data-i18n="stats.streak">Rachas</h3>
+      <div class="streak-row">
+        <div class="streak-box"><div class="sv" id="st-current">0</div><div class="sl" data-i18n="stats.curstreak">Racha actual</div></div>
+        <div class="streak-box"><div class="sv" id="st-best">0</div><div class="sl" data-i18n="stats.beststreak">Mejor racha</div></div>
+        <div class="streak-box"><div class="sv" id="st-month">0</div><div class="sl" data-i18n="stats.monthdays">Días este mes</div></div>
+      </div>
+    </div>
+    <div class="stats-section">
+      <h3 data-i18n="stats.annual">Resumen anual <span id="annual-year" style="font-weight:400;text-transform:none;letter-spacing:0"></span></h3>
+      <div class="annual-grid">
+        <div class="annual-cell"><div class="av" id="ann-hours" style="color:var(--primary)">0h</div><div class="al" data-i18n="sum.hours">Horas</div></div>
+        <div class="annual-cell"><div class="av" id="ann-gross" style="color:var(--ok)">€0</div><div class="al" data-i18n="sum.gross">Bruto</div></div>
+        <div class="annual-cell"><div class="av" id="ann-net" style="color:var(--net)">€0</div><div class="al" data-i18n="sum.net">Neto</div></div>
+        <div class="annual-cell"><div class="av" id="ann-days" style="color:var(--accent)">0</div><div class="al" data-i18n="sum.days">Días trab.</div></div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -395,10 +555,18 @@ input,select,textarea{font-family:inherit;font-size:14px}
       <div class="rate-grid">
         <div class="rate-item"><label data-i18n="settings.defHours">Horas/día</label><input type="number" id="cfg-dh" step="0.5" min="1" max="24"></div>
         <div class="rate-item"><label data-i18n="settings.minHours">Mín. jornada completa</label><input type="number" id="cfg-mh" step="0.5" min="0" max="24"></div>
+        <div class="rate-item"><label data-i18n="settings.weekGoal">Meta h/semana</label><input type="number" id="cfg-wg" step="1" min="1" max="80"></div>
       </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;cursor:pointer">
         <input type="checkbox" id="cfg-autoday"> <span data-i18n="settings.autoday">Detectar finde automáticamente</span>
       </label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;cursor:pointer">
+        <input type="checkbox" id="cfg-notif"> <span data-i18n="notif.toggle">Recordatorio diario</span>
+      </label>
+      <div id="notif-time-row" style="display:none;align-items:center;gap:8px;margin-top:6px;font-size:13px">
+        <label for="cfg-notif-time" data-i18n="notif.time" style="color:var(--muted)">Hora del recordatorio</label>
+        <input type="time" id="cfg-notif-time" value="09:00" style="padding:4px 8px;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--surface2);color:var(--ink)">
+      </div>
     </div>
 
     <div class="settings-section">
@@ -422,6 +590,7 @@ input,select,textarea{font-family:inherit;font-size:14px}
     <div class="modal-row">
       <button class="btn-save" onclick="exportCSV()" data-i18n="report.csv">⬇ CSV</button>
       <button class="btn-save" style="background:var(--ok)" onclick="exportHTMLReport()" data-i18n="report.html">⬇ HTML</button>
+      <button class="btn-save" style="background:#7b1fa2" onclick="window.print()" data-i18n="report.print">🖨️ PDF</button>
       <button class="btn-save" style="background:var(--muted);display:flex;align-items:center;gap:6px;min-width:auto" onclick="copyHours()">📋</button>
     </div>
   </div>
@@ -458,10 +627,18 @@ const LANG = {
     'report.title':'Informe del período','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'Límite 40h/semana superado:','days.label':'días trabajados de',
     'dup':'Duplicar','del':'Eliminar',
+    'period.stats':'📊','settings.weekGoal':'Meta h/semana',
+    'punch.in':'▶ ENTRAR','punch.out':'⏹ SALIR','punch.elapsed':'Tiempo:',
+    'stats.heatmap':'Mapa de actividad del mes','stats.topdays':'Top 3 días con más horas',
+    'stats.streak':'Rachas','stats.curstreak':'Racha actual','stats.beststreak':'Mejor racha',
+    'stats.monthdays':'Días este mes','stats.annual':'Resumen anual','stats.goal':'META',
+    'stats.nodata':'Sin datos suficientes',
     'months':['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
     'weekdays':['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
     'weekdaysFull':['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
     'type_labels':{'normal':'Jornada Normal','noche':'Turno Nocturno','finde':'Fin de Semana','feriado':'Feriado/Festivo'},
+    'report.print':'🖨️ Imprimir PDF','notif.toggle':'Recordatorio diario','notif.time':'Hora del recordatorio',
+    'notif.msg':'¿Ya registraste tu jornada de hoy?','entries.count':'entradas',
   },
   en: {
     'auth.subtitle':'Track your working hours',
@@ -487,10 +664,18 @@ const LANG = {
     'report.title':'Period report','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'40h/week limit exceeded:','days.label':'days worked of',
     'dup':'Duplicate','del':'Delete',
+    'period.stats':'📊','settings.weekGoal':'Goal h/week',
+    'punch.in':'▶ CLOCK IN','punch.out':'⏹ CLOCK OUT','punch.elapsed':'Elapsed:',
+    'stats.heatmap':'Monthly activity map','stats.topdays':'Top 3 busiest days',
+    'stats.streak':'Streaks','stats.curstreak':'Current streak','stats.beststreak':'Best streak',
+    'stats.monthdays':'Days this month','stats.annual':'Annual summary','stats.goal':'GOAL',
+    'stats.nodata':'Not enough data',
     'months':['January','February','March','April','May','June','July','August','September','October','November','December'],
     'weekdays':['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
     'weekdaysFull':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     'type_labels':{'normal':'Regular shift','noche':'Night shift','finde':'Weekend','feriado':'Holiday'},
+    'report.print':'🖨️ Print PDF','notif.toggle':'Daily reminder','notif.time':'Reminder time',
+    'notif.msg':'Have you logged your shift for today?','entries.count':'entries',
   },
   uk: {
     'auth.subtitle':'Облік робочих годин',
@@ -516,10 +701,18 @@ const LANG = {
     'report.title':'Звіт за період','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'Перевищено ліміт 40год/тиждень:','days.label':'днів з',
     'dup':'Дублювати','del':'Видалити',
+    'period.stats':'📊','settings.weekGoal':'Мета год/тиждень',
+    'punch.in':'▶ ПРИЙТИ','punch.out':'⏹ ПІТИ','punch.elapsed':'Час:',
+    'stats.heatmap':'Карта активності місяця','stats.topdays':'Топ 3 дні за годинами',
+    'stats.streak':'Серії','stats.curstreak':'Поточна серія','stats.beststreak':'Найкраща серія',
+    'stats.monthdays':'Дні цього місяця','stats.annual':'Річний підсумок','stats.goal':'МЕТА',
+    'stats.nodata':'Недостатньо даних',
     'months':['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'],
     'weekdays':['Нд','Пн','Вт','Ср','Чт','Пт','Сб'],
     'weekdaysFull':['Неділя','Понеділок','Вівторок','Середа','Четвер','Пятниця','Субота'],
     'type_labels':{'normal':'Звичайна зміна','noche':'Нічна зміна','finde':'Вихідний','feriado':'Свято'},
+    'report.print':'🖨️ Друк PDF','notif.toggle':'Щоденне нагадування','notif.time':'Час нагадування',
+    'notif.msg':'Ви вже записали свою зміну сьогодні?','entries.count':'записів',
   },
   ro: {
     'auth.subtitle':'Evidența orelor de lucru',
@@ -545,10 +738,18 @@ const LANG = {
     'report.title':'Raport perioadă','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'Limita 40h/săptămână depășită:','days.label':'zile din',
     'dup':'Duplică','del':'Șterge',
+    'period.stats':'📊','settings.weekGoal':'Obiectiv ore/săpt.',
+    'punch.in':'▶ INTRU','punch.out':'⏹ IES','punch.elapsed':'Timp:',
+    'stats.heatmap':'Harta activității lunare','stats.topdays':'Top 3 zile cu ore maxime',
+    'stats.streak':'Serii','stats.curstreak':'Seria curentă','stats.beststreak':'Cea mai bună serie',
+    'stats.monthdays':'Zile în această lună','stats.annual':'Rezumat anual','stats.goal':'OBIECTIV',
+    'stats.nodata':'Date insuficiente',
     'months':['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'],
     'weekdays':['Du','Lu','Ma','Mi','Jo','Vi','Sâ'],
     'weekdaysFull':['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'],
     'type_labels':{'normal':'Schimb normal','noche':'Schimb de noapte','finde':'Weekend','feriado':'Sărbătoare'},
+    'report.print':'🖨️ Tipărire PDF','notif.toggle':'Memento zilnic','notif.time':'Ora memento-ului',
+    'notif.msg':'Ai înregistrat tura de azi?','entries.count':'înregistrări',
   },
   ru: {
     'auth.subtitle':'Учёт рабочего времени',
@@ -574,10 +775,18 @@ const LANG = {
     'report.title':'Отчёт за период','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'Превышен лимит 40ч/неделю:','days.label':'дней из',
     'dup':'Дублировать','del':'Удалить',
+    'period.stats':'📊','settings.weekGoal':'Цель часов/нед.',
+    'punch.in':'▶ ПРИЙТИ','punch.out':'⏹ УЙТИ','punch.elapsed':'Время:',
+    'stats.heatmap':'Карта активности месяца','stats.topdays':'Топ 3 дня по часам',
+    'stats.streak':'Серии','stats.curstreak':'Текущая серия','stats.beststreak':'Лучшая серия',
+    'stats.monthdays':'Дней в этом месяце','stats.annual':'Годовой итог','stats.goal':'ЦЕЛЬ',
+    'stats.nodata':'Недостаточно данных',
     'months':['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
     'weekdays':['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
     'weekdaysFull':['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
     'type_labels':{'normal':'Обычная смена','noche':'Ночная смена','finde':'Выходной','feriado':'Праздник'},
+    'report.print':'🖨️ Печать PDF','notif.toggle':'Ежедневное напоминание','notif.time':'Время напоминания',
+    'notif.msg':'Вы уже записали свою смену сегодня?','entries.count':'записей',
   },
   fr: {
     'auth.subtitle':'Suivi de votre temps de travail',
@@ -603,10 +812,18 @@ const LANG = {
     'report.title':'Rapport de période','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'Limite 40h/semaine dépassée:','days.label':'jours sur',
     'dup':'Dupliquer','del':'Supprimer',
+    'period.stats':'📊','settings.weekGoal':'Objectif h/semaine',
+    'punch.in':'▶ ENTRÉE','punch.out':'⏹ SORTIE','punch.elapsed':'Durée:',
+    'stats.heatmap':'Carte d\'activité mensuelle','stats.topdays':'Top 3 jours les plus chargés',
+    'stats.streak':'Séries','stats.curstreak':'Série actuelle','stats.beststreak':'Meilleure série',
+    'stats.monthdays':'Jours ce mois','stats.annual':'Bilan annuel','stats.goal':'OBJECTIF',
+    'stats.nodata':'Données insuffisantes',
     'months':['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
     'weekdays':['Di','Lu','Ma','Me','Je','Ve','Sa'],
     'weekdaysFull':['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
     'type_labels':{'normal':'Horaire normal','noche':'Nuit','finde':'Weekend','feriado':'Jour férié'},
+    'report.print':'🖨️ Imprimer PDF','notif.toggle':'Rappel quotidien','notif.time':'Heure du rappel',
+    'notif.msg':'Avez-vous enregistré votre journée aujourd\'hui?','entries.count':'entrées',
   },
   de: {
     'auth.subtitle':'Arbeitszeiterfassung',
@@ -632,10 +849,18 @@ const LANG = {
     'report.title':'Zeitraumbericht','report.csv':'⬇ CSV','report.html':'⬇ HTML',
     'ot.msg':'40h/Woche-Limit überschritten:','days.label':'Tage von',
     'dup':'Duplizieren','del':'Löschen',
+    'period.stats':'📊','settings.weekGoal':'Ziel Std/Woche',
+    'punch.in':'▶ KOMMEN','punch.out':'⏹ GEHEN','punch.elapsed':'Zeit:',
+    'stats.heatmap':'Monatsaktivitätskarte','stats.topdays':'Top 3 Tage nach Stunden',
+    'stats.streak':'Serien','stats.curstreak':'Aktuelle Serie','stats.beststreak':'Beste Serie',
+    'stats.monthdays':'Tage diesen Monat','stats.annual':'Jahreszusammenfassung','stats.goal':'ZIEL',
+    'stats.nodata':'Nicht genug Daten',
     'months':['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
     'weekdays':['So','Mo','Di','Mi','Do','Fr','Sa'],
     'weekdaysFull':['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
     'type_labels':{'normal':'Normalschicht','noche':'Nachtschicht','finde':'Wochenende','feriado':'Feiertag'},
+    'report.print':'🖨️ PDF drucken','notif.toggle':'Tägliche Erinnerung','notif.time':'Erinnerungszeit',
+    'notif.msg':'Haben Sie Ihre heutige Schicht bereits eingetragen?','entries.count':'Einträge',
   }
 };
 
@@ -690,6 +915,7 @@ function getSettings(uid){
     ss:         s.ss??6.35,
     defHours:   s.defHours??8,
     minHours:   s.minHours??4,
+    weekGoal:   s.weekGoal??40,
     autoday:    s.autoday!==undefined?s.autoday:true,
     theme:      s.theme||'system'
   };
@@ -785,12 +1011,21 @@ function navPeriod(dir){ periodOffset+=dir; renderPeriod(); }
 function goToday(){ periodOffset=0; renderPeriod(); }
 function setPeriodMode(m){
   periodMode=m; periodOffset=0;
-  document.querySelectorAll('.pmb').forEach((b,i)=>b.classList.toggle('active',(m==='semana'&&i===0)||(m==='mes'&&i===1)));
-  renderPeriod();
+  document.querySelectorAll('.pmb').forEach((b,i)=>b.classList.toggle('active',(m==='semana'&&i===0)||(m==='mes'&&i===1)||(m==='stats'&&i===2)));
+  const isStats=m==='stats';
+  document.getElementById('entries-wrap').style.display=isStats?'none':'';
+  document.getElementById('stats-panel').classList.toggle('active',isStats);
+  document.getElementById('chart-wrap').style.display=isStats?'none':'';
+  document.getElementById('summary-bar').style.display=isStats?'none':'';
+  document.getElementById('ot-alert').style.display=isStats?'none':'';
+  document.getElementById('punch-bar').classList.toggle('hidden-punch',isStats);
+  if(isStats){ renderStats(); }
+  else { renderPeriod(); }
 }
 function renderPeriod(){
   const {start,end,label}=getPeriodRange();
   document.getElementById('period-label').textContent=label;
+  // entry count badge (updated after entries filter below)
   _curStart=start; _curEnd=end;
   const entries=DB.entries.filter(e=>{
     if(e.uid!==curUser.email)return false;
@@ -798,6 +1033,8 @@ function renderPeriod(){
     return d>=start&&d<=end;
   });
   _curEntries=entries;
+  const ecBadge=document.getElementById('entry-count');
+  if(ecBadge){if(entries.length){ecBadge.textContent=entries.length+' '+t('entries.count');ecBadge.hidden=false;}else{ecBadge.hidden=true;}}
   renderSummary(entries,start,end);
   renderChart(entries,start,end);
   renderList(entries);
@@ -1097,6 +1334,7 @@ function saveEntry(){
     DB.entries.push({id:Date.now(),uid:curUser.email,date,type:curType,hours,notes});
   }
   saveDB();
+  navigator.vibrate?.(50);
   document.getElementById('overlay-entry').classList.remove('open');
   renderPeriod();
   toast('✅ '+t('entry.save'));
@@ -1134,6 +1372,10 @@ function openSettings(){
   document.getElementById('cfg-dh').value=cfg.defHours;
   document.getElementById('cfg-mh').value=cfg.minHours;
   document.getElementById('cfg-autoday').checked=cfg.autoday;
+  document.getElementById('cfg-notif').checked=cfg.notifEnabled||false;
+  document.getElementById('cfg-notif-time').value=cfg.notifTime||'09:00';
+  document.getElementById('notif-time-row').style.display=(cfg.notifEnabled)?'flex':'none';
+  document.getElementById('cfg-notif').onchange=function(){document.getElementById('notif-time-row').style.display=this.checked?'flex':'none';};
   // mark theme
   document.querySelectorAll('.theme-btn').forEach((b,i)=>{
     const themes=['light','system','dark'];
@@ -1154,6 +1396,9 @@ function saveSettings(){
   s.defHours=parseFloat(document.getElementById('cfg-dh').value)||8;
   s.minHours=parseFloat(document.getElementById('cfg-mh').value)||4;
   s.autoday=document.getElementById('cfg-autoday').checked;
+  s.notifEnabled=document.getElementById('cfg-notif').checked;
+  s.notifTime=document.getElementById('cfg-notif-time').value||'09:00';
+  if(s.notifEnabled&&Notification.permission==='default')Notification.requestPermission();
   saveDB();
   document.getElementById('overlay-settings').classList.remove('open');
   renderPeriod(); toast('⚙️ '+t('settings.save'));
@@ -1294,6 +1539,25 @@ function setupScrollFloat(){
 loadDB();
 // restore lang
 try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;const sel=document.getElementById('lang-sel');if(sel)sel.value=l;setLang(l);}}catch(e){}
+// daily reminder notifications
+(function setupNotifCheck(){
+  setInterval(()=>{
+    if(!curUser)return;
+    const cfg=getSettings(curUser.email);
+    if(!cfg.notifEnabled||Notification.permission!=='granted')return;
+    const now=new Date();
+    const hh=String(now.getHours()).padStart(2,'0');
+    const mm=String(now.getMinutes()).padStart(2,'0');
+    const target=cfg.notifTime||'09:00';
+    if(hh+':'+mm!==target)return;
+    const todayStr=now.toISOString().slice(0,10);
+    const hasToday=DB.entries.some(e=>e.uid===curUser.email&&e.date===todayStr);
+    if(!hasToday){
+      try{new Notification('ControlHoras',{body:t('notif.msg'),icon:''});}catch(e){}
+    }
+  },60000);
+})();
+
 // live clock
 (function tickClock(){
   const now=new Date();
