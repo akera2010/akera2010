@@ -400,6 +400,24 @@ input,select,textarea{font-family:inherit;font-size:14px}
   body::before{content:'ControlHoras — Informe de jornadas  ·  @MauGonzalez';display:block;font-size:9pt;color:#888;border-bottom:1pt solid #ccc;padding-bottom:6pt;margin-bottom:12pt}
 }
 </style>
+<style>
+/* ── Filter bar ── */
+#filter-bar{display:flex;flex-direction:column;gap:8px;padding:8px 14px 4px;background:var(--surface);border-bottom:1px solid var(--border)}
+#filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{padding:4px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.fchip.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.fchip.fc-normal.active{background:#1565c0;border-color:#1565c0}
+.fchip.fc-noche.active{background:#4a148c;border-color:#4a148c}
+.fchip.fc-finde.active{background:#1b5e20;border-color:#1b5e20}
+.fchip.fc-feriado.active{background:#bf360c;border-color:#bf360c}
+#filter-search{width:100%;box-sizing:border-box;padding:7px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink);font-size:13px;outline:none}
+#filter-search:focus{border-color:var(--primary)}
+#filter-active-info{font-size:11px;color:var(--muted);padding:0 2px 2px;min-height:14px}
+/* ── Disclaimer ── */
+#calc-disclaimer{margin:6px 14px 0;padding:8px 12px;border-radius:8px;background:var(--surface2);border-left:3px solid var(--warn,#f59e0b);font-size:11px;color:var(--muted);line-height:1.4;display:none}
+#calc-disclaimer.show{display:block}
+#calc-disclaimer strong{color:var(--ink)}
+</style>
 </head>
 <body>
 
@@ -537,6 +555,11 @@ input,select,textarea{font-family:inherit;font-size:14px}
 
   <div id="ot-alert">⚠️ <span id="ot-msg"></span></div>
 
+  <!-- Disclaimer estimación orientativa -->
+  <div id="calc-disclaimer">
+    <strong>Estimación orientativa</strong> — El bruto y el neto calculados dependen de las tarifas que has configurado, no de tu contrato firmado ni de tu convenio colectivo. No sustituye la nómina oficial emitida por tu empresa.
+  </div>
+
   <div id="chart-wrap">
     <canvas id="chart-canvas"></canvas>
   </div>
@@ -546,6 +569,19 @@ input,select,textarea{font-family:inherit;font-size:14px}
     <button class="punch-btn in" onclick="punchIn()" data-i18n="punch.in">▶ ENTRAR</button>
     <span class="punch-time" id="punch-time-display"></span>
     <button class="punch-btn out" onclick="punchOut()" data-i18n="punch.out">⏹ SALIR</button>
+  </div>
+
+  <!-- Filter bar -->
+  <div id="filter-bar">
+    <div id="filter-chips">
+      <button class="fchip active" data-type="all" onclick="setTypeFilter('all',this)">Todos</button>
+      <button class="fchip fc-normal" data-type="normal" onclick="setTypeFilter('normal',this)">🏢 Normal</button>
+      <button class="fchip fc-noche" data-type="noche" onclick="setTypeFilter('noche',this)">🌙 Noche</button>
+      <button class="fchip fc-finde" data-type="finde" onclick="setTypeFilter('finde',this)">🌴 Finde</button>
+      <button class="fchip fc-feriado" data-type="feriado" onclick="setTypeFilter('feriado',this)">🎉 Festivo</button>
+    </div>
+    <input type="text" id="filter-search" placeholder="Buscar en notas..." oninput="applyFilters()">
+    <div id="filter-active-info"></div>
   </div>
 
   <div id="entries-wrap" role="main" aria-live="polite" aria-label="Lista de entradas">
@@ -1665,6 +1701,35 @@ let periodMode='semana';
 let periodOffset=0;
 let _curEntries=[];
 let _curStart=null,_curEnd=null;
+let _activeTypeFilter='all';
+
+function setTypeFilter(type,btn){
+  _activeTypeFilter=type;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters(){
+  const search=(document.getElementById('filter-search')||{}).value||'';
+  const q=search.trim().toLowerCase();
+  const type=_activeTypeFilter;
+  const info=document.getElementById('filter-active-info');
+
+  let filtered=[..._curEntries];
+  if(type&&type!=='all') filtered=filtered.filter(e=>e.type===type);
+  if(q) filtered=filtered.filter(e=>(e.notes||'').toLowerCase().includes(q));
+
+  const hasFilter=(type!=='all')||q;
+  if(info){
+    info.textContent=hasFilter?`Mostrando ${filtered.length} de ${_curEntries.length} registros`:'';
+  }
+  renderList(filtered);
+
+  // show disclaimer whenever there are entries with pay
+  const disc=document.getElementById('calc-disclaimer');
+  if(disc) disc.classList.toggle('show', _curEntries.some(e=>!['vacaciones','baja','festivo0'].includes(e.type)));
+}
 
 function loadDB(){
   try{
@@ -1815,6 +1880,10 @@ function setPeriodMode(m){
   document.getElementById('summary-bar').style.display=isStats?'none':'';
   document.getElementById('ot-alert').style.display=isStats?'none':'';
   document.getElementById('punch-bar').classList.toggle('hidden-punch',isStats);
+  const fb=document.getElementById('filter-bar');
+  if(fb) fb.style.display=isStats?'none':'';
+  const disc=document.getElementById('calc-disclaimer');
+  if(disc&&isStats) disc.classList.remove('show');
   if(isStats){ renderStats(); }
   else { renderPeriod(); }
 }
@@ -1833,7 +1902,7 @@ function renderPeriod(){
   if(ecBadge){if(entries.length){ecBadge.textContent=entries.length+' '+t('entries.count');ecBadge.hidden=false;}else{ecBadge.hidden=true;}}
   renderSummary(entries,start,end);
   renderChart(entries,start,end);
-  renderList(entries);
+  applyFilters();
   renderWeekCompare();
   updateTopbarBadge();
   setTimeout(observeEntries,50);
