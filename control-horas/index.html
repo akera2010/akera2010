@@ -3466,6 +3466,483 @@ function _applyAdminConfig(){
 // Apply on load
 document.addEventListener('DOMContentLoaded',_applyAdminConfig);
 setTimeout(_applyAdminConfig,500);
+
+// ══════════════════════════════════════════════════════
+// BOTTOM NAV
+// ══════════════════════════════════════════════════════
+function showBNav(tab){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('bnav-'+tab);
+  if(btn)btn.classList.add('active');
+  if(tab==='freelance'){
+    document.getElementById('scr-freelance').classList.add('open');
+    flRefreshAll();
+  } else {
+    document.getElementById('scr-freelance').classList.remove('open');
+  }
+}
+
+// Activate bottom nav when app screen is active
+(function(){
+  const appScreen=document.getElementById('scr-app');
+  if(!appScreen)return;
+  const activate=()=>{ if(appScreen.classList.contains('active'))document.body.classList.add('app-active'); };
+  activate();
+  new MutationObserver(muts=>{
+    muts.forEach(m=>{
+      if(m.target===appScreen){
+        if(m.target.classList.contains('active'))document.body.classList.add('app-active');
+        else document.body.classList.remove('app-active');
+      }
+    });
+  }).observe(appScreen,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('DOMContentLoaded',activate);
+  setTimeout(activate,500);setTimeout(activate,1500);
+})();
+
+// ══════════════════════════════════════════════════════
+// FREELANCE DATA
+// ══════════════════════════════════════════════════════
+const FL_KEY='ch_fl';
+function _flRaw(){ try{return JSON.parse(localStorage.getItem(FL_KEY)||'{}')}catch(e){return{}} }
+function _flSave(d){ try{localStorage.setItem(FL_KEY,JSON.stringify(d));}catch(e){} }
+function flData(){
+  const d=_flRaw();
+  if(!d.clients)d.clients=[];
+  if(!d.projects)d.projects=[];
+  if(!d.entries)d.entries=[];
+  if(!d.invoices)d.invoices=[];
+  return d;
+}
+function flUid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+const FL_COLORS=['#3f51b5','#e91e63','#009688','#ff5722','#607d8b','#795548','#673ab7','#2196f3','#f44336','#4caf50'];
+function flColor(s){ let h=0;for(let c of String(s))h=(h*31+c.charCodeAt(0))&0xffffffff;return FL_COLORS[Math.abs(h)%FL_COLORS.length]; }
+function flLetter(s){ return String(s).trim().charAt(0).toUpperCase()||'?'; }
+
+// ── TABS ──
+function flTab(tab){
+  document.querySelectorAll('.fl-tab').forEach(b=>b.classList.remove('active'));
+  const tb=document.getElementById('flt-'+tab);if(tb)tb.classList.add('active');
+  document.querySelectorAll('.fl-panel').forEach(p=>p.classList.remove('active'));
+  const tp=document.getElementById('flp-'+tab);if(tp)tp.classList.add('active');
+  if(tab==='resumen')flRenderResumen();
+  if(tab==='clientes')flRenderClients();
+  if(tab==='proyectos')flRenderProjects();
+  if(tab==='facturas')flRenderInvoices();
+}
+function flRefreshAll(){ flRenderResumen();flRenderClients();flRenderProjects();flRenderInvoices(); }
+
+// ── RESUMEN ──
+function flRenderResumen(){
+  const d=flData();
+  const hours=d.entries.reduce((s,e)=>s+(e.hours||0),0);
+  const paid=d.invoices.filter(i=>i.status==='paid').reduce((s,i)=>s+(i.total||0),0);
+  const pend=d.invoices.filter(i=>i.status!=='paid').reduce((s,i)=>s+(i.total||0),0);
+  const actv=d.projects.filter(p=>p.status==='active').length;
+  const fmt=n=>n>=1000?(n/1000).toFixed(1)+'k€':n.toFixed(0)+'€';
+  const $=id=>document.getElementById(id);
+  $('fl-kpi-cobrado').textContent=fmt(paid);
+  $('fl-kpi-pendiente').textContent=fmt(pend);
+  $('fl-kpi-horas').textContent=hours.toFixed(1)+'h';
+  $('fl-kpi-proyectos').textContent=actv;
+  const recent=[...d.entries].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,6);
+  const list=$('fl-recent-list');
+  if(!list)return;
+  if(!recent.length){list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">Sin entradas aún.<br>Regístra tu tiempo en Proyectos.</div>';return;}
+  list.innerHTML=recent.map(e=>{
+    const proj=d.projects.find(p=>p.id===e.projectId);
+    const amt=(e.hours||0)*((proj&&proj.rate)||0);
+    return `<div class="fl-entry-row">
+      <span class="fl-entry-date">${(e.date||'').slice(5)}</span>
+      <span class="fl-entry-h">${e.hours||0}h</span>
+      <span class="fl-entry-note">${proj?proj.name:(e.notes||'—')}</span>
+      <span class="fl-entry-amt">${amt>0?amt.toFixed(0)+'€':''}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── CLIENTS ──
+function flRenderClients(){
+  const d=flData();
+  const el=document.getElementById('fl-clients-list');if(!el)return;
+  if(!d.clients.length){el.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Sin clientes.<br>Pulsa <strong>+</strong> para añadir uno.</div>';return;}
+  el.innerHTML=d.clients.map(c=>{
+    const n=d.projects.filter(p=>p.clientId===c.id).length;
+    return `<div class="fl-card">
+      <div class="fl-card-row">
+        <div class="fl-avatar" style="background:${flColor(c.name)}">${flLetter(c.name)}</div>
+        <div class="fl-card-info">
+          <div class="fl-card-name">${c.name}</div>
+          <div class="fl-card-sub">${c.nif?c.nif+' · ':''} ${n} proyecto${n!==1?'s':''}</div>
+        </div>
+        <div class="fl-card-actions">
+          <button class="fl-ic-btn" onclick="flOpenClient('${c.id}')" title="Editar">✏️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function flOpenClient(id){
+  const d=flData();const c=id?d.clients.find(x=>x.id===id):null;
+  document.getElementById('fl-client-title').textContent=c?'Editar cliente':'Nuevo cliente';
+  document.getElementById('fl-client-id').value=c?c.id:'';
+  document.getElementById('fl-client-name').value=c?c.name:'';
+  document.getElementById('fl-client-nif').value=c?c.nif||'':'';
+  document.getElementById('fl-client-city').value=c?c.city||'':'';
+  document.getElementById('fl-client-email').value=c?c.email||'':'';
+  document.getElementById('fl-client-phone').value=c?c.phone||'':'';
+  document.getElementById('fl-client-del-btn').style.display=c?'':'none';
+  document.getElementById('fl-ov-client').classList.add('open');
+}
+function flSaveClient(){
+  const name=(document.getElementById('fl-client-name').value||'').trim();
+  if(!name){showToast('El nombre es obligatorio');return;}
+  const d=flData();
+  const id=document.getElementById('fl-client-id').value;
+  const obj={id:id||flUid(),name,nif:(document.getElementById('fl-client-nif').value||'').trim(),city:(document.getElementById('fl-client-city').value||'').trim(),email:(document.getElementById('fl-client-email').value||'').trim(),phone:(document.getElementById('fl-client-phone').value||'').trim()};
+  if(id){const i=d.clients.findIndex(c=>c.id===id);if(i>=0)d.clients[i]=obj;else d.clients.push(obj);}
+  else d.clients.push(obj);
+  _flSave(d);flCloseSheet('fl-ov-client');flRenderClients();flRenderResumen();showToast('Cliente guardado ✓');
+}
+function flDeleteClient(){
+  if(!confirm('¿Eliminar este cliente?'))return;
+  const id=document.getElementById('fl-client-id').value;
+  const d=flData();
+  d.clients=d.clients.filter(c=>c.id!==id);
+  d.projects=d.projects.map(p=>p.clientId===id?{...p,clientId:''}:p);
+  _flSave(d);flCloseSheet('fl-ov-client');flRenderClients();showToast('Cliente eliminado');
+}
+
+// ── PROJECTS ──
+const _FL_STATUS={active:'Activo',paused:'Pausado',done:'Completado'};
+function flRenderProjects(){
+  const d=flData();
+  const el=document.getElementById('fl-projects-list');if(!el)return;
+  if(!d.projects.length){el.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Sin proyectos.<br>Pulsa <strong>+</strong> para crear uno.</div>';return;}
+  el.innerHTML=d.projects.map(p=>{
+    const cli=d.clients.find(c=>c.id===p.clientId);
+    const ents=d.entries.filter(e=>e.projectId===p.id);
+    const h=ents.reduce((s,e)=>s+(e.hours||0),0);
+    const earned=h*(p.rate||0);
+    const st=p.status||'active';
+    return `<div class="fl-card">
+      <div class="fl-card-row" onclick="flOpenProjectDetail('${p.id}')">
+        <div class="fl-avatar" style="background:${flColor(p.name)}">${flLetter(p.name)}</div>
+        <div class="fl-card-info">
+          <div class="fl-card-name">${p.name}</div>
+          <div class="fl-card-sub">${cli?'👤 '+cli.name+' · ':''} ${h.toFixed(1)}h${p.rate&&earned?' · '+earned.toFixed(0)+'€':''}</div>
+        </div>
+        <div class="fl-card-actions" onclick="event.stopPropagation()">
+          <span class="fl-badge ${st}">${_FL_STATUS[st]||st}</span>
+          <button class="fl-ic-btn" onclick="flOpenProject('${p.id}')" title="Editar">✏️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function flOpenProject(id){
+  const d=flData();const p=id?d.projects.find(x=>x.id===id):null;
+  document.getElementById('fl-project-title').textContent=p?'Editar proyecto':'Nuevo proyecto';
+  document.getElementById('fl-project-id').value=p?p.id:'';
+  document.getElementById('fl-project-name').value=p?p.name:'';
+  document.getElementById('fl-project-desc').value=p?p.desc||'':'';
+  document.getElementById('fl-project-rate').value=p?p.rate||'':'';
+  document.getElementById('fl-project-status').value=p?p.status||'active':'active';
+  document.getElementById('fl-project-start').value=p?p.startDate||'':new Date().toISOString().slice(0,10);
+  document.getElementById('fl-project-del-btn').style.display=p?'':'none';
+  const sel=document.getElementById('fl-project-client');
+  sel.innerHTML='<option value="">Sin cliente</option>'+d.clients.map(c=>`<option value="${c.id}"${p&&p.clientId===c.id?' selected':''}>${c.name}</option>`).join('');
+  document.getElementById('fl-ov-project').classList.add('open');
+}
+function flSaveProject(){
+  const name=(document.getElementById('fl-project-name').value||'').trim();
+  if(!name){showToast('El nombre es obligatorio');return;}
+  const d=flData();
+  const id=document.getElementById('fl-project-id').value;
+  const obj={id:id||flUid(),name,clientId:document.getElementById('fl-project-client').value,desc:(document.getElementById('fl-project-desc').value||'').trim(),rate:parseFloat(document.getElementById('fl-project-rate').value)||0,status:document.getElementById('fl-project-status').value,startDate:document.getElementById('fl-project-start').value};
+  if(id){const i=d.projects.findIndex(p=>p.id===id);if(i>=0)d.projects[i]=obj;else d.projects.push(obj);}
+  else d.projects.push(obj);
+  _flSave(d);flCloseSheet('fl-ov-project');flRenderProjects();showToast('Proyecto guardado ✓');
+}
+function flDeleteProject(){
+  if(!confirm('¿Eliminar este proyecto y sus entradas?'))return;
+  const id=document.getElementById('fl-project-id').value;
+  const d=flData();
+  d.projects=d.projects.filter(p=>p.id!==id);
+  d.entries=d.entries.filter(e=>e.projectId!==id);
+  _flSave(d);flCloseSheet('fl-ov-project');flRenderProjects();showToast('Proyecto eliminado');
+}
+
+// ── PROJECT DETAIL ──
+function flOpenProjectDetail(pid){
+  const d=flData();
+  const p=d.projects.find(x=>x.id===pid);if(!p)return;
+  const cli=d.clients.find(c=>c.id===p.clientId);
+  const ents=d.entries.filter(e=>e.projectId===pid).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const h=ents.reduce((s,e)=>s+(e.hours||0),0);
+  const earned=h*(p.rate||0);
+  const st=p.status||'active';
+  document.getElementById('fl-pd-name').textContent=p.name;
+  document.getElementById('fl-pd-meta').innerHTML=`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">${cli?'👤 '+cli.name+' · ':''}<span class="fl-badge ${st}">${_FL_STATUS[st]||st}</span>${p.rate?' · '+p.rate+'€/h':''}</div>`;
+  document.getElementById('fl-pd-progress').style.width=Math.min(100,h/40*100)+'%';
+  document.getElementById('fl-pd-stats').innerHTML=`<span>⏱ <strong>${h.toFixed(1)}h</strong></span><span>💰 <strong>${earned.toFixed(0)}€</strong></span><span>📋 <strong>${ents.length}</strong> entradas</span>`;
+  document.getElementById('fl-te-project-id').value=pid;
+  document.getElementById('fl-te-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('fl-te-hours').value='1';
+  document.getElementById('fl-te-notes').value='';
+  document.getElementById('fl-pd-entries').innerHTML=ents.length?ents.map(e=>{
+    const a=(e.hours||0)*(p.rate||0);
+    return `<div class="fl-entry-row">
+      <span class="fl-entry-date">${e.date||''}</span>
+      <span class="fl-entry-h">${e.hours||0}h</span>
+      <span class="fl-entry-note">${e.notes||'—'}</span>
+      <span class="fl-entry-amt">${a>0?a.toFixed(0)+'€':''}</span>
+      <button class="fl-entry-del" onclick="flDelTimeEntry('${e.id}','${pid}')" title="Eliminar">🗑</button>
+    </div>`;
+  }).join(''):'<div style="color:var(--muted);font-size:13px;padding:12px 0">Sin entradas registradas.</div>';
+  document.getElementById('fl-ov-proj-detail').classList.add('open');
+}
+function flSaveTimeEntry(){
+  const pid=document.getElementById('fl-te-project-id').value;
+  const h=parseFloat(document.getElementById('fl-te-hours').value);
+  if(!pid||isNaN(h)||h<=0){showToast('Indica las horas');return;}
+  const d=flData();
+  d.entries.push({id:flUid(),projectId:pid,date:document.getElementById('fl-te-date').value,hours:h,notes:(document.getElementById('fl-te-notes').value||'').trim()});
+  _flSave(d);flOpenProjectDetail(pid);flRenderResumen();showToast('Tiempo registrado ✓');
+}
+function flDelTimeEntry(eid,pid){
+  if(!confirm('¿Eliminar esta entrada?'))return;
+  const d=flData();d.entries=d.entries.filter(e=>e.id!==eid);
+  _flSave(d);flOpenProjectDetail(pid);flRenderResumen();
+}
+
+// ── INVOICES ──
+function flRenderInvoices(){
+  const d=flData();
+  const el=document.getElementById('fl-invoices-list');if(!el)return;
+  if(!d.invoices.length){el.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Sin facturas.<br>Pulsa <strong>+</strong> para generar una.</div>';return;}
+  const sorted=[...d.invoices].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const SL={pending:'Pendiente',sent:'Enviada',paid:'Cobrada'};
+  el.innerHTML=sorted.map(inv=>{
+    const cli=d.clients.find(c=>c.id===inv.clientId);
+    const st=inv.status||'pending';
+    return `<div class="fl-inv-card" onclick="flOpenInvoiceById('${inv.id}')">
+      <div class="fl-inv-header">
+        <div>
+          <div class="fl-inv-num">${inv.num||''}</div>
+          <div class="fl-inv-client">${cli?cli.name:'Sin cliente'}</div>
+        </div>
+        <div>
+          <div class="fl-inv-amount">${(inv.total||0).toFixed(0)}€</div>
+          <div style="text-align:right;margin-top:4px"><span class="fl-inv-status ${st}">${SL[st]||st}</span></div>
+        </div>
+      </div>
+      <div class="fl-inv-meta"><span>📅 ${inv.date||''}</span><span>Base: ${(inv.base||0).toFixed(0)}€ · IVA ${inv.tax||21}%</span></div>
+    </div>`;
+  }).join('');
+}
+function flOpenInvoice(){
+  const d=flData();
+  document.getElementById('fl-inv-id').value='';
+  document.getElementById('fl-inv-num').value='FAC-'+new Date().getFullYear()+'-'+String((d.invoices.length||0)+1).padStart(3,'0');
+  document.getElementById('fl-inv-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('fl-inv-tax').value='21';
+  document.getElementById('fl-inv-status').value='pending';
+  document.getElementById('fl-inv-concept').value='Servicios profesionales';
+  document.getElementById('fl-inv-preview').textContent='Selecciona cliente y proyecto para previsualizar';
+  const sel=document.getElementById('fl-inv-client');
+  sel.innerHTML='<option value="">Seleccionar cliente...</option>'+d.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('fl-inv-project').innerHTML='<option value="">Todos los proyectos</option>';
+  document.getElementById('fl-ov-invoice').classList.add('open');
+}
+function flOpenInvoiceById(id){
+  flOpenInvoice();
+  const d=flData();const inv=d.invoices.find(i=>i.id===id);if(!inv)return;
+  document.getElementById('fl-inv-id').value=inv.id;
+  document.getElementById('fl-inv-num').value=inv.num||'';
+  document.getElementById('fl-inv-date').value=inv.date||'';
+  document.getElementById('fl-inv-tax').value=inv.tax||21;
+  document.getElementById('fl-inv-status').value=inv.status||'pending';
+  document.getElementById('fl-inv-concept').value=inv.concept||'';
+  document.getElementById('fl-inv-client').value=inv.clientId||'';
+  flUpdateInvProjects();
+  setTimeout(()=>{ document.getElementById('fl-inv-project').value=inv.projectId||'';flPreviewInvoice(); },60);
+}
+function flUpdateInvProjects(){
+  const cid=document.getElementById('fl-inv-client').value;
+  const d=flData();
+  const projs=cid?d.projects.filter(p=>p.clientId===cid):d.projects;
+  document.getElementById('fl-inv-project').innerHTML='<option value="">Todos los proyectos</option>'+projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  flPreviewInvoice();
+}
+function flPreviewInvoice(){
+  const cid=document.getElementById('fl-inv-client').value;
+  const pid=document.getElementById('fl-inv-project').value;
+  const tax=parseFloat(document.getElementById('fl-inv-tax').value)||21;
+  const concept=(document.getElementById('fl-inv-concept').value||'Servicios profesionales').trim();
+  const d=flData();
+  const cli=d.clients.find(c=>c.id===cid);
+  if(!cli){document.getElementById('fl-inv-preview').textContent='Selecciona un cliente para previsualizar';return null;}
+  const projs=pid?d.projects.filter(p=>p.id===pid):(cid?d.projects.filter(p=>p.clientId===cid):d.projects);
+  let lines=[];let base=0;
+  projs.forEach(p=>{
+    const es=d.entries.filter(e=>e.projectId===p.id);
+    const h=es.reduce((s,e)=>s+(e.hours||0),0);
+    const a=h*(p.rate||0);
+    base+=a;
+    if(h>0)lines.push(`  ${p.name}: ${h.toFixed(1)}h × ${p.rate||0}€/h = ${a.toFixed(2)}€`);
+  });
+  const iva=base*tax/100;const total=base+iva;
+  document.getElementById('fl-inv-preview').textContent=`FACTURA — ${cli.name}${cli.nif?' ('+cli.nif+')':''}\nConcepto: ${concept}\n\nDetalle:\n${lines.join('\n')||'  Sin entradas de tiempo registradas'}\n\n${'─'.repeat(36)}\nBase imponible:    ${base.toFixed(2)} €\nIVA (${tax}%):         ${iva.toFixed(2)} €\n${'─'.repeat(36)}\nTOTAL:             ${total.toFixed(2)} €`;
+  return {base,iva,total,cli,concept};
+}
+function flSaveInvoice(){
+  const cid=document.getElementById('fl-inv-client').value;
+  if(!cid){showToast('Selecciona un cliente');return;}
+  const preview=flPreviewInvoice();
+  const d=flData();
+  const inv={id:document.getElementById('fl-inv-id').value||flUid(),num:document.getElementById('fl-inv-num').value,date:document.getElementById('fl-inv-date').value,clientId:cid,projectId:document.getElementById('fl-inv-project').value||'',concept:document.getElementById('fl-inv-concept').value,tax:parseFloat(document.getElementById('fl-inv-tax').value)||21,base:preview?preview.base:0,iva:preview?preview.iva:0,total:preview?preview.total:0,status:document.getElementById('fl-inv-status').value};
+  const idx=d.invoices.findIndex(i=>i.id===inv.id);
+  if(idx>=0)d.invoices[idx]=inv;else d.invoices.push(inv);
+  _flSave(d);flCloseSheet('fl-ov-invoice');flRenderInvoices();flRenderResumen();showToast('Factura guardada ✓');
+}
+function flPrintInvoice(){
+  const preview=document.getElementById('fl-inv-preview').textContent;
+  const w=window.open('','_blank','width=600,height=700');
+  if(!w){showToast('Permite ventanas emergentes para imprimir');return;}
+  w.document.write(`<!DOCTYPE html><html><head><title>Factura ControlHoras</title><style>body{font-family:monospace;padding:40px;white-space:pre-wrap;font-size:14px;line-height:1.7;color:#222}h1{font-size:18px;margin-bottom:24px;font-family:sans-serif;color:#3f51b5;border-bottom:2px solid #3f51b5;padding-bottom:8px}@media print{body{padding:20px}}</style></head><body><h1>ControlHoras — Factura</h1><pre>${preview.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></body></html>`);
+  w.document.close();setTimeout(()=>w.print(),300);
+}
+
+// ── SHEET HELPERS ──
+function flCloseSheet(id,evt){
+  if(evt&&evt.target!==document.getElementById(id))return;
+  const el=document.getElementById(id);if(el)el.classList.remove('open');
+}
 </script>
+
+<!-- ══════════ FREELANCE SECTION HTML ══════════ -->
+<div id="scr-freelance">
+  <div class="fl-topbar">
+    <h2>💼 Freelance &amp; Proyectos</h2>
+    <div class="fl-tabs">
+      <button class="fl-tab active" id="flt-resumen" onclick="flTab('resumen')">Resumen</button>
+      <button class="fl-tab" id="flt-clientes" onclick="flTab('clientes')">Clientes</button>
+      <button class="fl-tab" id="flt-proyectos" onclick="flTab('proyectos')">Proyectos</button>
+      <button class="fl-tab" id="flt-facturas" onclick="flTab('facturas')">Facturas</button>
+    </div>
+  </div>
+  <div class="fl-body">
+    <div class="fl-panel active" id="flp-resumen">
+      <div class="fl-kpis">
+        <div class="fl-kpi ok"><div class="fkv" id="fl-kpi-cobrado">0€</div><div class="fkl">Cobrado</div></div>
+        <div class="fl-kpi warn"><div class="fkv" id="fl-kpi-pendiente">0€</div><div class="fkl">Pendiente</div></div>
+        <div class="fl-kpi"><div class="fkv" id="fl-kpi-horas">0h</div><div class="fkl">Horas totales</div></div>
+        <div class="fl-kpi accent"><div class="fkv" id="fl-kpi-proyectos">0</div><div class="fkl">Proyectos activos</div></div>
+      </div>
+      <div class="fl-sec-header"><span class="fl-sec-title">Últimas entradas</span></div>
+      <div id="fl-recent-list"></div>
+    </div>
+    <div class="fl-panel" id="flp-clientes">
+      <button class="fl-add-btn" onclick="flOpenClient(null)">+ Nuevo cliente</button>
+      <div id="fl-clients-list"></div>
+    </div>
+    <div class="fl-panel" id="flp-proyectos">
+      <button class="fl-add-btn" onclick="flOpenProject(null)">+ Nuevo proyecto</button>
+      <div id="fl-projects-list"></div>
+    </div>
+    <div class="fl-panel" id="flp-facturas">
+      <button class="fl-add-btn" onclick="flOpenInvoice()">+ Nueva factura</button>
+      <div id="fl-invoices-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Client form -->
+<div class="fl-sheet-overlay" id="fl-ov-client" onclick="flCloseSheet('fl-ov-client',event)">
+  <div class="fl-sheet">
+    <h3 id="fl-client-title">Nuevo cliente</h3>
+    <input type="hidden" id="fl-client-id">
+    <div class="fl-field"><label>Nombre *</label><input type="text" id="fl-client-name" placeholder="Empresa S.L."></div>
+    <div class="fl-row2">
+      <div class="fl-field"><label>NIF / CIF</label><input type="text" id="fl-client-nif" placeholder="B12345678"></div>
+      <div class="fl-field"><label>Ciudad</label><input type="text" id="fl-client-city" placeholder="Madrid"></div>
+    </div>
+    <div class="fl-field"><label>Email</label><input type="email" id="fl-client-email" placeholder="cliente@email.com"></div>
+    <div class="fl-field"><label>Teléfono</label><input type="tel" id="fl-client-phone" placeholder="+34 600 000 000"></div>
+    <div class="fl-btn-row">
+      <button class="fl-btn primary" onclick="flSaveClient()">Guardar</button>
+      <button class="fl-btn danger" id="fl-client-del-btn" style="display:none" onclick="flDeleteClient()">Eliminar</button>
+      <button class="fl-btn secondary" onclick="flCloseSheet('fl-ov-client')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project form -->
+<div class="fl-sheet-overlay" id="fl-ov-project" onclick="flCloseSheet('fl-ov-project',event)">
+  <div class="fl-sheet">
+    <h3 id="fl-project-title">Nuevo proyecto</h3>
+    <input type="hidden" id="fl-project-id">
+    <div class="fl-field"><label>Nombre *</label><input type="text" id="fl-project-name" placeholder="Diseño web corporativo"></div>
+    <div class="fl-field"><label>Cliente</label><select id="fl-project-client"><option value="">Sin cliente</option></select></div>
+    <div class="fl-field"><label>Descripción</label><input type="text" id="fl-project-desc" placeholder="Breve descripción..."></div>
+    <div class="fl-row2">
+      <div class="fl-field"><label>Tarifa/hora (€)</label><input type="number" id="fl-project-rate" min="0" step="0.01" placeholder="50.00"></div>
+      <div class="fl-field"><label>Estado</label><select id="fl-project-status"><option value="active">Activo</option><option value="paused">Pausado</option><option value="done">Completado</option></select></div>
+    </div>
+    <div class="fl-field"><label>Fecha inicio</label><input type="date" id="fl-project-start"></div>
+    <div class="fl-btn-row">
+      <button class="fl-btn primary" onclick="flSaveProject()">Guardar</button>
+      <button class="fl-btn danger" id="fl-project-del-btn" style="display:none" onclick="flDeleteProject()">Eliminar</button>
+      <button class="fl-btn secondary" onclick="flCloseSheet('fl-ov-project')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project detail + time entry -->
+<div class="fl-sheet-overlay" id="fl-ov-proj-detail" onclick="flCloseSheet('fl-ov-proj-detail',event)">
+  <div class="fl-sheet">
+    <h3 id="fl-pd-name">Proyecto</h3>
+    <div id="fl-pd-meta"></div>
+    <div class="fl-progress-bar"><div class="fl-progress-fill" id="fl-pd-progress" style="width:0%"></div></div>
+    <div id="fl-pd-stats" style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap"></div>
+    <div class="fl-sec-header" style="margin-bottom:8px"><span class="fl-sec-title">Registrar tiempo</span></div>
+    <div class="fl-row2">
+      <div class="fl-field"><label>Fecha</label><input type="date" id="fl-te-date"></div>
+      <div class="fl-field"><label>Horas</label><input type="number" id="fl-te-hours" min="0.25" max="24" step="0.25" value="1"></div>
+    </div>
+    <div class="fl-field"><label>Notas</label><input type="text" id="fl-te-notes" placeholder="Tarea realizada..."></div>
+    <input type="hidden" id="fl-te-project-id">
+    <button class="fl-btn primary" style="width:100%;margin-bottom:16px" onclick="flSaveTimeEntry()">+ Añadir entrada</button>
+    <div class="fl-sec-header"><span class="fl-sec-title">Historial</span></div>
+    <div id="fl-pd-entries"></div>
+  </div>
+</div>
+
+<!-- Invoice form -->
+<div class="fl-sheet-overlay" id="fl-ov-invoice" onclick="flCloseSheet('fl-ov-invoice',event)">
+  <div class="fl-sheet">
+    <h3>Factura</h3>
+    <input type="hidden" id="fl-inv-id">
+    <div class="fl-row2">
+      <div class="fl-field"><label>Número</label><input type="text" id="fl-inv-num" placeholder="FAC-2026-001"></div>
+      <div class="fl-field"><label>Fecha</label><input type="date" id="fl-inv-date"></div>
+    </div>
+    <div class="fl-field"><label>Cliente *</label><select id="fl-inv-client" onchange="flUpdateInvProjects()"><option value="">Seleccionar...</option></select></div>
+    <div class="fl-field"><label>Proyecto</label><select id="fl-inv-project" onchange="flPreviewInvoice()"><option value="">Todos los proyectos</option></select></div>
+    <div class="fl-row2">
+      <div class="fl-field"><label>IVA (%)</label><input type="number" id="fl-inv-tax" value="21" min="0" max="100" oninput="flPreviewInvoice()"></div>
+      <div class="fl-field"><label>Estado</label><select id="fl-inv-status"><option value="pending">Pendiente</option><option value="sent">Enviada</option><option value="paid">Cobrada</option></select></div>
+    </div>
+    <div class="fl-field"><label>Concepto</label><input type="text" id="fl-inv-concept" placeholder="Servicios profesionales" oninput="flPreviewInvoice()"></div>
+    <div id="fl-inv-preview"></div>
+    <div class="fl-btn-row">
+      <button class="fl-btn primary" onclick="flSaveInvoice()">Guardar</button>
+      <button class="fl-btn secondary" onclick="flPrintInvoice()">🖨 Imprimir</button>
+      <button class="fl-btn secondary" onclick="flCloseSheet('fl-ov-invoice')">Cancelar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
