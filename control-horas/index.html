@@ -71,7 +71,10 @@ input,select,textarea{font-family:inherit;font-size:14px}
 /* ═══════════ APP SHELL ═══════════ */
 #scr-app{flex-direction:column}
 #topbar{background:var(--primary);color:#fff;display:flex;align-items:center;gap:8px;padding:0 12px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-#topbar h1{font-size:17px;font-weight:800;flex:1}
+#topbar h1{font-size:17px;font-weight:800;margin-right:4px}
+#live-clock{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;flex:1;min-width:0}
+#live-clock .lc-time{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap}
+#live-clock .lc-date{font-size:10px;font-weight:500;opacity:.8;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:160px}
 .icon-btn{background:none;border:none;color:inherit;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
 .icon-btn:hover{background:rgba(255,255,255,.18)}
 
@@ -249,6 +252,7 @@ input,select,textarea{font-family:inherit;font-size:14px}
 
   <div id="topbar">
     <h1>⏱ ControlHoras</h1>
+    <div id="live-clock"><span class="lc-time" id="lc-t"></span><span class="lc-date" id="lc-d"></span></div>
     <select id="lang-sel" onchange="setLang(this.value)" title="Idioma / Language">
       <option value="es">🇪🇸 ES</option>
       <option value="en">🇬🇧 EN</option>
@@ -1290,6 +1294,14 @@ function setupScrollFloat(){
 loadDB();
 // restore lang
 try{const l=localStorage.getItem('ch_lang');if(l&&LANG[l]){curLang=l;const sel=document.getElementById('lang-sel');if(sel)sel.value=l;setLang(l);}}catch(e){}
+// live clock
+(function tickClock(){
+  const now=new Date();
+  const tEl=document.getElementById('lc-t'),dEl=document.getElementById('lc-d');
+  if(tEl)tEl.textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  if(dEl)dEl.textContent=now.toLocaleDateString([],{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  setTimeout(tickClock,1000);
+})();
 </script>
 </body>
 </html>
