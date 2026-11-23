@@ -9,6 +9,15 @@ Este repositorio es el cerebro central sincronizado entre:
 Vault Obsidian: `~/.claude/obsidian/`
 Repo GitHub: `akera2010/akera2010`
 
+## Especificaciones del Mac (dispositivo principal)
+- **Modelo**: MacBook Pro Retina 13 pulgadas, principios de 2015
+- **Procesador**: 3,1 GHz Intel Core i7 de doble núcleo — CHIP INTEL (no Apple Silicon)
+- **Memoria RAM**: 16 GB 1867 MHz DDR3
+- **Gráficos**: Intel Iris Graphics 6100, 1536 MB
+- **macOS**: Monterey 12.7.6
+- **Número de serie**: C02RW3TMFVH6
+- **Compilación APK**: usar Android Studio para Intel Mac o Cordova con JDK 17
+
 ## Al inicio de cada sesión (OBLIGATORIO)
 1. `cd /home/user/akera2010 && git pull origin HEAD --quiet` — sincronizar últimos cambios
 2. Revisar `~/.claude/obsidian/04-Inbox/` — notas pendientes del móvil o Toshiba
