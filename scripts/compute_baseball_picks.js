@@ -3,7 +3,7 @@
 const fs = require('fs');
 
 const PRM = {
-  VERSION: '1.1', N: 50000, UMBRAL: 0.63, TOP: 8,
+  VERSION: '1.1', N: 50000, UMBRAL: 0.60, TOP: 8,
   MIN_P: 5, MIN_ODDS: 1.10,
   LG_AVG: { mlb: 4.5, 'ven.1': 4.2, 'mex.1': 4.3, 'dom.1': 4.4 },
 };
