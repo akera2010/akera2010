@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FútbolIQ · Sandra Blanco v4.0</title>
+<title>FutbolIQ</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -134,8 +134,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
     <div class="logo">
       <div class="logo-icon">⚽</div>
       <div class="logo-text">
-        <h1>Fútbol<span style="color:#c00000">IQ</span></h1>
-        <span class="sub-brand">Por Data Science Sandra Blanco</span>
+        <h1><span style="color:#102747">Futbol</span><span style="color:#c00000">IQ</span></h1>
+        <span class="sub-brand">Sandra Blanco</span>
         <span class="sub-algo">Análisis Bayesiano · Dixon-Coles · ELO · Monte Carlo 100K</span>
       </div>
     </div>
@@ -318,8 +318,8 @@ function pscore(mkt,R){
   return mkt.p+0.05*stab+0.03*rel+ob;
 }
 function impliedOdds(p){return p<=0||p>=1?1.01:Math.round((1/p)*0.95*100)/100;}
-function allMkts(R){
-  const mc=R.mc;
+function allMkts(R,minOdds){
+  const mc=R.mc,mo=minOdds??PRM.MIN_ODDS;
   return[
     {code:'1',label:'Victoria Local',p:mc.p1},
     {code:'X',label:'Empate',p:mc.pX},
@@ -332,11 +332,11 @@ function allMkts(R){
     {code:'g35p',label:'Más 3.5 Goles',p:mc['G+3.5']},
     {code:'g35m',label:'Menos 3.5 Goles',p:mc['G-3.5']},
     {code:'g05m',label:'Sin Goles',p:mc['G-0.5']},
-  ].map(m=>({...m,odds:impliedOdds(m.p)})).filter(m=>m.p>0.01&&m.p<0.99&&m.odds>=PRM.MIN_ODDS);
+  ].map(m=>({...m,odds:impliedOdds(m.p)})).filter(m=>m.p>0.01&&m.p<0.99&&m.odds>=mo);
 }
 
 /* ===== STATZ AI DATA (actualizado: dinámico) ===== */
-const STATZ_UPDATED='2026-11-23';
+const STATZ_UPDATED='2026-11-24';
 // Cache y fixtures son mutables — fetchStatzData() los sobreescribe con datos del día
 const STATZ_CACHE={
   // Fallback 2026-11-22
@@ -382,6 +382,13 @@ async function fetchStatzData(){
     if(Array.isArray(d.fixtures)&&d.fixtures.length){
       STATZ_FIXTURES.length=0;
       STATZ_FIXTURES.push(...d.fixtures);
+      // Puente: statz_data.json usa claves ASCII sin separador (ej "galatasarayvilla")
+      // pero el app busca con statzKey (ej "galatasaray|villa"). Indexar ambos formatos.
+      if(d.cache){d.fixtures.forEach(f=>{
+        const rawK=(f.home+f.away).toLowerCase().replace(/[^a-z0-9]/g,'');
+        const appK=statzKey(f.home,f.away);
+        if(d.cache[rawK]&&!STATZ_CACHE[appK])STATZ_CACHE[appK]=d.cache[rawK];
+      });}
     }
     if(Array.isArray(d.picks)&&d.picks.length&&d.updated===todayMadrid()){
       STATE.bakedPicks=d.picks;
@@ -425,10 +432,11 @@ function computePicksFromStatz(){
     mc['G-1.5']=1-mc['G+1.5'];mc['G-2.5']=1-mc['G+2.5'];
     const tot=mc.p1+mc.pX+mc.p2;if(tot>0){mc.p1/=tot;mc.pX/=tot;mc.p2/=tot;}
     const R={mc,lh,la,ppgH:1.5,ppgA:1.0,hH:[],hA:[]};
-    const mkts=allMkts(R);mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
+    // Para partidos Statz sin historial ESPN: sin restricción MIN_ODDS y umbral 0.65
+    const mkts=allMkts(R,1.01);mkts.sort((a,b)=>pscore(b,R)-pscore(a,R));
     if(!mkts.length)continue;
     const best=mkts[0];const sc=pscore(best,R);
-    if(sc<PRM.UMBRAL)continue;
+    if(sc<0.65)continue;
     results.push({...g,R,markets:mkts,bestMkt:best,score:sc,dataQ:0,statz:true});
   }
   results.sort((a,b)=>b.score-a.score);
@@ -456,6 +464,9 @@ const LEAGUES=[
   {id:'esp.2',name:'Segunda Div',flag:'🇪🇸'},{id:'ita.2',name:'Serie B',flag:'🇮🇹'},
   {id:'fra.2',name:'Ligue 2',flag:'🇫🇷'},{id:'cze.1',name:'Czech Liga',flag:'🇨🇿'},
   {id:'pol.1',name:'Ekstraklasa',flag:'🇵🇱'},{id:'rou.1',name:'Liga 1',flag:'🇷🇴'},
+  {id:'UEFA.Champions',name:'Champions League',flag:'🏆'},
+  {id:'UEFA.Europa',name:'Europa League',flag:'🏆'},
+  {id:'UEFA.ConfLeague',name:'Conference League',flag:'🏆'},
 ];
 async function fetchT(url,ms=8000){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);

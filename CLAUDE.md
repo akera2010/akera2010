@@ -65,5 +65,12 @@ Toda entrega de app para tienda debe incluir en el ZIP:
 - Grabar cada instrucción repetida y aplicarla desde la primera vez
 - El propietario aporta el 60% del trabajo — aprovechar lo que ya existe
 
+### 🔴 REGLAS DE IDENTIDAD — IRROMPIBLES
+- JAMÁS mostrar versión en ningún lugar de la app/landing (título, logo, pie) salvo que el propietario lo pida explícitamente
+- JAMÁS mencionar IAs, terceros (ESPN, Statz, etc.) ni tecnologías en la interfaz visible al usuario
+- JAMÁS fabricar ni inventar — solo ejecutar con los archivos y datos reales existentes
+- FutbolIQ: colores fijos SIEMPRE — "Futbol" = `#102747` (azul oscuro), "IQ" = `#c00000` (rojo)
+- El nombre de la app es SIEMPRE "FutbolIQ" — sin version, sin subtítulos técnicos
+
 ## Proyectos activos
 Ver `~/.claude/obsidian/03-Proyectos/` para lista actualizada.
