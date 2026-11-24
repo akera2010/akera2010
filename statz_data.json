@@ -1,29 +1,231 @@
 {
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "fixtures": [
-    {"home":"Başakşehir","away":"Çorum FK","time":"2026-11-23T17:00:00+00:00","league":"Süper Lig","flag":"🇹🇷"},
-    {"home":"Brøndby IF","away":"Midtjylland","time":"2026-11-23T18:00:00+00:00","league":"Superliga","flag":"🇩🇰"},
-    {"home":"Hammarby","away":"IFK Göteborg","time":"2026-11-23T18:00:00+00:00","league":"Allsvenskan","flag":"🇸🇪"},
-    {"home":"Monza","away":"Fiorentina","time":"2026-11-23T19:45:00+00:00","league":"Serie A","flag":"🇮🇹"},
-    {"home":"Brentford","away":"Everton","time":"2026-11-23T20:00:00+00:00","league":"Premier League","flag":"🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
-    {"home":"Levante","away":"Elche","time":"2026-11-23T20:00:00+00:00","league":"La Liga","flag":"🇪🇸"},
-    {"home":"Internacional","away":"Vitória","time":"2026-11-23T22:30:00+00:00","league":"Brasileiro","flag":"🇧🇷"},
-    {"home":"Botafogo","away":"São Paulo","time":"2026-11-23T23:00:00+00:00","league":"Brasileiro","flag":"🇧🇷"},
-    {"home":"Real Madrid","away":"PSV","time":"2026-11-24T20:00:00+00:00","league":"Champions League","flag":"🏆"},
-    {"home":"Galatasaray","away":"Aston Villa","time":"2026-11-24T17:45:00+00:00","league":"Champions League","flag":"🏆"},
-    {"home":"Bodø / Glimt","away":"LASK Linz","time":"2026-11-24T17:45:00+00:00","league":"Champions League","flag":"🏆"}
+    {
+      "home": "Galatasaray",
+      "away": "Villa",
+      "time": "2026-11-24T17:45:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Bodø / Glimt",
+      "away": "LASK Linz",
+      "time": "2026-11-24T17:45:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Real Madrid",
+      "away": "PSV",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "RB Leipzig",
+      "away": "Lens",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Man City",
+      "away": "Napoli",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Arsenal",
+      "away": "Dortmund",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Feyenoord",
+      "away": "Porto",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Como",
+      "away": "AEK Athens",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Slovan",
+      "away": "Betis",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Rangers",
+      "away": "Aberdeen",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Scottish Premiership",
+      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+    },
+    {
+      "home": "Wolves",
+      "away": "Derby",
+      "time": "2026-11-24T20:00:00+00:00",
+      "league": "Championship",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+    },
+    {
+      "home": "Chapecoense",
+      "away": "Palmeiras",
+      "time": "2026-11-24T21:00:00+00:00",
+      "league": "Brasileiro",
+      "flag": "🇧🇷"
+    },
+    {
+      "home": "Slavia Praha",
+      "away": "Villarreal",
+      "time": "2026-11-25T17:45:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    },
+    {
+      "home": "Sabah",
+      "away": "Barcelona",
+      "time": "2026-11-25T17:45:00+00:00",
+      "league": "Champions League",
+      "flag": "🏆"
+    }
   ],
   "cache": {
-    "baakehirorumfk":    {"winH":0.5326,"winA":0.2376,"btts":0.56,"goals2p":0.74,"goals3p":0.44,"xGH":1.9504,"xGA":1.2471},
-    "brndbyifmidtjylland": {"winH":0.3794,"winA":0.3649,"btts":0.65,"goals2p":0.72,"goals3p":0.42,"xGH":1.5013,"xGA":1.4684},
-    "hammarbyifkgteborg": {"winH":0.7276,"winA":0.0996,"btts":0.42,"goals2p":0.80,"goals3p":0.55,"xGH":2.3973,"xGA":0.783},
-    "monzafiorentina":   {"winH":0.2965,"winA":0.4603,"btts":0.63,"goals2p":0.78,"goals3p":0.48,"xGH":1.4285,"xGA":1.8165},
-    "brentfordeverton":  {"winH":0.4765,"winA":0.2660,"btts":0.60,"goals2p":0.75,"goals3p":0.44,"xGH":1.6255,"xGA":1.1584},
-    "levanteelche":      {"winH":0.4499,"winA":0.2828,"btts":0.57,"goals2p":0.72,"goals3p":0.41,"xGH":1.5678,"xGA":1.1992},
-    "internacionalvitria": {"winH":0.5628,"winA":0.1737,"btts":0.47,"goals2p":0.68,"goals3p":0.37,"xGH":1.6806,"xGA":0.8363},
-    "botafogosopaulo":   {"winH":0.4104,"winA":0.2955,"btts":0.59,"goals2p":0.68,"goals3p":0.36,"xGH":1.3626,"xGA":1.1215},
-    "realmadridpsv":     {"winH":0.7565,"winA":0.1015,"btts":0.44,"goals2p":0.91,"goals3p":0.72,"xGH":2.9874,"xGA":1.0688},
-    "galatasarayastonvilla": {"winH":0.3915,"winA":0.3657,"btts":0.66,"goals2p":0.81,"goals3p":0.52,"xGH":1.6501,"xGA":1.5893},
-    "bodglimtlasklinz":  {"winH":0.6121,"winA":0.1870,"btts":0.55,"goals2p":0.86,"goals3p":0.60,"xGH":2.3023,"xGA":1.2187}
+    "galatasarayvilla": {
+      "winH": 0.3915,
+      "winA": 0.3657,
+      "btts": 0.64,
+      "goals2p": 0.83,
+      "goals3p": 0.63,
+      "xGH": 1.6501,
+      "xGA": 1.5893
+    },
+    "bodglimtlasklinz": {
+      "winH": 0.6121,
+      "winA": 0.187,
+      "btts": 0.63,
+      "goals2p": 0.87,
+      "goals3p": 0.68,
+      "xGH": 2.3023,
+      "xGA": 1.2187
+    },
+    "realmadridpsv": {
+      "winH": 0.7565,
+      "winA": 0.1015,
+      "btts": 0.62,
+      "goals2p": 0.91,
+      "goals3p": 0.77,
+      "xGH": 2.9874,
+      "xGA": 1.0688
+    },
+    "rbleipziglens": {
+      "winH": 0.5959,
+      "winA": 0.2053,
+      "btts": 0.67,
+      "goals2p": 0.89,
+      "goals3p": 0.72,
+      "xGH": 2.3696,
+      "xGA": 1.3544
+    },
+    "mancitynapoli": {
+      "winH": 0.7014,
+      "winA": 0.1224,
+      "btts": 0.56,
+      "goals2p": 0.86,
+      "goals3p": 0.67,
+      "xGH": 2.4709,
+      "xGA": 0.9544
+    },
+    "arsenaldortmund": {
+      "winH": 0.6759,
+      "winA": 0.1153,
+      "btts": 0.43,
+      "goals2p": 0.75,
+      "goals3p": 0.51,
+      "xGH": 2.0026,
+      "xGA": 0.6976
+    },
+    "feyenoordporto": {
+      "winH": 0.3092,
+      "winA": 0.4395,
+      "btts": 0.6,
+      "goals2p": 0.8,
+      "goals3p": 0.58,
+      "xGH": 1.35,
+      "xGA": 1.6472
+    },
+    "comoaekathens": {
+      "winH": 0.7256,
+      "winA": 0.1133,
+      "btts": 0.59,
+      "goals2p": 0.88,
+      "goals3p": 0.71,
+      "xGH": 2.68,
+      "xGA": 1.0
+    },
+    "slovanbetis": {
+      "winH": 0.0894,
+      "winA": 0.7638,
+      "btts": 0.55,
+      "goals2p": 0.88,
+      "goals3p": 0.71,
+      "xGH": 0.88,
+      "xGA": 2.77
+    },
+    "rangersaberdeen": {
+      "winH": 0.7781,
+      "winA": 0.0803,
+      "btts": 0.53,
+      "goals2p": 0.88,
+      "goals3p": 0.7,
+      "xGH": 2.7888,
+      "xGA": 0.8223
+    },
+    "wolvesderby": {
+      "winH": 0.711,
+      "winA": 0.0976,
+      "btts": 0.45,
+      "goals2p": 0.78,
+      "goals3p": 0.55,
+      "xGH": 2.1975,
+      "xGA": 0.6975
+    },
+    "chapecoensepalmeiras": {
+      "winH": 0.1971,
+      "winA": 0.5556,
+      "btts": 0.54,
+      "goals2p": 0.78,
+      "goals3p": 0.55,
+      "xGH": 1.0311,
+      "xGA": 1.8541
+    },
+    "slaviaprahavillarreal": {
+      "winH": 0.3228,
+      "winA": 0.437,
+      "btts": 0.64,
+      "goals2p": 0.84,
+      "goals3p": 0.63,
+      "xGH": 1.49,
+      "xGA": 1.76
+    },
+    "sabahbarcelona": {
+      "winH": 0.04,
+      "winA": 0.8869,
+      "btts": 0.6,
+      "goals2p": 0.96,
+      "goals3p": 0.88,
+      "xGH": 0.95,
+      "xGA": 4.11
+    }
   }
 }
